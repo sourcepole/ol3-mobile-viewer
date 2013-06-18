@@ -80,4 +80,8 @@ $(document).ready(function() {
   $('#layerOrderButton').on('tap', function() {
     panelSelect('layerOrder');
   });
+  
+  // set default value for map following
+  $('#switch_follow').val('on');
+  $('#switch_follow').slider('refresh');
 });
