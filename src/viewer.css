@@ -5,3 +5,80 @@
 .ui-panel .ui-listview {
   overflow: auto;
 }
+
+.ui-icon-share {
+  background-image: url("img/share.png");
+  background-color: transparent;
+  background-size: 30px 30px;
+  width: 30px;
+  height: 30px;
+  box-shadow: none;
+  border-radius: none;
+  margin: 0;
+}
+
+.ui-icon-properties {
+  background-image: url("img/properties.png");
+  background-color: transparent;
+  background-size: 30px 30px;
+  width: 30px;
+  height: 30px;
+  box-shadow: none;
+  border-radius: none;
+  margin: 0;
+}
+
+.ui-icon-suche {
+  background-image: url("img/search.png");
+  background-color: transparent;
+  background-size: 30px 30px;
+  width: 30px;
+  height: 30px;
+  box-shadow: none;
+  border-radius: none;
+  margin: 0;
+}
+
+.ui-icon-layer {
+  background-image: url("img/layer.png");
+  background-color: transparent;
+  background-size: 30px 30px;
+  width: 30px;
+  height: 30px;
+  box-shadow: none;
+  border-radius: none;
+  margin: 0;
+}
+
+.ui-icon-winterthur_logo {
+  background-image: url("img/winterthur_logo.png");
+  background-color: transparent;
+  background-size: 30px 30px;
+  width: 30px;
+  height: 30px;
+  box-shadow: none;
+  border-radius: none;
+  margin: 0;
+}
+
+.ui-icon-uster_logo {
+  background-image: url("img/uster_logo.png");
+  background-color: transparent;
+  background-size: 30px 30px;
+  width: 30px;
+  height: 30px;
+  box-shadow: none;
+  border-radius: none;
+  margin: 0;
+}
+
+.ui-icon-glarus_logo {
+  background-image: url("img/glarus_logo.png");
+  background-color: transparent;
+  background-size: 30px 30px;
+  width: 30px;
+  height: 30px;
+  box-shadow: none;
+  border-radius: none;
+  margin: 0;
+}
