@@ -27,16 +27,16 @@
     <link rel="stylesheet" type="text/css" href="src/viewer.css" />
   </head>
   <body>
-    <div data-role="page" id="mappage" data-theme="a">
+    <div data-role="page" id="mappage" data-theme="c">
 
-      <div id="header" data-role="header" data-id="mobileHeader" data-position="fixed" data-theme="a">
-        <div data-role="navbar" class="ui-icon-alt">
+      <div id="header" data-role="header" data-id="mobileHeader" data-position="fixed">
+        <div data-role="navbar">
           <ul>
-            <li><a href="layers.html">Logo</a></li>
-            <li><a href="#layerPanel" data-icon="bars" >Layer</a></li>
-            <li><a href="search.html" data-icon="search" >Suche</a></li>
-            <li><a href="share.html" data-icon="star" >Share</a></li>
-            <li><a href="#optionsPanel" data-icon="gear" >Optionen</a></li>
+            <li><a href="#panelLayer" data-icon="layer" data-iconpos="notext"></a></li>
+            <li><a href="http://www.gl.ch/xml_1/internet/de/application/d1257/f433.cfm" data-icon="glarus_logo" data-iconpos="notext"></a></li>
+            <li><a href="#" data-icon="searching" data-iconpos="notext"></a></li>
+            <li><a href="#" data-icon="share" data-iconpos="notext"></a></li>
+            <li><a href="#panelProperties" data-icon="gear" >Optionen</a></li>
           </ul>
         </div>
       </div>
@@ -45,30 +45,35 @@
         <div id="map"></div>
       </div>
 
-      <div data-role="panel" id="optionsPanel" data-position="right" data-display="overlay">
+      <div data-role="panel" id="panelProperties" data-position="right" data-display="overlay">
         <div class="panel-content" >
-          <p>Bedienung</p>
           <fieldset data-role="controlgroup">
-            <input name="radio-bedienung" id="radio-bedienung-rechts" type="radio" checked="checked" value="on">
-            <label for="radio-bedienung-rechts">Rechtsh&auml;nder</label>
-            <input name="radio-bedienung" id="radio-bedienung-links" type="radio" value="off">
-            <label for="radio-bedienung-links">Linksh&auml;nder</label>
+            <input id="radioHandlingRight" name="radioHandling" type="radio" checked="checked" value="on">
+            <label for="radioHandlingRight">Rechte Hand-Modus</label>
+            <input id="radioHandlingLeft" name="radioHandling" type="radio" value="off">
+            <label for="radioHandlingLeft">Linke Hand-Modus</label>
           </fieldset>
-          <p>Lokalisierung</p>
-          <input name="checkbox-lokalisierung" id="checkbox-lokalisierung" type="checkbox" checked="checked" value="on">
-          <label for="checkbox-lokalisierung">autom. Nachf&uuml;hrung</label>
-          <p>Massstabsbalken</p>
-          <input name="checkbox-massstab" id="checkbox-massstab" type="checkbox" value="off">
-          <label for="checkbox-massstab">anzeigen</label>
-          <p>Anmelden</p>
-          <a href="" data-role="button" data-inline="true">Login</a>
+          </p>
+          <label for="switchFollow">Kartennachf&uuml;hrung</label>
+          <select id="switchFollow" name="switchFollow" data-role="slider">
+            <option value="off">Aus</option>
+            <option value="on">Ein</option>
+          </select>
+          </p>
+          <label for="switchScale"> Massstabsbalken</label>
+          <select id="switchScale" name="switchScale" data-role="slider">
+            <option value="off">Aus</option>
+            <option value="on">Ein</option>
+          </select>
+          </p>
+          <a href="#" id="buttonLogin" data-role="button" data-inline="true">Login</a>
           </p>
           </p>
-          <a href="" data-rel="close" data-role="button" data-icon="arrow-r" data-iconpos="notext" data-inline="true"></a>
+          <a href="#" data-rel="close" data-role="button" data-icon="arrow-r" data-inline="true">Schliessen</a>
         </div>
       </div>
 
-      <div data-role="panel" id="layerPanel" data-position="left" data-display="overlay">
+      <div data-role="panel" id="panelLayer" data-position="left" data-display="overlay">
         <div class="panel-content">
           <div data-role="navbar">
             <ul>
