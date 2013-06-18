@@ -82,6 +82,6 @@ $(document).ready(function() {
   });
   
   // set default value for map following
-  $('#switch_follow').val('on');
-  $('#switch_follow').slider('refresh');
+  $('#switchFollow').val('on');
+  $('#switchFollow').slider('refresh');
 });
