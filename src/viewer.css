@@ -1,0 +1,7 @@
+.ui-content {
+  padding: 0;
+}
+
+.ui-panel .ui-listview {
+  overflow: auto;
+}
