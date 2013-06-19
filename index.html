@@ -6,6 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
 
     <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script src="http://code.jquery.com/ui/1.9.1/jquery-ui.min.js"></script>
+	<!-- Download jQuery UI Touch Punch Plugin from http://touchpunch.furf.com -->
+	<!-- is used for sortable Lists like the one for Reorder layers -->
+	<script src="lib/jquery/jquery.ui.touch-punch.min.js"></script>
+	
     <!-- uncompressed jQuery Mobile -->
     <script src="lib/jquery/jquery.mobile-1.3.1.js"></script>
     <link rel="stylesheet" href="lib/jquery/jquery.mobile-1.3.1.css" />
@@ -89,70 +94,160 @@
               </ul>
             </div>
             <div id="panelLayerAll">
-			  <div data-role="collapsible-set" data-theme="c">
-			    <div data-role="collapsible" >
+			  <!--<div data-role="collapsible-set" data-theme="c">-->
+			  <form style="padding-top:5px">
+			    <fieldset data-role="collapsible" data-theme="c">
+			      <legend><p style="white-space:pre-wrap;margin:0">Basiskarten und Landschaftsmodelle</p></legend>
+				  <label for="pixelkarte25">Pixelkarte 25</label>
+				  
+				  <input type="checkbox" name="pixelkarte25" id="pixelkarte25" data-inset="true">
+				  <input type="range" name="pixelkarte25" id="pixelkarte25slider" min="0" max="100" value="100" data-mini="true">
+
+				  <label for="pixelkarte25grau">Pixelkarte 25 grau</label>
+				  <input type="checkbox" name="pixelkarte25grau" id="pixelkarte25grau" data-inset="false">
+				  <label for="LK25_1983_85">LK25 1983-85</label>
+				  <input type="checkbox" name="LK25_1983_85" id="LK25_1983_85" data-inset="false">
+				  <label for="LK25_1958_63">LK25 1958-63</label>
+				  <input type="checkbox" name="LK25_1958_63" id="LK25_1958_63" data-inset="false">
+				</fieldset>
+			  </form> 
+			    <!--
+				<div data-role="collapsible" data-theme="c">
                   <h3><p style="white-space:pre-wrap;margin:0">Basiskarten und Landschaftsmodelle</p></h3>
-			      <ul data-role="listview">
-				    <li><a href="#">Pixelkarte 25</a></li>
-					<li><a href="#">Pixelkarte 25 grau</a></li>
-					<li><a href="#">LK25 1983-85</a></li>
-					<li><a href="#">LK25 1958-63</a></li>
-					<li><a href="#">Pixelkarte 100</a></li>
+			      <ul data-role="listview" data-inset="false">
+				    <li><a href="#"><p style="white-space:pre-wrap;margin:0">Pixelkarte 25</p></a></li>
+					<li><a href="#"><p style="white-space:pre-wrap;margin:0">Pixelkarte 25 grau</p></a></li>
+					<li><a href="#"><p style="white-space:pre-wrap;margin:0">LK25 1983-85</p></a></li>
+					<li><a href="#"><p style="white-space:pre-wrap;margin:0">LK25 1958-63</p></a></li>
+					<li><a href="#"><p style="white-space:pre-wrap;margin:0">Pixelkarte 100</p></a></li>
                     <li data-role="list-divider" data-theme="c">Basisplan-AV farbig</li>
-                    <li><a href="#">BPAV5000 farbig Liegenschaften</a></li>
-                    <li><a href="#">BPAV5000 farbig</a></li>
-					<li><a href="#">BPAV10000 farbig</a></li>
+                    <li><a href="#"><p style="white-space:pre-wrap;margin:0">BPAV5000 farbig Liegenschaften</p></a></li>
+                    <li><a href="#"><p style="white-space:pre-wrap;margin:0">BPAV5000 farbig</p></a></li>
+					<li><a href="#"><p style="white-space:pre-wrap;margin:0">BPAV10000 farbig</p></a></li>
 					<li data-role="list-divider" data-theme="c">Basisplan-AV schwarz-weiss</li>
-                    <li><a href="#">BPAV5000 sw Liegenschaften</a></li>
-                    <li><a href="#">BPAV5000 sw</a></li>
-					<li><a href="#">BPAV10000 sw</a></li>
+                    <li><a href="#"><p style="white-space:pre-wrap;margin:0">BPAV5000 sw Liegenschaften</p></a></li>
+                    <li><a href="#"><p style="white-space:pre-wrap;margin:0">BPAV5000 sw</p></a></li>
+					<li><a href="#"><p style="white-space:pre-wrap;margin:0">BPAV10000 sw</p></a></li>
                   </ul>
-			    </div>
+			    </div>-->
+			  <form style="padding-top:5px">
+			    <fieldset data-role="collapsible" data-theme="c">
+			      <legend><p style="white-space:pre-wrap;margin:0">Bodenbedeckung und Bodennutzung</p></legend>
+			  <!--
 			    <div data-role="collapsible">
-                  <h4><p style="white-space:pre-wrap;margin:0">Bodenbedeckung und Bodennutzung</p></h4>
+                  <h3><p style="white-space:pre-wrap;margin:0">Bodenbedeckung und Bodennutzung</p></h3>-->
 			      <ul data-role="listview">
                     <li data-role="list-divider">AV Bodenbedeckung</li>
                     <li><a href="#">BB Namen</a></li>
                     <li><a href="#">BB Fl&auml;chen farbig</a></li>
 					<li><a href="#">BB Fl&auml;chen farbig</a></li>
                   </ul>
+			    <!--</div>-->
+				</fieldset>
+			  </form>
+			    <div data-role="collapsible">
+                  <h3><p style="white-space:pre-wrap;margin:0">Luft- und Satellitenbilder</p></h3>
+			      <ul data-role="listview">
+                    <li data-role="list-divider">Kategorie</li>
+                    <li><a href="#">Thema1</a></li>
+                    <li><a href="#">Thema2</a></li>
+					<li><a href="#">Thema3</a></li>
+                  </ul>
+			    </div>
+			    <div data-role="collapsible">
+                  <h3><p style="white-space:pre-wrap;margin:0">Ortsangaben und Referenzsysteme</p></h3>
+			      <ul data-role="listview">
+                    <li data-role="list-divider">Kategorie</li>
+                    <li><a href="#">Thema1</a></li>
+                    <li><a href="#">Thema2</a></li>
+					<li><a href="#">Thema3</a></li>
+                  </ul>
+			    </div>
+			    <div data-role="collapsible">
+                  <h3><p style="white-space:pre-wrap;margin:0">H&ouml;hen</p></h3>
+			      <ul data-role="listview">
+                    <li data-role="list-divider">Kategorie</li>
+                    <li><a href="#">Thema1</a></li>
+                    <li><a href="#">Thema2</a></li>
+					<li><a href="#">Thema3</a></li>
+                  </ul>
+			    </div>
+			    <div data-role="collapsible">
+                  <h3><p style="white-space:pre-wrap;margin:0">Politische und Administrative Grenzen</p></h3>
+			      <ul data-role="listview">
+                    <li data-role="list-divider">Kategorie</li>
+                    <li><a href="#">Thema1</a></li>
+                    <li><a href="#">Thema2</a></li>
+					<li><a href="#">Thema3</a></li>
+                  </ul>
+			    </div>
+			    <div data-role="collapsible">
+                  <h3><p style="white-space:pre-wrap;margin:0">Raumplanung- und Raumentwicklung</p></h3>
+			      <ul data-role="listview">
+                    <li data-role="list-divider">Kategorie</li>
+                    <li><a href="#">Thema1</a></li>
+                    <li><a href="#">Thema2</a></li>
+					<li><a href="#">Thema3</a></li>
+                  </ul>
+			    </div>
+			    <div data-role="collapsible">
+                  <h3><p style="white-space:pre-wrap;margin:0">Grundst&uuml;ckskataster</p></h3>
+			      <ul data-role="listview">
+                    <li data-role="list-divider">Kategorie</li>
+                    <li><a href="#">Thema1</a></li>
+                    <li><a href="#">Thema2</a></li>
+					<li><a href="#">Thema3</a></li>
+                  </ul>
+			    </div>
+			    <div data-role="collapsible">
+                  <h3><p style="white-space:pre-wrap;margin:0">Boden</p></h3>
+			      <ul data-role="listview">
+                    <li data-role="list-divider">Kategorie</li>
+                    <li><a href="#">Thema1</a></li>
+                    <li><a href="#">Thema2</a></li>
+					<li><a href="#">Thema3</a></li>
+                  </ul>
+			    </div>
+			    <div data-role="collapsible">
+                  <h3><p style="white-space:pre-wrap;margin:0">Naturbedingte Risiken</p></h3>
+			      <ul data-role="listview">
+                    <li data-role="list-divider">Kategorie</li>
+                    <li><a href="#">Thema1</a></li>
+                    <li><a href="#">Thema2</a></li>
+					<li><a href="#">Thema3</a></li>
+                  </ul>
+			    </div>
+			    <div data-role="collapsible">
+                  <h3><p style="white-space:pre-wrap;margin:0">Gew&auml;sser</p></h3>
+			      <ul data-role="listview">
+                    <li data-role="list-divider">Kategorie</li>
+                    <li><a href="#">Thema1</a></li>
+                    <li><a href="#">Thema2</a></li>
+					<li><a href="#">Thema3</a></li>
+                  </ul>
+			    </div>
+			    <div data-role="collapsible">
+                  <h3><p style="white-space:pre-wrap;margin:0">Luft- und Satellitenbilder</p></h3>
+			      <ul data-role="listview">
+                    <li data-role="list-divider">Kategorie</li>
+                    <li><a href="#">Thema1</a></li>
+                    <li><a href="#">Thema2</a></li>
+					<li><a href="#">Thema3</a></li>
+                  </ul>
 			    </div>
 			  </div>
+			<!--</div> -->
+
+            <div id="panelLayerOrder">
+			  <div data-role="controlgroup" >
+			    <ul id="listOrder" data-role="listview" data-inset="true">
+			      <li style="margin-bottom:2px;margin-top:2px">Thema 1</li>
+				  <li style="margin-bottom:2px;margin-top:2px">Thema 2</li>
+				  <li style="margin-bottom:2px;margin-top:2px">Thema 3</li>
+			    </ul>
+			  </div>
+			  <a href="#" data-role="button">&Uuml;bernehmen</a>
 			</div>
-				  <!--
- 
-							<div data-role="collapsible" data-inset="false">
-								Luft- und Satellitenbilder
-							</div>
-							<div data-role="collapsible" data-inset="false">
-								Ortsangaben und Referenzsysteme
-							</div>
-							<div data-role="collapsible" data-inset="false">
-								H&ouml;hen
-							</div>
-							<div data-role="collapsible" data-inset="false">
-								Politische und Administrative Grenzen
-							</div>
-							<div data-role="collapsible" data-inset="false">
-								Raumplanung- und Raumentwicklung
-							</div>
-							<div data-role="collapsible" data-inset="false">
-								Grundst&uuml;ckskataster
-							</div>
-							<div data-role="collapsible" data-inset="false">
-								Boden
-							</div>							
-							<div data-role="collapsible" data-inset="false">
-								Naturbedingte Risiken
-							</div>
-							<div data-role="collapsible" data-inset="false">
-								Gew&auml;sser
-							</div>
-							<div data-role="collapsible" data-inset="false">
-								Gew&auml;sser
-							</div>
-						-->
-            <div id="panelLayerOrder">Reihenfolge</div>
           </div>
 		  <div align="right">
 		    <a href="#" data-rel="close" data-role="button" data-icon="arrow-l" data-iconpos="left" data-inline="true">Schliessen</a>

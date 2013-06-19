@@ -23,7 +23,8 @@ function createMap() {
       projection: projection,
       center: [722500, 205000],
       zoom: 4
-    })
+    }),
+	controls:[]
   });
 };
 
@@ -99,7 +100,17 @@ function loadTopics() {
   $('#topicList').listview('refresh');
 }
 
-$(document).ready(function() {
+// binds the reorder functionality to the visible layer list
+$(document).bind('pageinit', function() {
+  $('#listOrder').sortable();
+  $('#listOrder').disableSelection();
+  $('#listOrder').bind('sortstop', function(event, ui) {
+    $('#listOrder').listview('refresh');
+	});
+});
+
+
+$(document).ready(function(e) {
   // init
   updateLayout();
   createMap();
@@ -124,4 +135,5 @@ $(document).ready(function() {
   // set default value for map following
   $('#switchFollow').val('on');
   $('#switchFollow').slider('refresh');
+  
 });
