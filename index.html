@@ -29,14 +29,14 @@
   <body>
     <div data-role="page" id="mappage" data-theme="c">
 
-      <div id="header" data-role="header" data-id="mobileHeader" data-position="fixed">
+      <div id="header" data-role="header" data-id="mobileHeader" data-position="fixed" data-theme="c">
         <div data-role="navbar">
           <ul>
             <li><a href="#panelLayer" data-icon="layer" data-iconpos="notext"></a></li>
             <li><a href="http://www.gl.ch/xml_1/internet/de/application/d1257/f433.cfm" data-icon="glarus_logo" data-iconpos="notext"></a></li>
             <li><a href="#" data-icon="searching" data-iconpos="notext"></a></li>
             <li><a href="#" data-icon="share" data-iconpos="notext"></a></li>
-            <li><a href="#panelProperties" data-icon="gear" >Optionen</a></li>
+            <li><a href="#panelProperties" data-icon="properties" data-iconpos="notext"></a></li>
           </ul>
         </div>
       </div>
@@ -46,7 +46,7 @@
       </div>
 
       <div data-role="panel" id="panelProperties" data-position="right" data-display="overlay">
-        <div class="panel-content" >
+        <div class="panel-content">
           <fieldset data-role="controlgroup">
             <input id="radioHandlingRight" name="radioHandling" type="radio" checked="checked" value="on">
             <label for="radioHandlingRight">Rechte Hand-Modus</label>
@@ -73,27 +73,94 @@
         </div>
       </div>
 
-      <div data-role="panel" id="panelLayer" data-position="left" data-display="overlay">
+
+      <div data-role="panel" id="panelLayer" data-position="left" data-display="overlay" style="win-width:450px">
         <div class="panel-content">
           <div data-role="navbar">
             <ul>
-              <li><a id="topicButton" href="#topicPanel">Themen</a></li>
-              <li><a id="layerButton" href="#layersPanel">Alle Layer</a></li>
-              <li><a id="layerOrderButton" href="#layerOrderPanel">Reihenfolge</a></li>
+              <li><a id="buttonTopics" href="#panelTopics">Themen</a></li>
+              <li><a id="buttonLayerAll" href="#panelLayerAll">Alle Layer</a></li>
+              <li><a id="buttonLayerOrder" href="#panelLayerOrder">Reihenfolge</a></li>
             </ul>
           </div>
           <div id="layerPanelContent">
-            <div id="topics">
-              <ul id="topicsList" data-role="listview" data-inset="true">
+            <div id="panelTopics">
+              <ul id="topicList" data-role="listview">
               </ul>
             </div>
-            <div id="layers">Alle Layer</div>
-            <div id="layerOrder">Reihenfolge</div>
+            <div id="panelLayerAll">
+			  <div data-role="collapsible-set" data-theme="c">
+			    <div data-role="collapsible" >
+                  <h3><p style="white-space:pre-wrap;margin:0">Basiskarten und Landschaftsmodelle</p></h3>
+			      <ul data-role="listview">
+				    <li><a href="#">Pixelkarte 25</a></li>
+					<li><a href="#">Pixelkarte 25 grau</a></li>
+					<li><a href="#">LK25 1983-85</a></li>
+					<li><a href="#">LK25 1958-63</a></li>
+					<li><a href="#">Pixelkarte 100</a></li>
+                    <li data-role="list-divider" data-theme="c">Basisplan-AV farbig</li>
+                    <li><a href="#">BPAV5000 farbig Liegenschaften</a></li>
+                    <li><a href="#">BPAV5000 farbig</a></li>
+					<li><a href="#">BPAV10000 farbig</a></li>
+					<li data-role="list-divider" data-theme="c">Basisplan-AV schwarz-weiss</li>
+                    <li><a href="#">BPAV5000 sw Liegenschaften</a></li>
+                    <li><a href="#">BPAV5000 sw</a></li>
+					<li><a href="#">BPAV10000 sw</a></li>
+                  </ul>
+			    </div>
+			    <div data-role="collapsible">
+                  <h4><p style="white-space:pre-wrap;margin:0">Bodenbedeckung und Bodennutzung</p></h4>
+			      <ul data-role="listview">
+                    <li data-role="list-divider">AV Bodenbedeckung</li>
+                    <li><a href="#">BB Namen</a></li>
+                    <li><a href="#">BB Fl&auml;chen farbig</a></li>
+					<li><a href="#">BB Fl&auml;chen farbig</a></li>
+                  </ul>
+			    </div>
+			  </div>
+			</div>
+				  <!--
+ 
+							<div data-role="collapsible" data-inset="false">
+								Luft- und Satellitenbilder
+							</div>
+							<div data-role="collapsible" data-inset="false">
+								Ortsangaben und Referenzsysteme
+							</div>
+							<div data-role="collapsible" data-inset="false">
+								H&ouml;hen
+							</div>
+							<div data-role="collapsible" data-inset="false">
+								Politische und Administrative Grenzen
+							</div>
+							<div data-role="collapsible" data-inset="false">
+								Raumplanung- und Raumentwicklung
+							</div>
+							<div data-role="collapsible" data-inset="false">
+								Grundst&uuml;ckskataster
+							</div>
+							<div data-role="collapsible" data-inset="false">
+								Boden
+							</div>							
+							<div data-role="collapsible" data-inset="false">
+								Naturbedingte Risiken
+							</div>
+							<div data-role="collapsible" data-inset="false">
+								Gew&auml;sser
+							</div>
+							<div data-role="collapsible" data-inset="false">
+								Gew&auml;sser
+							</div>
+						-->
+            <div id="panelLayerOrder">Reihenfolge</div>
           </div>
-          <a href="#" data-rel="close" data-role="button" data-icon="arrow-l" data-iconpos="notext" data-inline="true"></a>
+		  <div align="right">
+		    <a href="#" data-rel="close" data-role="button" data-icon="arrow-l" data-iconpos="left" data-inline="true">Schliessen</a>
+		  </div>
         </div>
       </div>
-
+	  
     </div>
+	
   </body>
 </html>

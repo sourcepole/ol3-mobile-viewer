@@ -32,31 +32,71 @@ function updateLayout() {
   $("#map").height(window.innerHeight - $("#header ").outerHeight());
 
   // limit panel list to screen height
-  $('.ui-panel .ui-listview').height(window.innerHeight - 140);
+  $('.ui-panel .ui-listview').height(window.innerHeight - 160);
+  $('#panelProperties').height(window.innerHeight - 160);
 }
 
 // show selected panel
 function panelSelect(panel) {
-  $('#topics').toggle(panel === 'topics');
-  $('#layers').toggle(panel === 'layers');
-  $('#layerOrder').toggle(panel === 'layerOrder');
+  $('#panelTopics').toggle(panel === 'panelTopics');
+  $('#panelLayerAll').toggle(panel === 'panelLayerAll');
+  $('#panelLayerOrder').toggle(panel === 'panelLayerOrder');
 }
 
 // load topics
 function loadTopics() {
   // static dummy html
-  var html = '<li data-role="list-provider">Amtliche Vermessung und Basispl&auml;ne</li>';
+  var html = '<li data-role="list-provider">Amtliche Vermessung und Basispl&auml;ng</li>';
   html +=    '<li><a href="#">';
   html +=    '  <img src="img/grundplan_av.png"/>';
-  html +=    '  Grundplan Amtliche Vermessung mit Abstandslinien (schwarz/weiss)</a>';
+  html +=    '  <p style="white-space:pre-wrap">Grundplan Amtliche Vermessung mit Abstandslinien (schwarz/weiss)</p></a>';
   html +=    '</li>';
   html +=    '<li><a href="#">';
   html +=    '  <img src="img/grundplan_av_farbig.png"/>';
-  html +=    '  Grundplan Amtliche Vermessung mit Abstandslinien (farbig)</a>';
+  html +=    '  <p style="white-space:pre-wrap">Grundplan Amtliche Vermessung mit Abstandslinien (farbig)</p></a>';
+  html +=    '</li>';
+  html +=    '<li><a href="#">';
+  html +=    '  <img src="http://webgis.uster.ch/qgis-web-client/thumbnails/orthofotos_und_uep.png"/>';
+  html +=    '  <p style="white-space:pre-wrap">Orthofotos und &Uuml;bersichtspl&auml;ne (inkl. historische)</p></a>';
+  html +=    '</li>';
+  html +=    '<li><a href="#">';
+  html +=    '  <img src="http://webgis.uster.ch/qgis-web-client/thumbnails/administrative_grenzen.png"/>';
+  html +=    '  <p style="white-space:pre-wrap">Admistrative Grenzen (Quartiere, Postkreise, Zivilgemeinden)</p></a>';
+  html +=    '</li>';
+  html +=    '<li><a href="#">';
+  html +=    '  <img src="http://webgis.uster.ch/qgis-web-client/thumbnails/grundplan_av_mit_eigentum.png"/>';
+  html +=    '  <p style="white-space:pre-wrap">Grundplan Amtliche Vermessung mit Eigentum (schwarz/weiss)</p></a>';
+  html +=    '</li>';
+  html +=    '<li data-role="list-provider">Raumplanung</li>';
+  html +=    '<li><a href="#">';
+  html +=    '  <img src="http://webgis.uster.ch/qgis-web-client/thumbnails/zonenplan.png"/>';
+  html +=    '  <p style="white-space:pre-wrap">Zonenplan</p></a>';
+  html +=    '</li>';
+  html +=    '<li data-role="list-provider">Hydrologie und Grundwasser</li>';
+  html +=    '<li><a href="#">';
+  html +=    '  <img src="http://webgis.uster.ch/qgis-web-client/thumbnails/gewaesserplan.png"/>';
+  html +=    '  <p style="white-space:pre-wrap">Gew&auml;sserplan</p></a>';
+  html +=    '</li>';
+  html +=    '<li data-role="list-provider">Infrastruktur</li>';
+  html +=    '<li><a href="#">';
+  html +=    '  <img src="http://webgis.uster.ch/qgis-web-client/thumbnails/abfallentsorgung.png"/>';
+  html +=    '  <p style="white-space:pre-wrap">Abfallentsorgung</p></a>';
+  html +=    '</li>';
+  html +=    '<li><a href="#">';
+  html +=    '  <img src="http://webgis.uster.ch/qgis-web-client/thumbnails/wc_anlagen.png"/>';
+  html +=    '  <p style="white-space:pre-wrap">&Ouml;ffentliche WC-Anlagen</p></a>';
+  html +=    '</li>';
+  html +=    '<li><a href="#">';
+  html +=    '  <img src="http://webgis.uster.ch/qgis-web-client/thumbnails/baustellen_oeffentlich.png"/>';
+  html +=    '  <p style="white-space:pre-wrap">Aktuelle Baustellen</p></a>';
+  html +=    '</li>';
+  html +=    '<li><a href="#">';
+  html +=    '  <img src="http://webgis.uster.ch/qgis-web-client/thumbnails/baukoordination.png"/>';
+  html +=    '  <p style="white-space:pre-wrap">Baukoordination (Baustellen)</p></a>';
   html +=    '</li>';
 
-  $('#topicsList').html(html);
-  $('#topicsList').listview('refresh');
+  $('#topicList').html(html);
+  $('#topicList').listview('refresh');
 }
 
 $(document).ready(function() {
@@ -64,21 +104,21 @@ $(document).ready(function() {
   updateLayout();
   createMap();
   loadTopics();
-  panelSelect('topics');
+  panelSelect('panelTopics');
 
   $(window).on('resize', function() {
     updateLayout();
   });
 
   // layer panel navigation
-  $('#topicButton').on('tap', function() {
-    panelSelect('topics');
+  $('#buttonTopics').on('tap', function() {
+    panelSelect('panelTopics');
   });
-  $('#layerButton').on('tap', function() {
-    panelSelect('layers');
+  $('#buttonLayerAll').on('tap', function() {
+    panelSelect('panelLayerAll');
   });
-  $('#layerOrderButton').on('tap', function() {
-    panelSelect('layerOrder');
+  $('#buttonLayerOrder').on('tap', function() {
+    panelSelect('panelLayerOrder');
   });
   
   // set default value for map following
