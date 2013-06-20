@@ -1,32 +1,6 @@
-function createMap() {
-  var projection = ol.projection.configureProj4jsProjection({
-    code: 'EPSG:21781',
-    extent: new ol.Extent(485869.5728, 76443.1884, 837076.5648, 299941.7864)
-  });
-
-  var map = new ol.Map({
-    layers: [
-      new ol.layer.ImageLayer({
-        source: new ol.source.SingleImageWMS({
-          url: 'http://map.geo.gl.ch/wms/Public',
-          params: {
-            'LAYERS': 'Pixelkarte 25 grau,CH-Rahmen',
-            FORMAT: 'image/png; mode=8bit'
-          },
-          extent: new ol.Extent(700000, 180000, 745000, 230000)
-        })
-      })
-    ],
-    renderers: ol.RendererHints.createFromQueryData(),
-    target: 'map',
-    view: new ol.View2D({
-      projection: projection,
-      center: [722500, 205000],
-      zoom: 4
-    }),
-	controls:[]
-  });
-};
+/**
+ * jQuery Mobile GUI
+ */
 
 function updateLayout() {
   // use full content height for map
