@@ -53,28 +53,30 @@
 
       <div data-role="panel" id="panelProperties" data-position="right" data-display="overlay">
         <div class="panel-content">
-          <fieldset data-role="controlgroup">
-            <input id="radioHandlingRight" name="radioHandling" type="radio" checked="checked" value="on">
-            <label for="radioHandlingRight">Rechte Hand-Modus</label>
-            <input id="radioHandlingLeft" name="radioHandling" type="radio" value="off">
-            <label for="radioHandlingLeft">Linke Hand-Modus</label>
-          </fieldset>
-          </p>
-          <label for="switchFollow">Kartennachf&uuml;hrung</label>
-          <select id="switchFollow" name="switchFollow" data-role="slider">
-            <option value="off">Aus</option>
-            <option value="on">Ein</option>
-          </select>
-          </p>
-          <label for="switchScale"> Massstabsbalken</label>
-          <select id="switchScale" name="switchScale" data-role="slider">
-            <option value="off">Aus</option>
-            <option value="on">Ein</option>
-          </select>
-          </p>
-          <a href="#" id="buttonLogin" data-role="button" data-inline="true">Login</a>
-          </p>
-          </p>
+          <div id="properties" class="scrollable">
+            <fieldset data-role="controlgroup">
+              <input id="radioHandlingRight" name="radioHandling" type="radio" checked="checked" value="on">
+              <label for="radioHandlingRight">Rechte Hand-Modus</label>
+              <input id="radioHandlingLeft" name="radioHandling" type="radio" value="off">
+              <label for="radioHandlingLeft">Linke Hand-Modus</label>
+            </fieldset>
+            </p>
+            <label for="switchFollow">Kartennachf&uuml;hrung</label>
+            <select id="switchFollow" name="switchFollow" data-role="slider">
+              <option value="off">Aus</option>
+              <option value="on">Ein</option>
+            </select>
+            </p>
+            <label for="switchScale"> Massstabsbalken</label>
+            <select id="switchScale" name="switchScale" data-role="slider">
+              <option value="off">Aus</option>
+              <option value="on">Ein</option>
+            </select>
+            </p>
+            <a href="#" id="buttonLogin" data-role="button" data-inline="true">Login</a>
+            </p>
+            </p>
+          </div>
           <a href="#" data-rel="close" data-role="button" data-icon="arrow-r" data-inline="true">Schliessen</a>
         </div>
       </div>
@@ -91,10 +93,10 @@
           </div>
           <div id="layerPanelContent">
             <div id="panelTopics">
-              <ul id="topicList" data-role="listview">
+              <ul id="topicList" data-role="listview" class="scrollable">
               </ul>
             </div>
-            <div id="panelLayerAll">
+            <div id="panelLayerAll" class="scrollable">
 			  <!--<div data-role="collapsible-set" data-theme="c">-->
 			  <form style="padding-top:5px">
 			    <fieldset data-role="collapsible" data-theme="c">
@@ -241,7 +243,7 @@
 
             <div id="panelLayerOrder">
 			  <div data-role="controlgroup" >
-			    <ul id="listOrder" data-role="listview" data-inset="true">
+			    <ul id="listOrder" data-role="listview" data-inset="true" class="scrollable">
 			      <li style="margin-bottom:2px;margin-top:2px">Thema 1</li>
 				  <li style="margin-bottom:2px;margin-top:2px">Thema 2</li>
 				  <li style="margin-bottom:2px;margin-top:2px">Thema 3</li>

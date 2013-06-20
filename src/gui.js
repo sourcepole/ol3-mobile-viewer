@@ -6,9 +6,11 @@ function updateLayout() {
   // use full content height for map
   $("#map").height(window.innerHeight - $("#header ").outerHeight());
 
-  // limit panel list to screen height
-  $('.ui-panel .ui-listview').height(window.innerHeight - 160);
-  $('#panelProperties').height(window.innerHeight - 160);
+  // limit panels to screen height
+  $('#panelTopics .ui-listview').height(window.innerHeight - 140);
+  $('#panelLayerAll').height(window.innerHeight - 140);
+  $('#panelLayerOrder .ui-listview').height(window.innerHeight - 223);
+  $('#properties').height(window.innerHeight - 100);
 }
 
 // show selected panel
