@@ -20,57 +20,22 @@ function panelSelect(panel) {
   $('#panelLayerOrder').toggle(panel === 'panelLayerOrder');
 }
 
-// load topics
-function loadTopics() {
-  // static dummy html
-  var html = '<li data-role="list-provider">Amtliche Vermessung und Basispl&auml;ng</li>';
-  html +=    '<li><a href="#">';
-  html +=    '  <img src="img/grundplan_av.png"/>';
-  html +=    '  <p style="white-space:pre-wrap">Grundplan Amtliche Vermessung mit Abstandslinien (schwarz/weiss)</p></a>';
-  html +=    '</li>';
-  html +=    '<li><a href="#">';
-  html +=    '  <img src="img/grundplan_av_farbig.png"/>';
-  html +=    '  <p style="white-space:pre-wrap">Grundplan Amtliche Vermessung mit Abstandslinien (farbig)</p></a>';
-  html +=    '</li>';
-  html +=    '<li><a href="#">';
-  html +=    '  <img src="http://webgis.uster.ch/qgis-web-client/thumbnails/orthofotos_und_uep.png"/>';
-  html +=    '  <p style="white-space:pre-wrap">Orthofotos und &Uuml;bersichtspl&auml;ne (inkl. historische)</p></a>';
-  html +=    '</li>';
-  html +=    '<li><a href="#">';
-  html +=    '  <img src="http://webgis.uster.ch/qgis-web-client/thumbnails/administrative_grenzen.png"/>';
-  html +=    '  <p style="white-space:pre-wrap">Admistrative Grenzen (Quartiere, Postkreise, Zivilgemeinden)</p></a>';
-  html +=    '</li>';
-  html +=    '<li><a href="#">';
-  html +=    '  <img src="http://webgis.uster.ch/qgis-web-client/thumbnails/grundplan_av_mit_eigentum.png"/>';
-  html +=    '  <p style="white-space:pre-wrap">Grundplan Amtliche Vermessung mit Eigentum (schwarz/weiss)</p></a>';
-  html +=    '</li>';
-  html +=    '<li data-role="list-provider">Raumplanung</li>';
-  html +=    '<li><a href="#">';
-  html +=    '  <img src="http://webgis.uster.ch/qgis-web-client/thumbnails/zonenplan.png"/>';
-  html +=    '  <p style="white-space:pre-wrap">Zonenplan</p></a>';
-  html +=    '</li>';
-  html +=    '<li data-role="list-provider">Hydrologie und Grundwasser</li>';
-  html +=    '<li><a href="#">';
-  html +=    '  <img src="http://webgis.uster.ch/qgis-web-client/thumbnails/gewaesserplan.png"/>';
-  html +=    '  <p style="white-space:pre-wrap">Gew&auml;sserplan</p></a>';
-  html +=    '</li>';
-  html +=    '<li data-role="list-provider">Infrastruktur</li>';
-  html +=    '<li><a href="#">';
-  html +=    '  <img src="http://webgis.uster.ch/qgis-web-client/thumbnails/abfallentsorgung.png"/>';
-  html +=    '  <p style="white-space:pre-wrap">Abfallentsorgung</p></a>';
-  html +=    '</li>';
-  html +=    '<li><a href="#">';
-  html +=    '  <img src="http://webgis.uster.ch/qgis-web-client/thumbnails/wc_anlagen.png"/>';
-  html +=    '  <p style="white-space:pre-wrap">&Ouml;ffentliche WC-Anlagen</p></a>';
-  html +=    '</li>';
-  html +=    '<li><a href="#">';
-  html +=    '  <img src="http://webgis.uster.ch/qgis-web-client/thumbnails/baustellen_oeffentlich.png"/>';
-  html +=    '  <p style="white-space:pre-wrap">Aktuelle Baustellen</p></a>';
-  html +=    '</li>';
-  html +=    '<li><a href="#">';
-  html +=    '  <img src="http://webgis.uster.ch/qgis-web-client/thumbnails/baukoordination.png"/>';
-  html +=    '  <p style="white-space:pre-wrap">Baukoordination (Baustellen)</p></a>';
-  html +=    '</li>';
+// fill topics list
+function loadTopics(categories) {
+  html = "";
+  for (var i=0;i<categories.length; i++) {
+    var category = categories[i];
+
+    html += '<li data-role="list-provider">' + category.title + '</li>';
+
+    for (var j=0;j<category.topics.length; j++) {
+      var topic = category.topics[j];
+      html +=    '<li><a href="#">';
+      html +=    '  <img src="' + topic.icon + '"/>';
+      html +=    '  <p style="white-space:pre-wrap">' + topic.title + '</p></a>';
+      html +=    '</li>';
+    }
+  }
 
   $('#topicList').html(html);
   $('#topicList').listview('refresh');
@@ -90,7 +55,7 @@ $(document).ready(function(e) {
   // init
   updateLayout();
   createMap();
-  loadTopics();
+  Topics.loadTopics("src/topics.json", loadTopics);
   panelSelect('panelTopics');
 
   $(window).on('resize', function() {
