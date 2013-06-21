@@ -35,12 +35,17 @@ function createMap() {
     layers.push(
       new ol.layer.TileLayer({
         source: new ol.source.TiledWMS({
-          url: 'http://map.geo.gl.ch/wms/Public',
+          url: 'http://wms.geo.admin.ch/',
+          crossOrigin: 'anonymous',
+          attributions: [new ol.Attribution(
+              '&copy; ' +
+              '<a href="http://www.geo.admin.ch/internet/geoportal/en/home.html">' +
+              'Pixelmap 1:1000000 / geo.admin.ch</a>')],
           params: {
-            'LAYERS': 'Pixelkarte 25 grau,CH-Rahmen',
-            'FORMAT': 'image/png; mode=8bit'
+            'LAYERS': 'ch.swisstopo.pixelkarte-farbe-pk1000.noscale',
+            'FORMAT': 'image/jpeg'
           },
-          extent: new ol.Extent(700000, 180000, 745000, 230000)
+          extent: new ol.Extent(420000, 30000, 900000, 350000)
         })
       })
     );
@@ -49,12 +54,17 @@ function createMap() {
     layers.push(
       new ol.layer.ImageLayer({
         source: new ol.source.SingleImageWMS({
-          url: 'http://map.geo.gl.ch/wms/Public',
+          url: 'http://wms.geo.admin.ch/',
+          crossOrigin: 'anonymous',
+          attributions: [new ol.Attribution(
+              '&copy; ' +
+              '<a href="http://www.geo.admin.ch/internet/geoportal/en/home.html">' +
+              'Pixelmap 1:1000000 / geo.admin.ch</a>')],
           params: {
-            'LAYERS': 'Pixelkarte 25 grau,CH-Rahmen',
-            'FORMAT': 'image/png; mode=8bit'
+            'LAYERS': 'ch.swisstopo.pixelkarte-farbe-pk1000.noscale',
+            'FORMAT': 'image/jpeg'
           },
-          extent: new ol.Extent(700000, 180000, 745000, 230000)
+          extent: new ol.Extent(420000, 900000, 30000, 350000)
         })
       })
     );
@@ -71,9 +81,11 @@ function createMap() {
     target: 'map',
     view: new ol.View2D({
       projection: projection,
-      center: [722500, 205000],
-      zoom: 4
+      center: [660000, 190000],
+      zoom: 2
     }),
-    controls:[]
+    controls:[
+      new ol.control.Attribution()
+    ]
   });
 };
