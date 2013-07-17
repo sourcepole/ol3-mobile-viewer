@@ -2,6 +2,14 @@
   "success":true,
   "gbtopics":[
     {
+      "name":"basisplan_av_farbig",
+      "title": "Basisplan-AV farbig",
+      "icon":"http://www.gl.ch/pictures/thumb/schnellzugriff_bpavf.png",
+      "categorytitle": "Glarus",
+      "categorysort": null,
+      "wms_url":"http://map.geo.gl.ch/wms/Public"
+    },
+    {
       "name":"grundplan_av",
       "title":"Grundplan Amtliche Vermessung mit Abstandslinien (schwarz/weiss)",
       "print_title":"Grundplan Amtliche Vermessung mit Abstandslinien (schwarz/weiss)",
