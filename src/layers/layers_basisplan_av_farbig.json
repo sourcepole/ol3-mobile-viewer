@@ -25,8 +25,8 @@
             "layername": "BBFlaechen_farbig",
             "toclayertitle": "BBFlaechen farbig",
             "visini": false,
-            "wms_sort": 2,
-            "toc_sort": 2
+            "wms_sort": 3,
+            "toc_sort": 3
         },
         {
             "topic": "basisplan_av_farbig",
@@ -34,8 +34,8 @@
             "layername": "CH-Rahmen",
             "toclayertitle": "CH-Rahmen",
             "visini": true,
-            "wms_sort": 3,
-            "toc_sort": 3
+            "wms_sort": 2,
+            "toc_sort": 2
         },
         {
             "topic": "basisplan_av_farbig",

@@ -2,9 +2,21 @@
  * OpenLayers 3 map
  */
 
-function createMap() {
+var Map = {};
+
+// topics (key = topic name)
+Map.topics = {};
+// current topic
+Map.topic = null;
+// ordered layers (key = layer name)
+Map.layers = {};
+// OpenLayers 3 map object
+Map.map = null;
+
+Map.useTiledWMS = false;
+
+Map.createMap = function() {
   // map options
-  var useTiledWMS = false;
   var useCanvasRenderer = false;
 
   // browser specific map setup
@@ -13,14 +25,14 @@ function createMap() {
     // Mozilla/5.0 (Linux; U; Android 4.0.3; en-gb; Transformer TF101 Build/IML74K) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Safari/534.30
 
     // SingleImageWMS is not refreshed on pinch zoom
-    useTiledWMS = true;
+    Map.useTiledWMS = true;
   }
   else if (navigator.userAgent.match(/Mozilla.+Android.+Firefox/)) {
     // Android Firefox
     // Mozilla/5.0 (Android; Tablet; rv:21.0) Gecko/21.0 Firefox/21.0
 
     // SingleImageWMS is not refreshed on pinch zoom
-    useTiledWMS = true;
+    Map.useTiledWMS = true;
     // WEBGL renderer renders GL WMS as black image
     useCanvasRenderer = true;
   }
@@ -30,42 +42,31 @@ function createMap() {
     extent: new ol.Extent(485869.5728, 76443.1884, 837076.5648, 299941.7864)
   });
 
+  var wmsOptions = {
+    url: 'http://wms.geo.admin.ch/',
+    crossOrigin: 'anonymous',
+    attributions: [new ol.Attribution(
+        '&copy; ' +
+        '<a href="http://www.geo.admin.ch/internet/geoportal/en/home.html">' +
+        'Pixelmap 1:1000000 / geo.admin.ch</a>')],
+    params: {
+      'LAYERS': 'ch.swisstopo.pixelkarte-farbe-pk1000.noscale',
+      'FORMAT': 'image/jpeg'
+    },
+    extent: new ol.Extent(420000, 30000, 900000, 350000)
+  };
   var layers = [];
-  if (useTiledWMS) {
+  if (Map.useTiledWMS) {
     layers.push(
       new ol.layer.TileLayer({
-        source: new ol.source.TiledWMS({
-          url: 'http://wms.geo.admin.ch/',
-          crossOrigin: 'anonymous',
-          attributions: [new ol.Attribution(
-              '&copy; ' +
-              '<a href="http://www.geo.admin.ch/internet/geoportal/en/home.html">' +
-              'Pixelmap 1:1000000 / geo.admin.ch</a>')],
-          params: {
-            'LAYERS': 'ch.swisstopo.pixelkarte-farbe-pk1000.noscale',
-            'FORMAT': 'image/jpeg'
-          },
-          extent: new ol.Extent(420000, 30000, 900000, 350000)
-        })
+        source: new ol.source.TiledWMS(wmsOptions)
       })
     );
   }
   else {
     layers.push(
       new ol.layer.ImageLayer({
-        source: new ol.source.SingleImageWMS({
-          url: 'http://wms.geo.admin.ch/',
-          crossOrigin: 'anonymous',
-          attributions: [new ol.Attribution(
-              '&copy; ' +
-              '<a href="http://www.geo.admin.ch/internet/geoportal/en/home.html">' +
-              'Pixelmap 1:1000000 / geo.admin.ch</a>')],
-          params: {
-            'LAYERS': 'ch.swisstopo.pixelkarte-farbe-pk1000.noscale',
-            'FORMAT': 'image/jpeg'
-          },
-          extent: new ol.Extent(420000, 900000, 30000, 350000)
-        })
+        source: new ol.source.SingleImageWMS(wmsOptions)
       })
     );
   }
@@ -75,7 +76,7 @@ function createMap() {
     renderers = [ol.RendererHint.CANVAS, ol.RendererHint.WEBGL, ol.RendererHint.DOM];
   }
 
-  var map = new ol.Map({
+  Map.map = new ol.Map({
     layers: layers,
     renderers: renderers,
     target: 'map',
@@ -88,4 +89,49 @@ function createMap() {
       new ol.control.Attribution()
     ]
   });
+};
+
+Map.setTopicLayer = function() {
+  // remove old layer
+  Map.map.removeLayer(Map.map.getLayers().getAt(0));
+
+  // add new layer
+  var wmsOptions = {
+    url: Map.topics[Map.topic].wms_url,
+    params: {
+      'LAYERS': Map.visibleLayers().join(','),
+      'FORMAT': 'image/png; mode=8bit'
+    },
+    extent: new ol.Extent(420000, 30000, 900000, 350000)
+  };
+  var layer = null;
+  if (Map.useTiledWMS) {
+    layer = new ol.layer.TileLayer({
+      source: new ol.source.TiledWMS(wmsOptions)
+    });
+  }
+  else {
+    layer = new ol.layer.ImageLayer({
+      source: new ol.source.SingleImageWMS(wmsOptions)
+    });
+  }
+  Map.map.addLayer(layer);
+};
+
+Map.setLayerVisible = function(layername, visible) {
+  Map.layers[layername] = visible;
+
+  // FIXME: WMS layer update (mergeNewParams()) not yet implemented, replace layer instead
+  Map.setTopicLayer();
+};
+
+Map.visibleLayers = function() {
+  // collect visible layers
+  var visibleLayers = [];
+  for (var key in Map.layers) {
+    if (Map.layers[key]) {
+      visibleLayers.push(key);
+    }
+  }
+  return visibleLayers;
 };
