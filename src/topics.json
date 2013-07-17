@@ -7,6 +7,7 @@
       "icon":"http://www.gl.ch/pictures/thumb/schnellzugriff_bpavf.png",
       "categorytitle": "Glarus",
       "categorysort": null,
+      "categories_topics_sort":0,
       "wms_url":"http://map.geo.gl.ch/wms/Public"
     },
     {
