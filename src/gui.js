@@ -148,4 +148,13 @@ $(document).ready(function(e) {
   $('#btnCompass').on('tap', function() {
     Map.setRotation(0);
   });
+
+  // geolocation
+  var tracking = false;
+  $('#btnLocation').on('tap', function() {
+    tracking = !tracking;
+    $('#btnLocation .ui-icon').toggleClass('ui-icon-location_off', !tracking);
+    $('#btnLocation .ui-icon').toggleClass('ui-icon-location_on', tracking);
+    Map.setTracking(tracking);
+  });
 });

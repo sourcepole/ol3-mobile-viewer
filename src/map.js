@@ -15,8 +15,10 @@ Map.topic = null;
 Map.layers = {};
 // OpenLayers 3 map object
 Map.map = null;
-// current map rotation
+// current map rotation in rad
 Map.rotation = null;
+// OpenLayers 3 geolocation object
+Map.geolocation = null;
 
 Map.useTiledWMS = false;
 
@@ -149,3 +151,21 @@ Map.visibleLayers = function() {
 Map.setRotation = function(rotation) {
   Map.map.getView().setRotation(rotation);
 };
+
+Map.setTracking = function(enabled) {
+  if (Map.geolocation == null) {
+    // create geolocation
+    Map.geolocation = new ol.Geolocation();
+    Map.geolocation.bindTo('projection', Map.map.getView());
+
+    // add geolocation marker
+    var marker = new ol.Overlay({
+      map: Map.map,
+      element: ($('<div id="locationMarker"></div>'))
+    });
+    marker.bindTo('position', Map.geolocation);
+  }
+
+  Map.geolocation.setTracking(enabled);
+  $('#locationMarker').toggle(enabled);
+}

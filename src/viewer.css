@@ -87,21 +87,48 @@
   margin: 0;
 }
 
-.ui-icon-compass {
-  background-image: url("../img/compass.svg");
+.ui-btn-icon-notext .ui-btn-inner .ui-icon  {
   background-color: transparent;
   background-size: 30px 30px;
   width: 30px;
   height: 30px;
   box-shadow: none;
   border-radius: none;
-  margin: 5px !important;
+  margin: 5px;
 }
 
-#btnCompass {
+.ui-icon-compass {
+  background-image: url("../img/compass.svg");
+}
+
+.ui-icon-location_off {
+  background-image: url("../img/positioning_off.png");
+}
+
+.ui-icon-location_on {
+  background-image: url("../img/positioning_on.png");
+}
+
+.ui-btn-icon-notext {
   width: 40px;
   height: 40px;
   position: absolute;
-  right: 5px;
   z-index: 1;
+}
+
+#btnCompass {
+  right: 5px;
+}
+
+#btnLocation {
+  right: 5px;
+  top: 95px;
+}
+
+#locationMarker {
+  background-image: url("../img/location.svg");
+  width: 20px;
+  height: 20px;
+  margin-left: -10px;
+  margin-bottom: -10px;
 }
