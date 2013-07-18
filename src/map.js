@@ -42,9 +42,9 @@ Map.createMap = function() {
     useCanvasRenderer = true;
   }
 
-  var projection = ol.projection.configureProj4jsProjection({
+  var projection = ol.proj.configureProj4jsProjection({
     code: 'EPSG:21781',
-    extent: new ol.Extent(485869.5728, 76443.1884, 837076.5648, 299941.7864)
+    extent: [485869.5728, 837076.5648, 76443.1884, 299941.7864]
   });
 
   var wmsOptions = {
@@ -58,7 +58,7 @@ Map.createMap = function() {
       'LAYERS': 'ch.swisstopo.pixelkarte-farbe-pk1000.noscale',
       'FORMAT': 'image/jpeg'
     },
-    extent: new ol.Extent(420000, 30000, 900000, 350000)
+    extent: [420000, 900000, 30000, 350000]
   };
   var layers = [];
   if (Map.useTiledWMS) {
@@ -95,13 +95,8 @@ Map.createMap = function() {
     ]
   });
 
-  Map.map.on('postrender', function() {
-    // trigger maprotation event on rotation change
-    var rotation = Map.map.getView().getRotation();
-    if (rotation != Map.rotation) {
-      Map.rotation = rotation;
-      $.event.trigger({type: 'maprotation', rotation: rotation});
-    }
+  Map.map.getView().on('change:rotation', function(e) {
+    $.event.trigger({type: 'maprotation', rotation: Map.map.getView().getRotation()});
   });
 };
 
@@ -116,7 +111,7 @@ Map.setTopicLayer = function() {
       'LAYERS': Map.visibleLayers().join(','),
       'FORMAT': 'image/png; mode=8bit'
     },
-    extent: new ol.Extent(420000, 30000, 900000, 350000)
+    extent: [420000, 900000, 30000, 350000]
   };
   var layer = null;
   if (Map.useTiledWMS) {
