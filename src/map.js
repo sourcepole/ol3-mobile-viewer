@@ -1,5 +1,8 @@
 /**
  * OpenLayers 3 map
+ *
+ * events:
+ *   maprotation({rotation: <rad>})
  */
 
 var Map = {};
@@ -12,6 +15,8 @@ Map.topic = null;
 Map.layers = {};
 // OpenLayers 3 map object
 Map.map = null;
+// current map rotation
+Map.rotation = null;
 
 Map.useTiledWMS = false;
 
@@ -89,6 +94,15 @@ Map.createMap = function() {
       new ol.control.Attribution()
     ]
   });
+
+  Map.map.on('postrender', function() {
+    // trigger maprotation event on rotation change
+    var rotation = Map.map.getView().getRotation();
+    if (rotation != Map.rotation) {
+      Map.rotation = rotation;
+      $.event.trigger({type: 'maprotation', rotation: rotation});
+    }
+  });
 };
 
 Map.setTopicLayer = function() {
@@ -134,4 +148,9 @@ Map.visibleLayers = function() {
     }
   }
   return visibleLayers;
+};
+
+// set map rotation in rad
+Map.setRotation = function(rotation) {
+  Map.map.getView().setRotation(rotation);
 };

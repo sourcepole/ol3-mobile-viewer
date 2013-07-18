@@ -86,3 +86,22 @@
   border-radius: none;
   margin: 0;
 }
+
+.ui-icon-compass {
+  background-image: url("../img/compass.svg");
+  background-color: transparent;
+  background-size: 30px 30px;
+  width: 30px;
+  height: 30px;
+  box-shadow: none;
+  border-radius: none;
+  margin: 5px !important;
+}
+
+#btnCompass {
+  width: 40px;
+  height: 40px;
+  position: absolute;
+  right: 5px;
+  z-index: 1;
+}

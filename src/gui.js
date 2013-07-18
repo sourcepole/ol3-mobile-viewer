@@ -140,5 +140,12 @@ $(document).ready(function(e) {
   // set default value for map following
   $('#switchFollow').val('on');
   $('#switchFollow').slider('refresh');
-  
+
+  // compass
+  $(document).on('maprotation', function(e) {
+    $('#btnCompass').find('.ui-icon').css('transform', 'rotate(' + e.rotation + 'rad)');
+  });
+  $('#btnCompass').on('tap', function() {
+    Map.setRotation(0);
+  });
 });
