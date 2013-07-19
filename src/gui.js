@@ -2,26 +2,31 @@
  * jQuery Mobile GUI
  */
 
-function updateLayout() {
+var Gui = {};
+
+// location tracking
+Gui.tracking = false;
+
+Gui.updateLayout = function() {
   // use full content height for map
   $("#map").height(window.innerHeight - $("#header ").outerHeight());
 
   // limit panels to screen height
-  $('#panelTopics .ui-listview').height(window.innerHeight - 140);
-  $('#panelLayerAll').height(window.innerHeight - 140);
-  $('#panelLayerOrder .ui-listview').height(window.innerHeight - 223);
-  $('#properties').height(window.innerHeight - 100);
+  $('#panelTopics .ui-listview').height(window.innerHeight - 90);
+  $('#panelLayerAll').height(window.innerHeight - 90);
+  $('#panelLayerOrder .ui-listview').height(window.innerHeight - 170);
+  $('#properties').height(window.innerHeight - 80);
 }
 
 // show selected panel
-function panelSelect(panel) {
+Gui.panelSelect = function(panel) {
   $('#panelTopics').toggle(panel === 'panelTopics');
   $('#panelLayerAll').toggle(panel === 'panelLayerAll');
   $('#panelLayerOrder').toggle(panel === 'panelLayerOrder');
 }
 
 // fill topics list
-function loadTopics(categories) {
+Gui.loadTopics = function(categories) {
   html = "";
   Map.topics = {};
   for (var i=0;i<categories.length; i++) {
@@ -31,9 +36,9 @@ function loadTopics(categories) {
 
     for (var j=0;j<category.topics.length; j++) {
       var topic = category.topics[j];
-      html +=    '<li data-topic="' + topic.name + '"><a href="#">';
+      html +=    '<li data-topic="' + topic.name + '">';
       html +=    '  <img src="' + topic.icon + '"/>';
-      html +=    '  <p style="white-space:pre-wrap">' + topic.title + '</p></a>';
+      html +=    '  <p style="white-space:pre-wrap">' + topic.title + '</p>';
       html +=    '</li>';
 
       Map.topics[topic.name] = {wms_url: topic.wms_url};
@@ -45,7 +50,7 @@ function loadTopics(categories) {
 }
 
 // update layers list
-function loadLayers(groups) {
+Gui.loadLayers = function(groups) {
   html = "";
   var layers = [];
   for (var i=0;i<groups.length; i++) {
@@ -100,46 +105,47 @@ $(document).bind('pageinit', function() {
   $('#listOrder').disableSelection();
   $('#listOrder').bind('sortstop', function(event, ui) {
     $('#listOrder').listview('refresh');
-	});
+  });
 });
 
-
 $(document).ready(function(e) {
-  // init
-  updateLayout();
+  Gui.updateLayout();
+  $(window).on('resize', function() {
+    Gui.updateLayout();
+  });
+
+  // layer panel navigation
+  $('#buttonTopics').on('tap', function() {
+    Gui.panelSelect('panelTopics');
+  });
+  $('#buttonLayerAll').on('tap', function() {
+    Gui.panelSelect('panelLayerAll');
+  });
+  $('#buttonLayerOrder').on('tap', function() {
+    Gui.panelSelect('panelLayerOrder');
+  });
+
+  // default properties
+  $('#switchFollow').val('on');
+  $('#switchFollow').slider('refresh');
+  $('#switchOrientation').val('on');
+  $('#switchOrientation').slider('refresh');
+
+  // map
   Map.createMap();
 
   // topics
-  Topics.loadTopics("src/topics.json", loadTopics);
+  Topics.loadTopics("src/topics.json", Gui.loadTopics);
   // topic selection
   $('#topicList').delegate('li', 'vclick', function(e) {
     Map.topic = $(this).data('topic');
-    Layers.loadLayers("src/layers/layers_" + $(this).data('topic') + ".json", loadLayers);
+    Layers.loadLayers("src/layers/layers_" + $(this).data('topic') + ".json", Gui.loadLayers);
   });
   // layer change
   $('#panelLayerAll').delegate(':checkbox', 'change', function(e) {
     Map.setLayerVisible($(this).data('layer'), $(this).is(':checked'));
   });
-  panelSelect('panelTopics');
-
-  $(window).on('resize', function() {
-    updateLayout();
-  });
-
-  // layer panel navigation
-  $('#buttonTopics').on('tap', function() {
-    panelSelect('panelTopics');
-  });
-  $('#buttonLayerAll').on('tap', function() {
-    panelSelect('panelLayerAll');
-  });
-  $('#buttonLayerOrder').on('tap', function() {
-    panelSelect('panelLayerOrder');
-  });
-  
-  // set default value for map following
-  $('#switchFollow').val('on');
-  $('#switchFollow').slider('refresh');
+  Gui.panelSelect('panelTopics');
 
   // compass
   $(document).on('maprotation', function(e) {
@@ -150,11 +156,10 @@ $(document).ready(function(e) {
   });
 
   // geolocation
-  var tracking = false;
   $('#btnLocation').on('tap', function() {
-    tracking = !tracking;
-    $('#btnLocation .ui-icon').toggleClass('ui-icon-location_off', !tracking);
-    $('#btnLocation .ui-icon').toggleClass('ui-icon-location_on', tracking);
-    Map.setTracking(tracking);
+    Gui.tracking = !Gui.tracking;
+    $('#btnLocation .ui-icon').toggleClass('ui-icon-location_off', !Gui.tracking);
+    $('#btnLocation .ui-icon').toggleClass('ui-icon-location_on', Gui.tracking);
+    Map.setTracking(Gui.tracking);
   });
 });
