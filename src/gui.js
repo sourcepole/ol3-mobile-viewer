@@ -7,6 +7,7 @@ var Gui = {};
 // location tracking
 Gui.tracking = false;
 Gui.following = true;
+Gui.orientation = true;
 
 Gui.updateLayout = function() {
   // use full content height for map
@@ -132,7 +133,7 @@ $(document).ready(function(e) {
   // default properties
   $('#switchFollow').val('on');
   $('#switchFollow').slider('refresh');
-  $('#switchOrientation').val('on');
+  $('#switchOrientation').val('off');
   $('#switchOrientation').slider('refresh');
   $('#switchScale').val('on');
   $('#switchScale').slider('refresh');
@@ -172,6 +173,10 @@ $(document).ready(function(e) {
   $('#switchFollow').on('change', function(e) {
     Gui.following = $(this).val() == 'on';
     Map.toggleFollowing(Gui.tracking && Gui.following);
+  });
+  $('#switchOrientation').on('change', function(e) {
+    Gui.orientation = $(this).val() == 'on';
+    Map.toggleOrientation(Gui.orientation);
   });
   $('#switchScale').on('change', function(e) {
     Map.toggleScalebar($(this).val() == 'on');

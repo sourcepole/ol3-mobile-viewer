@@ -15,10 +15,10 @@ Map.topic = null;
 Map.layers = {};
 // OpenLayers 3 map object
 Map.map = null;
-// current map rotation in rad
-Map.rotation = null;
 // OpenLayers 3 geolocation object
 Map.geolocation = null;
+// OpenLayers 3 DeviceOrientation object
+Map.deviceOrientation = null;
 // OpenLayers 3 ScaleLine control
 Map.scaleLine = null;
 
@@ -181,6 +181,21 @@ Map.toggleFollowing = function(enabled) {
 
 Map.centerOnLocation = function() {
   Map.map.getView().setCenter(Map.geolocation.getPosition());
+};
+
+Map.toggleOrientation = function(enabled) {
+  if (Map.deviceOrientation == null) {
+    Map.deviceOrientation = new ol.DeviceOrientation();
+
+    Map.deviceOrientation.on('change', function(event) {
+      var heading = event.target.getHeading();
+      if (Math.abs(Map.map.getView().getRotation() - heading) > 0.05) {
+        Map.setRotation(heading);
+      }
+    });
+  }
+
+  Map.deviceOrientation.setTracking(enabled);
 };
 
 Map.toggleScalebar = function(enabled) {
