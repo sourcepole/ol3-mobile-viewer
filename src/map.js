@@ -97,7 +97,7 @@ Map.createMap = function() {
     controls:[]
   });
 
-  Map.map.getView().on('change:rotation', function(e) {
+  Map.map.getView().on('change:rotation', function() {
     $.event.trigger({type: 'maprotation', rotation: Map.map.getView().getRotation()});
   });
 };
@@ -169,6 +169,19 @@ Map.toggleTracking = function(enabled) {
   Map.geolocation.setTracking(enabled);
   $('#locationMarker').toggle(enabled);
 }
+
+Map.toggleFollowing = function(enabled) {
+  if (enabled) {
+    Map.geolocation.on('change:position', Map.centerOnLocation);
+  }
+  else {
+    Map.geolocation.un('change:position', Map.centerOnLocation);
+  }
+};
+
+Map.centerOnLocation = function() {
+  Map.map.getView().setCenter(Map.geolocation.getPosition());
+};
 
 Map.toggleScalebar = function(enabled) {
   if (Map.scaleLine == null) {

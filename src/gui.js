@@ -6,6 +6,7 @@ var Gui = {};
 
 // location tracking
 Gui.tracking = false;
+Gui.following = true;
 
 Gui.updateLayout = function() {
   // use full content height for map
@@ -164,10 +165,15 @@ $(document).ready(function(e) {
     $('#btnLocation .ui-icon').toggleClass('ui-icon-location_off', !Gui.tracking);
     $('#btnLocation .ui-icon').toggleClass('ui-icon-location_on', Gui.tracking);
     Map.toggleTracking(Gui.tracking);
+    Map.toggleFollowing(Gui.tracking && Gui.following);
   });
 
   // properties
+  $('#switchFollow').on('change', function(e) {
+    Gui.following = $(this).val() == 'on';
+    Map.toggleFollowing(Gui.tracking && Gui.following);
+  });
   $('#switchScale').on('change', function(e) {
     Map.toggleScalebar($(this).val() == 'on');
-  })
+  });
 });
