@@ -114,6 +114,9 @@ $(document).ready(function(e) {
     Gui.updateLayout();
   });
 
+  // map
+  Map.createMap();
+
   // layer panel navigation
   $('#buttonTopics').on('tap', function() {
     Gui.panelSelect('panelTopics');
@@ -130,9 +133,9 @@ $(document).ready(function(e) {
   $('#switchFollow').slider('refresh');
   $('#switchOrientation').val('on');
   $('#switchOrientation').slider('refresh');
-
-  // map
-  Map.createMap();
+  $('#switchScale').val('on');
+  $('#switchScale').slider('refresh');
+  Map.toggleScalebar(true);
 
   // topics
   Topics.loadTopics("src/topics.json", Gui.loadTopics);
@@ -160,6 +163,11 @@ $(document).ready(function(e) {
     Gui.tracking = !Gui.tracking;
     $('#btnLocation .ui-icon').toggleClass('ui-icon-location_off', !Gui.tracking);
     $('#btnLocation .ui-icon').toggleClass('ui-icon-location_on', Gui.tracking);
-    Map.setTracking(Gui.tracking);
+    Map.toggleTracking(Gui.tracking);
   });
+
+  // properties
+  $('#switchScale').on('change', function(e) {
+    Map.toggleScalebar($(this).val() == 'on');
+  })
 });

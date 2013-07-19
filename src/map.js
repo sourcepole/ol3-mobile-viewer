@@ -19,6 +19,8 @@ Map.map = null;
 Map.rotation = null;
 // OpenLayers 3 geolocation object
 Map.geolocation = null;
+// OpenLayers 3 ScaleLine control
+Map.scaleLine = null;
 
 Map.useTiledWMS = false;
 
@@ -92,9 +94,7 @@ Map.createMap = function() {
       center: [660000, 190000],
       zoom: 2
     }),
-    controls:[
-      new ol.control.Attribution()
-    ]
+    controls:[]
   });
 
   Map.map.getView().on('change:rotation', function(e) {
@@ -152,7 +152,7 @@ Map.setRotation = function(rotation) {
   Map.map.getView().setRotation(rotation);
 };
 
-Map.setTracking = function(enabled) {
+Map.toggleTracking = function(enabled) {
   if (Map.geolocation == null) {
     // create geolocation
     Map.geolocation = new ol.Geolocation();
@@ -169,3 +169,17 @@ Map.setTracking = function(enabled) {
   Map.geolocation.setTracking(enabled);
   $('#locationMarker').toggle(enabled);
 }
+
+Map.toggleScalebar = function(enabled) {
+  if (Map.scaleLine == null) {
+    Map.scaleLine = new ol.control.ScaleLine({
+      units: 'metric',
+    });
+  }
+  if (enabled && Map.scaleLine.getMap() == null) {
+    Map.map.addControl(Map.scaleLine);
+  }
+  else {
+    Map.map.removeControl(Map.scaleLine);
+  }
+};

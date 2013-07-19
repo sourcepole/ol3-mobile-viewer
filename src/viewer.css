@@ -90,6 +90,28 @@
   overflow: auto;
 }
 
+/* OpenLayers 3 */
+
+#map {
+  text-shadow: white 0 0 0;
+}
+
+.ol-scale-line {
+  background-color: transparent;
+  left: inherit;
+  right: 40px;
+}
+
+.ol-scale-line-inner {
+  color: black;
+  font-size: 10pt;
+  font-weight: bold;
+  border-color: black;
+  border-style: none none solid none;
+  border-bottom-width: 4px;
+  opacity: 0.6;
+}
+
 /* jQuery mobile */
 
 .ui-content {
