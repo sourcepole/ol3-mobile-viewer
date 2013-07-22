@@ -26,7 +26,7 @@ Map.useTiledWMS = false;
 
 Map.createMap = function() {
   // map options
-  var useCanvasRenderer = false;
+  var useCanvasRenderer = true; // FIXME: disable WEBGL renderer for now
 
   // browser specific map setup
   if (navigator.userAgent.match(/Mozilla.+Android.+Safari/)) {
