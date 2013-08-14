@@ -32,6 +32,7 @@
     <script src="src/map.js"></script>
     <script src="src/topics.js"></script>
     <script src="src/layers.js"></script>
+    <script src="src/search.js"></script>
     <script src="src/gui.js"></script>
     <link rel="stylesheet" type="text/css" href="src/viewer.css" />
   </head>
@@ -43,7 +44,7 @@
           <a href="#" id="btnLogo" data-role="button" data-inline="true" data-icon="logo" data-iconpos="notext"></a>
           <a href="#" id="btnCompass" data-role="button" data-inline="true" data-icon="compass" data-iconpos="notext"></a>
           <a href="#" id="btnLocation" data-role="button" data-inline="true" data-icon="location_off" data-iconpos="notext"></a>
-          <a href="#" id="btnSearching" data-role="button" data-inline="true" data-icon="searching" data-iconpos="notext"></a>
+          <a href="#panelSearch" id="btnSearching" data-role="button" data-inline="true" data-icon="searching" data-iconpos="notext"></a>
           <a href="#panelLayer" id="btnLayers" data-role="button" data-inline="true" data-icon="layers" data-iconpos="notext"></a>
           <a href="#panelProperties" id="btnProperties" data-role="button" data-inline="true" data-icon="properties" data-iconpos="notext"></a>
         </div>
@@ -122,6 +123,20 @@
           </div>
         </div>
       </div>
+
+      <div data-role="panel" id="panelSearch" data-position="right" data-display="overlay">
+        <div class="panel-content">
+          <b>Adresssuche</b>
+          <input id="searchInput" type="search" name="search" value="" />
+
+          <div id="searchResults" hidden>
+            <b>Suchresultat</b>
+            <ul id="searchResultsList" data-role="listview" class="scrollable">
+            </ul>
+          </div>
+        </div>
+      </div>
+
     </div>
 
   </body>

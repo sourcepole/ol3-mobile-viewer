@@ -17,6 +17,7 @@ Gui.updateLayout = function() {
   $('#panelTopics .ui-listview').height(window.innerHeight - 90);
   $('#panelLayerAll').height(window.innerHeight - 90);
   $('#panelLayerOrder .ui-listview').height(window.innerHeight - 170);
+  $('#panelSearch .ui-listview').height(window.innerHeight - 170);
   $('#properties').height(window.innerHeight - 80);
 }
 
@@ -101,6 +102,41 @@ Gui.loadLayers = function(groups) {
   Map.setTopicLayer();
 }
 
+// show search results list
+Gui.showSearchResults = function(results) {
+  html = "";
+  for (var i=0;i<results.features.length; i++) {
+    var result = results.features[i];
+
+    html += '<li data-feature_id="' + result.id + '" data-bbox="' + result.bbox.join(',') + '" data-layer="' + results.layer + '">';
+    html += '  <a href="#">' + result.name + '</a>';
+    html += '</li>';
+  }
+
+  $('#searchResultsList').html(html);
+  $('#searchResultsList').listview('refresh');
+
+  $('#searchResults').show();
+
+  // automatically jump to single result
+  if (results.features.length === 1) {
+    Gui.jumpToSearchResult(results.layer, results.features[0].id, results.features[0].bbox);
+  }
+}
+
+// bbox as [<minx>, <maxx>, <miny>, maxy>]
+Gui.jumpToSearchResult = function(layer, id, bbox) {
+  Map.zoomToExtent(bbox, 14);
+  Map.setSelection(layer, [id]);
+
+  // disable following
+  $('#switchFollow').val('off');
+  $('#switchFollow').slider('refresh');
+  Map.toggleFollowing(false);
+
+  $('#panelSearch').panel('close');
+}
+
 // binds the reorder functionality to the visible layer list
 $(document).bind('pageinit', function() {
   $('#listOrder').sortable();
@@ -167,6 +203,28 @@ $(document).ready(function(e) {
     $('#btnLocation .ui-icon').toggleClass('ui-icon-location_on', Gui.tracking);
     Map.toggleTracking(Gui.tracking);
     Map.toggleFollowing(Gui.tracking && Gui.following);
+  });
+
+  // search
+  $('#searchInput').bind('change', function(e) {
+    // reset search panel
+    $('#searchResults').hide();
+
+    var searchString = $(this).val();
+    if (searchString != "") {
+      // submit search
+      Search.submit(searchString, Gui.showSearchResults)
+    }
+    else {
+      // reset selection
+      Map.setSelection(null, []);
+    }
+  });
+  $('#searchResultsList').delegate('li', 'vclick', function() {
+    var bbox = $.map($(this).data('bbox').split(','), function(value, index) {
+      return parseFloat(value);
+    });
+    Gui.jumpToSearchResult($(this).data('layer'), $(this).data('feature_id'), bbox);
   });
 
   // properties

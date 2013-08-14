@@ -135,6 +135,22 @@
   margin: 4px;
 }
 
+.ui-input-clear {
+  width: 24px;
+  height: 24px;
+}
+
+.ui-input-clear .ui-btn-inner .ui-icon-delete {
+  background-color: #666;
+  background-color: rgba(0, 0, 0, 0.4);
+  background-image: url('../lib/jquery/images/icons-18-white.png');
+  background-size: 864px 18px;
+  background-repeat: no-repeat;
+  width: 18px;
+  height: 18px;
+  margin: 2px 1px 2px 3px;
+}
+
 .ui-panel-inner {
   padding: 8px;
 }

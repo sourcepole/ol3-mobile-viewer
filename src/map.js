@@ -21,6 +21,8 @@ Map.geolocation = null;
 Map.deviceOrientation = null;
 // OpenLayers 3 ScaleLine control
 Map.scaleLine = null;
+// WMS selection
+Map.selection = null;
 
 Map.useTiledWMS = false;
 
@@ -107,12 +109,16 @@ Map.setTopicLayer = function() {
   Map.map.removeLayer(Map.map.getLayers().getAt(0));
 
   // add new layer
+  var wmsParams = {
+    'LAYERS': Map.visibleLayers().join(','),
+    'FORMAT': 'image/png; mode=8bit'
+  };
+  if (Map.selection != null) {
+    wmsParams['SELECTION'] = Map.selection;
+  }
   var wmsOptions = {
     url: Map.topics[Map.topic].wms_url,
-    params: {
-      'LAYERS': Map.visibleLayers().join(','),
-      'FORMAT': 'image/png; mode=8bit'
-    },
+    params: wmsParams,
     extent: [420000, 900000, 30000, 350000]
   };
   var layer = null;
@@ -131,9 +137,7 @@ Map.setTopicLayer = function() {
 
 Map.setLayerVisible = function(layername, visible) {
   Map.layers[layername] = visible;
-
-  // FIXME: WMS layer update (mergeNewParams()) not yet implemented, replace layer instead
-  Map.setTopicLayer();
+  Map.refresh();
 };
 
 Map.visibleLayers = function() {
@@ -147,10 +151,37 @@ Map.visibleLayers = function() {
   return visibleLayers;
 };
 
+// set WMS SELECTION parameter, disable if layer = null
+Map.setSelection = function(layer, ids) {
+  if (layer == null) {
+    Map.selection = null;
+  }
+  else {
+    Map.selection = layer + ":" + ids.join(',');
+  }
+  Map.refresh();
+}
+
+Map.refresh = function() {
+  if (Map.topic != null) {
+    // FIXME: WMS layer update (mergeNewParams()) not yet implemented, replace layer instead
+    Map.setTopicLayer();
+  }
+}
+
 // set map rotation in rad
 Map.setRotation = function(rotation) {
   Map.map.getView().setRotation(rotation);
 };
+
+// zoom to extent and clamp to max zoom level
+// extent as [<minx>, <maxx>, <miny>, maxy>]
+Map.zoomToExtent = function(extent, maxZoom) {
+  Map.map.getView().fitExtent(extent, Map.map.getSize())
+  if (Map.map.getView().getZoom() > maxZoom) {
+    Map.map.getView().setZoom(maxZoom)
+  }
+}
 
 Map.toggleTracking = function(enabled) {
   if (Map.geolocation == null) {
@@ -171,11 +202,13 @@ Map.toggleTracking = function(enabled) {
 }
 
 Map.toggleFollowing = function(enabled) {
-  if (enabled) {
-    Map.geolocation.on('change:position', Map.centerOnLocation);
-  }
-  else {
-    Map.geolocation.un('change:position', Map.centerOnLocation);
+  if (Map.geolocation != null) {
+    if (enabled) {
+      Map.geolocation.on('change:position', Map.centerOnLocation);
+    }
+    else {
+      Map.geolocation.un('change:position', Map.centerOnLocation);
+    }
   }
 };
 
