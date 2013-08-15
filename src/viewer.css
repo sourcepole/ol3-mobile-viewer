@@ -151,6 +151,11 @@
   margin: 2px 1px 2px 3px;
 }
 
+#searchResultsList .ui-li .ui-btn-text a.ui-link-inherit {
+  font-weight: normal;
+  margin-left: -12px;
+}
+
 .ui-panel-inner {
   padding: 8px;
 }

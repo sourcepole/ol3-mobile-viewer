@@ -105,10 +105,15 @@ Gui.loadLayers = function(groups) {
 // show search results list
 Gui.showSearchResults = function(results) {
   html = "";
-  for (var i=0;i<results.features.length; i++) {
-    var result = results.features[i];
+  for (var i=0;i<results.length; i++) {
+    var result = results[i];
 
-    html += '<li data-feature_id="' + result.id + '" data-bbox="' + result.bbox.join(',') + '" data-layer="' + results.layer + '">';
+    if (result.bbox != null) {
+      html += '<li data-bbox="' + result.bbox.join(',') + '">';
+    }
+    else {
+      html += '<li>';
+    }
     html += '  <a href="#">' + result.name + '</a>';
     html += '</li>';
   }
@@ -119,15 +124,14 @@ Gui.showSearchResults = function(results) {
   $('#searchResults').show();
 
   // automatically jump to single result
-  if (results.features.length === 1) {
-    Gui.jumpToSearchResult(results.layer, results.features[0].id, results.features[0].bbox);
+  if (results.length === 1 && results[0].bbox != null) {
+    Gui.jumpToSearchResult(results[0].bbox);
   }
 }
 
 // bbox as [<minx>, <maxx>, <miny>, maxy>]
-Gui.jumpToSearchResult = function(layer, id, bbox) {
-  Map.zoomToExtent(bbox, 14);
-  Map.setSelection(layer, [id]);
+Gui.jumpToSearchResult = function(bbox) {
+  Map.zoomToExtent(bbox, 13);
 
   // disable following
   $('#switchFollow').val('off');
@@ -221,10 +225,12 @@ $(document).ready(function(e) {
     }
   });
   $('#searchResultsList').delegate('li', 'vclick', function() {
-    var bbox = $.map($(this).data('bbox').split(','), function(value, index) {
-      return parseFloat(value);
-    });
-    Gui.jumpToSearchResult($(this).data('layer'), $(this).data('feature_id'), bbox);
+    if ($(this).data('bbox') != null) {
+      var bbox = $.map($(this).data('bbox').split(','), function(value, index) {
+        return parseFloat(value);
+      });
+      Gui.jumpToSearchResult(bbox);
+    }
   });
 
   // properties
