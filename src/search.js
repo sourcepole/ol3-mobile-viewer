@@ -43,7 +43,7 @@ Search.parseSearchParams = function(searchParams) {
   // append query postfix
   var query = $.trim(searchParams) + " " + Search.queryPostfix;
   return {
-    services: 'address',
+    services: 'swissnames', // FIXME: use 'address' if available
     query: query
   };
 }
