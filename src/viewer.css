@@ -156,6 +156,11 @@
   margin-left: -12px;
 }
 
+#featureInfoResults span.value {
+  font-weight: normal;
+  float: right;
+}
+
 .ui-panel-inner {
   padding: 8px;
 }

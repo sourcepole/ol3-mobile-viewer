@@ -26,7 +26,7 @@ Map.selection = null;
 
 Map.useTiledWMS = false;
 
-Map.createMap = function() {
+Map.createMap = function(featureInfoCallback) {
   // map options
   var useCanvasRenderer = true; // FIXME: disable WEBGL renderer for now
 
@@ -102,6 +102,26 @@ Map.createMap = function() {
   Map.map.getView().on('change:rotation', function() {
     $.event.trigger({type: 'maprotation', rotation: Map.map.getView().getRotation()});
   });
+
+  // feature info
+  if (featureInfoCallback != null) {
+    Map.map.on('click', function(e) {
+      /* FIXME: enable this block for production
+      Map.map.getFeatureInfo({
+        pixel: e.getPixel(),
+        success: featureInfoCallback,
+      });
+      */
+      /* FIXME: use static xml file for demonstration purposes, to avoid cross domain issues */
+      $.ajax({
+        url: "src/get_feature_info_response.xml",
+        dataType: 'text'
+      }).done(function(data, status) {
+        featureInfoCallback([data]);
+      });
+      /* END */
+    });
+  }
 };
 
 Map.setTopicLayer = function() {
@@ -119,7 +139,13 @@ Map.setTopicLayer = function() {
   var wmsOptions = {
     url: Map.topics[Map.topic].wms_url,
     params: wmsParams,
-    extent: [420000, 900000, 30000, 350000]
+    extent: [420000, 900000, 30000, 350000],
+    getFeatureInfoOptions: {
+      method: 'xhr_get',
+      params: {
+        INFO_FORMAT: 'text/xml'
+      }
+    }
   };
   var layer = null;
   if (Map.useTiledWMS) {

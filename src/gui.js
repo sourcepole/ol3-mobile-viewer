@@ -17,6 +17,7 @@ Gui.updateLayout = function() {
   $('#panelTopics .ui-listview').height(window.innerHeight - 90);
   $('#panelLayerAll').height(window.innerHeight - 90);
   $('#panelLayerOrder .ui-listview').height(window.innerHeight - 170);
+  $('#panelFeatureInfo #featureInfoResults').height(window.innerHeight - 80);
   $('#panelSearch .ui-listview').height(window.innerHeight - 170);
   $('#properties').height(window.innerHeight - 80);
 }
@@ -102,6 +103,45 @@ Gui.loadLayers = function(groups) {
   Map.setTopicLayer();
 }
 
+// show feature info results
+Gui.showFeatureInfoResults = function(results) {
+  html = "";
+  for (var i=0;i<results.length; i++) {
+    var result = results[i];
+
+    html += '<div data-role="collapsible"  data-collapsed="false" data-theme="c">';
+    html += '  <h3>' + result.layer + '</h3>';
+
+    for (var j=0; j<result.features.length; j++) {
+      var feature = result.features[j];
+      var title = feature.id === null ? "Rasterzelle" : "Feature mit ID:" + feature.id;
+
+      html += '<div data-role="collapsible"  data-collapsed="false" data-theme="c">';
+      html += '  <h3>' + title + '</h3>';
+      html += '  <ul data-role="listview">'
+
+      for (var k=0; k<feature.attributes.length; k++) {
+        var attribute = feature.attributes[k];
+
+        html += '  <li>';
+        html += '    <span class="name">' + attribute.name + ': </span>';
+        html += '    <span class="value">' + attribute.value + '</span>';
+        html += '  </li>';
+      }
+
+      html += '  </ul>'
+      html += '</div>';
+    }
+
+    html += '</div>';
+  }
+
+  $('#featureInfoResults').html(html);
+  $('#featureInfoResults').trigger('create');
+
+  $('#panelFeatureInfo').panel('open');
+}
+
 // show search results list
 Gui.showSearchResults = function(results) {
   html = "";
@@ -157,7 +197,7 @@ $(document).ready(function(e) {
   });
 
   // map
-  Map.createMap();
+  Map.createMap(FeatureInfo.parseResults);
 
   // layer panel navigation
   $('#buttonTopics').on('tap', function() {
@@ -208,6 +248,9 @@ $(document).ready(function(e) {
     Map.toggleTracking(Gui.tracking);
     Map.toggleFollowing(Gui.tracking && Gui.following);
   });
+
+  // feature info
+  FeatureInfo.setCallback(Gui.showFeatureInfoResults);
 
   // search
   $('#searchInput').bind('change', function(e) {

@@ -25,13 +25,13 @@
     <script src="http://cdnjs.cloudflare.com/ajax/libs/proj4js/1.1.0/defs/EPSG21781.js" type="text/javascript"></script>
 
     <!-- OpenLayers 3 -->
-    <script src="http://ol3js.org/en/r3.0.0-alpha.3/build/ol.js"></script>
-<!--    <script src="http://ol3js.org/en/r3.0.0-alpha.3/build/ol-whitespace.js"></script> -->
-    <link rel="stylesheet" href="http://ol3js.org/en/r3.0.0-alpha.1/build/ol.css">
+    <script src="lib/ol3/ol.js"></script>
+    <link rel="stylesheet" href="lib/ol3/ol.css" />
 
     <script src="src/map.js"></script>
     <script src="src/topics.js"></script>
     <script src="src/layers.js"></script>
+    <script src="src/feature_info.js"></script>
     <script src="src/search.js"></script>
     <script src="src/gui.js"></script>
     <link rel="stylesheet" type="text/css" href="src/viewer.css" />
@@ -93,11 +93,9 @@
           </div>
           <div id="layerPanelContent">
             <div id="panelTopics">
-              <ul id="topicList" data-role="listview" class="scrollable">
-              </ul>
+              <ul id="topicList" data-role="listview" class="scrollable"></ul>
             </div>
-            <div id="panelLayerAll" class="scrollable">
-            </div>
+            <div id="panelLayerAll" class="scrollable"></div>
             <div id="panelLayerOrder">
               <div data-role="controlgroup" class="scrollable">
                 <ul id="listOrder" data-role="listview" data-inset="true">
@@ -124,15 +122,20 @@
         </div>
       </div>
 
+      <div data-role="panel" id="panelFeatureInfo" data-position="left" data-display="overlay">
+        <div class="panel-content">
+          <b>Attributdaten</b>
+          <div id="featureInfoResults" class="scrollable"></div>
+        </div>
+      </div>
+
       <div data-role="panel" id="panelSearch" data-position="right" data-display="overlay">
         <div class="panel-content">
           <b>Adresssuche</b>
           <input id="searchInput" type="search" name="search" value="" />
-
           <div id="searchResults" hidden>
             <b>Suchresultat</b>
-            <ul id="searchResultsList" data-role="listview" class="scrollable">
-            </ul>
+            <ul id="searchResultsList" data-role="listview" class="scrollable"></ul>
           </div>
         </div>
       </div>
