@@ -27,34 +27,41 @@
 }
 
 .ui-icon-properties {
-  background-image: url("../img/properties.svg");
+  background-image: url("../img/properties.png");
 }
 
 /* button positions */
 
 #btnCompass {
-  margin-left: auto;
-  margin-right: auto;
-  left: 0;
-  right: 0;
+  right: 5px;
+  bottom: 25px;
+  background: none repeat scroll 0 0 transparent;
+  box-shadow: none;
+  border: none;
+  border-radius: 0;
+  padding: 1px;
+}
+#btnCompass .ui-btn-inner {
+  border: none;
 }
 
 #btnLocation {
-  right: 55px;
+  right: 105px;
 }
 
 #btnSearching {
-  right: 5px;
+  right: 55px;
 }
 
 #btnLayers {
-  left: -25px;
+  left: -16px;
   bottom: 5px;
+  -webkit-border-radius: 0 1em 1em 0;
+  border-radius: 0 1em 1em 0;
 }
 
 #btnProperties {
-  right: -25px;
-  bottom: 5px;
+  right: 5px;
 }
 
 /* geolocation */
@@ -99,7 +106,7 @@
 .ol-scale-line {
   background-color: transparent;
   left: inherit;
-  right: 40px;
+  right: 8px;
 }
 
 .ol-scale-line-inner {
@@ -131,7 +138,7 @@
   width: 32px;
   height: 32px;
   box-shadow: none;
-  border-radius: none;
+  border-radius: 0;
   margin: 4px;
 }
 
@@ -145,7 +152,7 @@
   width: 32px;
   height: 32px;
   box-shadow: none;
-  border-radius: none;
+  border-radius: 0;
   margin-top: -17px;
 }
 
