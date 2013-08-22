@@ -40,7 +40,7 @@ Gui.loadTopics = function(categories) {
 
     for (var j=0;j<category.topics.length; j++) {
       var topic = category.topics[j];
-      html +=    '<li data-topic="' + topic.name + '">';
+      html +=    '<li class="topic" data-topic="' + topic.name + '">';
       html +=    '  <img src="' + topic.icon + '"/>';
       html +=    '  <p style="white-space:pre-wrap">' + topic.title + '</p>';
       html +=    '</li>';
@@ -222,7 +222,7 @@ $(document).ready(function(e) {
   // topics
   Topics.loadTopics("src/topics.json", Gui.loadTopics);
   // topic selection
-  $('#topicList').delegate('li', 'vclick', function(e) {
+  $('#topicList').delegate('li.topic', 'vclick', function(e) {
     Map.topic = $(this).data('topic');
     Layers.loadLayers("src/layers/layers_" + $(this).data('topic') + ".json", Gui.loadLayers);
   });
