@@ -125,7 +125,7 @@
   z-index: 1;
 }
 
-.ui-btn-icon-notext .ui-btn-inner .ui-icon  {
+.ui-btn-icon-notext .ui-btn-inner .ui-icon {
   background-color: transparent;
   background-size: 32px 32px;
   width: 32px;
@@ -133,6 +133,20 @@
   box-shadow: none;
   border-radius: none;
   margin: 4px;
+}
+
+.ui-btn-icon-left .ui-btn-inner {
+  padding-left: 48px;
+}
+
+.ui-btn-icon-left .ui-btn-inner .ui-icon {
+  background-color: transparent;
+  background-size: 32px 32px;
+  width: 32px;
+  height: 32px;
+  box-shadow: none;
+  border-radius: none;
+  margin-top: -17px;
 }
 
 .ui-input-clear {
