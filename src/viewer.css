@@ -74,6 +74,12 @@
   margin-bottom: -10px;
 }
 
+/* layer panel */
+
+#panelLayer .ui-navbar .ui-btn.selected .ui-btn-inner {
+  background-color: lightgray;
+}
+
 /* topics */
 
 #topicList li.selected {

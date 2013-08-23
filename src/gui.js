@@ -27,6 +27,10 @@ Gui.panelSelect = function(panel) {
   $('#panelTopics').toggle(panel === 'panelTopics');
   $('#panelLayerAll').toggle(panel === 'panelLayerAll');
   $('#panelLayerOrder').toggle(panel === 'panelLayerOrder');
+  // mark panel button
+  $('#buttonTopics').toggleClass('selected', panel === 'panelTopics');
+  $('#buttonLayerAll').toggleClass('selected', panel === 'panelLayerAll');
+  $('#buttonLayerOrder').toggleClass('selected', panel === 'panelLayerOrder');
 }
 
 // fill topics list
