@@ -74,6 +74,12 @@
   margin-bottom: -10px;
 }
 
+/* topics */
+
+#topicList li.selected {
+  background-color: lightgray;
+}
+
 /* layer order */
 
 #listOrder {

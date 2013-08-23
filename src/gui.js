@@ -53,6 +53,14 @@ Gui.loadTopics = function(categories) {
   $('#topicList').listview('refresh');
 }
 
+Gui.selectTopic = function(topic) {
+  Map.topic = topic;
+  Layers.loadLayers("src/layers/layers_" + topic + ".json", Gui.loadLayers);
+  // mark topic button
+  $('#topicList li.topic').removeClass('selected')
+  $('#topicList li.topic[data-topic=' + topic + ']').addClass('selected');
+}
+
 // update layers list
 Gui.loadLayers = function(groups) {
   html = "";
@@ -223,8 +231,7 @@ $(document).ready(function(e) {
   Topics.loadTopics("src/topics.json", Gui.loadTopics);
   // topic selection
   $('#topicList').delegate('li.topic', 'vclick', function(e) {
-    Map.topic = $(this).data('topic');
-    Layers.loadLayers("src/layers/layers_" + $(this).data('topic') + ".json", Gui.loadLayers);
+    Gui.selectTopic($(this).data('topic'));
   });
   // layer change
   $('#panelLayerAll').delegate(':checkbox', 'change', function(e) {
