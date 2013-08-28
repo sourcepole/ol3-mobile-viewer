@@ -305,4 +305,7 @@ $(document).ready(function(e) {
   $('#switchScale').on('change', function(e) {
     Map.toggleScalebar($(this).val() == 'on');
   });
+
+  // about popup
+  $('#aboutContent').html("Text");
 });

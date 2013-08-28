@@ -145,6 +145,10 @@
   padding: 0;
 }
 
+.ui-popup .ui-content {
+  padding: 10px;
+}
+
 .ui-btn-icon-notext {
   width: 40px;
   height: 40px;
