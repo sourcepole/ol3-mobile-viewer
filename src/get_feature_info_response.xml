@@ -1,4 +1,5 @@
 <GetFeatureInfoResponse>
+ <Layer name="BB Namen"/>
  <Layer name="BBFlaechen_farbig">
   <Feature id="4131034">
    <Attribute value="1632" name="BFS-Nummer"/>

@@ -57,7 +57,7 @@ FeatureInfo.parseResults = function(featureInfos) {
           });
         });
       }
-      else {
+      else if ($(this).find('Attribute').length > 0) {
         // raster layer
         var attributes = [];
         $(this).find('Attribute').each(function() {
@@ -72,10 +72,12 @@ FeatureInfo.parseResults = function(featureInfos) {
         });
       }
 
-      results.push({
-        layer: $(this).attr('name'),
-        features: features
-      });
+      if (features.length > 0) {
+        results.push({
+          layer: $(this).attr('name'),
+          features: features
+        });
+      }
     });
   }
 
