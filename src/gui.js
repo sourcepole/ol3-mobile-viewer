@@ -152,6 +152,8 @@ Gui.showFeatureInfoResults = function(results) {
   $('#featureInfoResults').trigger('create');
 
   $('#panelFeatureInfo').panel('open');
+
+  Map.toggleClickMarker(true);
 }
 
 // show search results list
@@ -262,6 +264,10 @@ $(document).ready(function(e) {
 
   // feature info
   FeatureInfo.setCallback(Gui.showFeatureInfoResults);
+
+  $('#panelFeatureInfo').on('panelclose', function() {
+    Map.toggleClickMarker(false);
+  });
 
   // search
   $('#searchInput').bind('change', function(e) {

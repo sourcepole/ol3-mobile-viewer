@@ -23,6 +23,10 @@ Map.deviceOrientation = null;
 Map.scaleLine = null;
 // WMS selection
 Map.selection = null;
+// last click position
+Map.lastClickPos = null;
+// click marker
+Map.clickMarker = null;
 
 Map.useTiledWMS = false;
 
@@ -106,6 +110,8 @@ Map.createMap = function(featureInfoCallback) {
   // feature info
   if (featureInfoCallback != null) {
     Map.map.on('click', function(e) {
+      Map.lastClickPos = e.getCoordinate();
+
       /* FIXME: enable this block for production
       Map.map.getFeatureInfo({
         pixel: e.getPixel(),
@@ -255,6 +261,16 @@ Map.toggleOrientation = function(enabled) {
   }
 
   Map.deviceOrientation.setTracking(enabled);
+};
+
+Map.toggleClickMarker = function(enabled) {
+  if (Map.clickMarker == null) {
+    Map.clickMarker = new ol.Overlay({
+      map: Map.map,
+      element: ($('<div id="clickMarker"></div>'))
+    });
+  }
+  Map.clickMarker.setPosition(enabled ? Map.lastClickPos : undefined);
 };
 
 Map.toggleScalebar = function(enabled) {
