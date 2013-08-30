@@ -238,6 +238,7 @@ $(document).ready(function(e) {
   // topic selection
   $('#topicList').delegate('li.topic', 'vclick', function(e) {
     Gui.selectTopic($(this).data('topic'));
+    $('#panelLayer').panel('close');
   });
   // layer change
   $('#panelLayerAll').delegate(':checkbox', 'change', function(e) {
