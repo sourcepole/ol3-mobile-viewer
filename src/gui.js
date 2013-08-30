@@ -308,4 +308,10 @@ $(document).ready(function(e) {
 
   // about popup
   $('#aboutContent').html("Text");
+
+  // SVG fallback test
+  $('span.ui-icon-layers').replaceWith(
+    '<svg width="32" height="32" style="margin: 4px;">' +
+    '  <image xlink:href="img/layers.svg" src="img/layers.png" width="32" height="32" style="margin: 4px;"/>' +
+    '</svg>');
 });
