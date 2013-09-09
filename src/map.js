@@ -85,23 +85,31 @@ Map.createMap = function(featureInfoCallback) {
 
   // feature info
   if (featureInfoCallback != null) {
+    var clickTimeout = null;
     Map.map.on('click', function(e) {
-      Map.lastClickPos = e.getCoordinate();
+      clearTimeout(clickTimeout);
+      clickTimeout = setTimeout(function() {
+        Map.lastClickPos = e.getCoordinate();
 
-      /* FIXME: enable this block for production
-      Map.map.getFeatureInfo({
-        pixel: e.getPixel(),
-        success: featureInfoCallback
-      });
-      */
-      /* FIXME: use static xml file for demonstration purposes, to avoid cross domain issues */
-      $.ajax({
-        url: "src/get_feature_info_response.xml",
-        dataType: 'text'
-      }).done(function(data, status) {
-        featureInfoCallback([data]);
-      });
-      /* END */
+        /* FIXME: enable this block for production
+        Map.map.getFeatureInfo({
+          pixel: e.getPixel(),
+          success: featureInfoCallback
+        });
+        */
+        /* FIXME: use static xml file for demonstration purposes, to avoid cross domain issues */
+        $.ajax({
+          url: "src/get_feature_info_response.xml",
+          dataType: 'text'
+        }).done(function(data, status) {
+          featureInfoCallback([data]);
+        });
+        /* END */
+      }, 200);
+    });
+    Map.map.on('dblclick', function(e) {
+      // abort feature info on double click
+      clearTimeout(clickTimeout);
     });
   }
 };
