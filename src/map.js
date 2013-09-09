@@ -115,7 +115,7 @@ Map.createMap = function(featureInfoCallback) {
       /* FIXME: enable this block for production
       Map.map.getFeatureInfo({
         pixel: e.getPixel(),
-        success: featureInfoCallback,
+        success: featureInfoCallback
       });
       */
       /* FIXME: use static xml file for demonstration purposes, to avoid cross domain issues */
