@@ -210,6 +210,19 @@
   padding: 8px;
 }
 
+/* fix switch layout on narrow screens */
+.ui-field-contain, .ui-mobile fieldset.ui-field-contain {
+  border-width: 0;
+  padding: 0;
+  margin: 1em 0;
+}
+.ui-field-contain label.ui-slider {
+  vertical-align: top;
+  display: inline-block;
+  width: 20%;
+  margin: 0 2% 0 0;
+}
+
 /* override panel width */
 
 .ui-panel {
