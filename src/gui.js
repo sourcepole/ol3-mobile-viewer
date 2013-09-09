@@ -150,6 +150,9 @@ Gui.showFeatureInfoResults = function(results) {
 
     html += '</div>';
   }
+  if (results.length == 0) {
+    html = "Kein Objekt gefunden";
+  }
 
   $('#featureInfoResults').html(html);
   $('#featureInfoResults').trigger('create');
