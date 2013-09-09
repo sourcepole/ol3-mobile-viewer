@@ -208,6 +208,8 @@ $(document).bind('pageinit', function() {
 });
 
 $(document).ready(function(e) {
+  UrlParams.parse();
+
   Gui.updateLayout();
   $(window).on('resize', function() {
     Gui.updateLayout();
