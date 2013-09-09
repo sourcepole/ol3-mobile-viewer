@@ -57,42 +57,13 @@ Map.createMap = function(featureInfoCallback) {
     extent: [485869.5728, 837076.5648, 76443.1884, 299941.7864]
   });
 
-  var wmsOptions = {
-    url: 'http://wms.geo.admin.ch/',
-    crossOrigin: 'anonymous',
-    attributions: [new ol.Attribution(
-        '&copy; ' +
-        '<a href="http://www.geo.admin.ch/internet/geoportal/en/home.html">' +
-        'Pixelmap 1:1000000 / geo.admin.ch</a>')],
-    params: {
-      'LAYERS': 'ch.swisstopo.pixelkarte-farbe-pk1000.noscale',
-      'FORMAT': 'image/jpeg'
-    },
-    extent: [420000, 900000, 30000, 350000]
-  };
-  var layers = [];
-  if (Map.useTiledWMS) {
-    layers.push(
-      new ol.layer.TileLayer({
-        source: new ol.source.TiledWMS(wmsOptions)
-      })
-    );
-  }
-  else {
-    layers.push(
-      new ol.layer.ImageLayer({
-        source: new ol.source.SingleImageWMS(wmsOptions)
-      })
-    );
-  }
-
   var renderers = ol.RendererHints.createFromQueryData();
   if (useCanvasRenderer) {
     renderers = [ol.RendererHint.CANVAS, ol.RendererHint.WEBGL, ol.RendererHint.DOM];
   }
 
   Map.map = new ol.Map({
-    layers: layers,
+    layers: [],
     renderers: renderers,
     target: 'map',
     view: new ol.View2D({

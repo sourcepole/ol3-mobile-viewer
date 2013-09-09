@@ -2,6 +2,15 @@
   "success":true,
   "gbtopics":[
     {
+      "name":"geo_admin_pk",
+      "title": "Pixelkarte",
+      "icon":"img/geo_admin_pk.png",
+      "categorytitle": "geo.admin.ch",
+      "categorysort": null,
+      "categories_topics_sort":0,
+      "wms_url":"http://wms.geo.admin.ch/"
+    },
+    {
       "name":"basisplan_av_farbig",
       "title": "Basisplan-AV farbig",
       "icon":"http://www.gl.ch/pictures/thumb/schnellzugriff_bpavf.png",

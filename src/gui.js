@@ -55,6 +55,9 @@ Gui.loadTopics = function(categories) {
 
   $('#topicList').html(html);
   $('#topicList').listview('refresh');
+
+  // select initial topic
+  Gui.selectTopic('geo_admin_pk');
 }
 
 Gui.selectTopic = function(topic) {
