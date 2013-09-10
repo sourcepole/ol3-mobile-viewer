@@ -202,8 +202,19 @@
   margin-left: -12px;
 }
 
+#featureInfoResults .ui-btn-text {
+  white-space: normal;
+}
+
+#featureInfoResults li.ui-li {
+  padding-left: 4px;
+  padding-right: 4px;
+  overflow: auto;
+}
+
 #featureInfoResults span.value {
   font-weight: normal;
+  text-align: right;
   float: right;
 }
 
