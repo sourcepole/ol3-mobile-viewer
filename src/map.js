@@ -139,12 +139,12 @@ Map.setTopicLayer = function() {
   };
   var layer = null;
   if (Map.useTiledWMS) {
-    layer = new ol.layer.TileLayer({
-      source: new ol.source.TiledWMS(wmsOptions)
+    layer = new ol.layer.Tile({
+      source: new ol.source.TileWMS(wmsOptions)
     });
   }
   else {
-    layer = new ol.layer.ImageLayer({
+    layer = new ol.layer.Image({
       source: new ol.source.SingleImageWMS(wmsOptions)
     });
   }
@@ -153,7 +153,9 @@ Map.setTopicLayer = function() {
 
 Map.setLayerVisible = function(layername, visible) {
   Map.layers[layername] = visible;
-  Map.refresh();
+  Map.mergeWmsParams({
+    'LAYERS': Map.visibleLayers().join(',')
+  });
 };
 
 Map.visibleLayers = function() {
@@ -175,14 +177,15 @@ Map.setSelection = function(layer, ids) {
   else {
     Map.selection = layer + ":" + ids.join(',');
   }
-  Map.refresh();
+  Map.mergeWmsParams({
+    'SELECTION': Map.selection
+  });
 }
 
-Map.refresh = function() {
-  if (Map.topic != null) {
-    // FIXME: WMS layer update (mergeNewParams()) not yet implemented, replace layer instead
-    Map.setTopicLayer();
-  }
+Map.mergeWmsParams = function(params) {
+  var source = Map.map.getLayers().getAt(0).getSource();
+  var newParams = $.extend(source.getParams(), params);
+  source.updateParams(newParams);
 }
 
 // set map rotation in rad
@@ -207,9 +210,9 @@ Map.toggleTracking = function(enabled) {
 
     // add geolocation marker
     var marker = new ol.Overlay({
-      map: Map.map,
       element: ($('<div id="locationMarker"></div>'))
     });
+    Map.map.addOverlay(marker);
     marker.bindTo('position', Map.geolocation);
   }
 
@@ -250,9 +253,9 @@ Map.toggleOrientation = function(enabled) {
 Map.toggleClickMarker = function(enabled) {
   if (Map.clickMarker == null) {
     Map.clickMarker = new ol.Overlay({
-      map: Map.map,
       element: ($('<div id="clickMarker"></div>'))
     });
+    Map.map.addOverlay(Map.clickMarker);
   }
   Map.clickMarker.setPosition(enabled ? Map.lastClickPos : undefined);
 };
