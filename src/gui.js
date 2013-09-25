@@ -203,11 +203,13 @@ Gui.jumpToSearchResult = function(bbox) {
 
 // binds the reorder functionality to the visible layer list
 $(document).bind('pageinit', function() {
-  $('#listOrder').sortable();
-  $('#listOrder').disableSelection();
-  $('#listOrder').bind('sortstop', function(event, ui) {
-    $('#listOrder').listview('refresh');
-  });
+  if ($('#listOrder').length > 0) {
+    $('#listOrder').sortable();
+    $('#listOrder').disableSelection();
+    $('#listOrder').bind('sortstop', function(event, ui) {
+      $('#listOrder').listview('refresh');
+    });
+  }
 });
 
 $(document).ready(function(e) {
@@ -242,7 +244,7 @@ $(document).ready(function(e) {
   Map.toggleScalebar(true);
 
   // topics
-  Topics.loadTopics("src/topics.json", Gui.loadTopics);
+  Topics.loadTopics("src/topics.json", Gui.loadTopics);  //TODO: custom config
   // topic selection
   $('#topicList').delegate('li.topic', 'vclick', function(e) {
     Gui.selectTopic($(this).data('topic'));
@@ -316,11 +318,5 @@ $(document).ready(function(e) {
   });
 
   // about popup
-  $('#aboutContent').html("Text");
-
-  // SVG fallback test
-  $('span.ui-icon-layers').replaceWith(
-    '<svg width="32" height="32" style="margin: 4px;">' +
-    '  <image xlink:href="img/layers.svg" src="img/layers.png" width="32" height="32" style="margin: 4px;"/>' +
-    '</svg>');
+  $('#aboutContent').html("Development version"); //TODO: custom config
 });
