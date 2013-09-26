@@ -54,7 +54,7 @@ Map.createMap = function(featureInfoCallback) {
 
   // override from URL params
   if (UrlParams.params.tiledWms != undefined) {
-    Map.useTiledWMS = UrlParams.params.tiledWms;
+    Map.useTiledWMS = UrlParams.params.tiledWms == 1;
   }
 
   var projection = ol.proj.configureProj4jsProjection({
