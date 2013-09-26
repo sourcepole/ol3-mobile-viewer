@@ -62,7 +62,7 @@ Gui.loadTopics = function(categories) {
 
 Gui.selectTopic = function(topic) {
   Map.topic = topic;
-  Layers.loadLayers("data/layers/layers_" + topic + ".json", Gui.loadLayers);  //TODO: custom config
+  Layers.loadLayers(Config.data.layersUrl(topic), Gui.loadLayers);
   // mark topic button
   $('#topicList li.topic').removeClass('selected')
   $('#topicList li.topic[data-topic=' + topic + ']').addClass('selected');
@@ -244,7 +244,7 @@ $(document).ready(function(e) {
   Map.toggleScalebar(true);
 
   // topics
-  Topics.loadTopics("data/topics.json", Gui.loadTopics);  //TODO: custom config
+  Topics.loadTopics(Config.data.topicsUrl, Gui.loadTopics);
   // topic selection
   $('#topicList').delegate('li.topic', 'vclick', function(e) {
     Gui.selectTopic($(this).data('topic'));

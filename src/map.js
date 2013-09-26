@@ -57,11 +57,6 @@ Map.createMap = function(featureInfoCallback) {
     Map.useTiledWMS = UrlParams.params.tiledWms == 1;
   }
 
-  var projection = ol.proj.configureProj4jsProjection({
-    code: 'EPSG:21781',
-    extent: [485869.5728, 837076.5648, 76443.1884, 299941.7864]
-  });
-
   var renderers = ol.RendererHints.createFromQueryData();
   if (useCanvasRenderer) {
     renderers = [ol.RendererHint.CANVAS, ol.RendererHint.WEBGL, ol.RendererHint.DOM];
@@ -71,11 +66,7 @@ Map.createMap = function(featureInfoCallback) {
     layers: [],
     renderers: renderers,
     target: 'map',
-    view: new ol.View2D({
-      projection: projection,
-      center: [660000, 190000],
-      zoom: 2
-    }),
+    view: new ol.View2D(Config.map.viewOptions),
     controls:[]
   });
 
@@ -119,17 +110,16 @@ Map.setTopicLayer = function() {
   Map.map.removeLayer(Map.map.getLayers().getAt(0));
 
   // add new layer
-  var wmsParams = {
-    'LAYERS': Map.visibleLayers().join(','),
-    'FORMAT': 'image/png; mode=8bit'
-  };
+  var wmsParams = $.extend(Config.map.wmsParams, {
+    'LAYERS': Map.visibleLayers().join(',')
+  });
   if (Map.selection != null) {
     wmsParams['SELECTION'] = Map.selection;
   }
   var wmsOptions = {
     url: Map.topics[Map.topic].wms_url,
     params: wmsParams,
-    extent: [420000, 900000, 30000, 350000],
+    extent: Config.map.extent,
     getFeatureInfoOptions: {
       method: 'xhr_get',
       params: {
