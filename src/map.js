@@ -90,21 +90,21 @@ Map.createMap = function(featureInfoCallback) {
       clearTimeout(clickTimeout);
       clickTimeout = setTimeout(function() {
         Map.lastClickPos = e.getCoordinate();
-
-        /* FIXME: enable this block for production
-        Map.map.getFeatureInfo({
-          pixel: e.getPixel(),
-          success: featureInfoCallback
-        });
-        */
-        /* FIXME: use static xml file for demonstration purposes, to avoid cross domain issues */
-        $.ajax({
-          url: "data/get_feature_info_response.xml",
-          dataType: 'text'
-        }).done(function(data, status) {
-          featureInfoCallback([data]);
-        });
-        /* END */
+        if (Config.debug) {
+          /* DEBUG: use static xml file for demonstration purposes, to avoid cross domain issues */
+          $.ajax({
+            url: "data/get_feature_info_response.xml",
+            dataType: 'text'
+          }).done(function(data, status) {
+            featureInfoCallback([data]);
+          });
+        }
+        else {
+          Map.map.getFeatureInfo({
+            pixel: e.getPixel(),
+            success: featureInfoCallback
+          });
+        }
       }, 200);
     });
     Map.map.on('dblclick', function(e) {
