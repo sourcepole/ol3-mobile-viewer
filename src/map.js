@@ -99,7 +99,7 @@ Map.createMap = function(featureInfoCallback) {
         */
         /* FIXME: use static xml file for demonstration purposes, to avoid cross domain issues */
         $.ajax({
-          url: "src/get_feature_info_response.xml",
+          url: "data/get_feature_info_response.xml",
           dataType: 'text'
         }).done(function(data, status) {
           featureInfoCallback([data]);
