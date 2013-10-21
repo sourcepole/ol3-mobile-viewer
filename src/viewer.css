@@ -1,9 +1,7 @@
 /* icons */
 
 .ui-icon-logo {
-  background-image: url("../img/glarus_logo.png");
-/*  background-image: url("../img/uster_logo.png"); */
-/*  background-image: url("../img/winterthur_logo.png"); */
+  background-image: none;
 }
 
 .ui-icon-compass {
