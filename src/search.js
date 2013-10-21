@@ -32,7 +32,7 @@ Search.submit = function(searchParams, callback) {
   request.done(Search.parseResults);
 
   request.fail(function(jqXHR, status) {
-    alert("Suche fehlgeschlagen:\n" + jqXHR.status + ": " + jqXHR.statusText);
+    alert(I18n.search.failed + "\n" + jqXHR.status + ": " + jqXHR.statusText);
   });
 }
 

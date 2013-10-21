@@ -11,7 +11,7 @@ Gui.orientation = true;
 
 Gui.updateLayout = function() {
   // use full content height for map
-  $("#map").height(window.innerHeight - $("#header ").outerHeight());
+  $('#map').height(window.innerHeight);
 
   // limit panels to screen height
   $('#panelTopics .ui-listview').height(window.innerHeight - 90);
@@ -57,7 +57,7 @@ Gui.loadTopics = function(categories) {
   $('#topicList').listview('refresh');
 
   // select initial topic
-  Gui.selectTopic('geo_admin_pk');
+  Gui.selectTopic(Config.data.initialTopic);
 }
 
 Gui.selectTopic = function(topic) {
@@ -129,7 +129,7 @@ Gui.showFeatureInfoResults = function(results) {
 
     for (var j=0; j<result.features.length; j++) {
       var feature = result.features[j];
-      var title = feature.id === null ? "Rasterzelle" : "Feature mit ID:" + feature.id;
+      var title = feature.id === null ? I18n.featureInfo.raster : I18n.featureInfo.feature + feature.id;
 
       html += '<div data-role="collapsible"  data-collapsed="false" data-theme="c">';
       html += '  <h3>' + title + '</h3>';
@@ -151,7 +151,7 @@ Gui.showFeatureInfoResults = function(results) {
     html += '</div>';
   }
   if (results.length == 0) {
-    html = "Kein Objekt gefunden";
+    html = I18n.featureInfo.noFeatureFound;
   }
 
   $('#featureInfoResults').html(html);
@@ -212,8 +212,34 @@ $(document).bind('pageinit', function() {
   }
 });
 
-$(document).ready(function(e) {
+Gui.updateTranslations = function() {
+  document.title = I18n.title;
+
+  $('#panelSearch b').html(I18n.search.header);
+  $('#panelSearch #searchResults b').html(I18n.search.results);
+
+  $('#panelProperties b').html(I18n.properties.header);
+  $('#panelProperties label[for=switchFollow]').html(I18n.properties.mapFollowing);
+  $('#panelProperties label[for=switchOrientation]').html(I18n.properties.mapRotation);
+  $('#panelProperties label[for=switchScale]').html(I18n.properties.scaleBar);
+  $('#panelProperties .ui-slider-label:contains(Ein)').html(I18n.properties.on);
+  $('#panelProperties .ui-slider-label:contains(Aus)').html(I18n.properties.off);
+  $('#panelProperties #buttonLogo .ui-btn-text').html(I18n.properties.about);
+  $('#panelProperties #dlgAbout h1').html(I18n.about.header);
+  $('#panelProperties #buttonShare .ui-btn-text').html(I18n.properties.share);
+  $('#panelProperties #buttonLogin .ui-btn-text').html(I18n.properties.login);
+
+  $('#panelLayer #buttonTopics .ui-btn-text').html(I18n.layers.topics);
+  $('#panelLayer #buttonLayerAll .ui-btn-text').html(I18n.layers.layers);
+  $('#panelLayer #buttonLayerOrder .ui-btn-text').html(I18n.layers.layerOrder);
+
+  $('#panelFeatureInfo b').html(I18n.featureInfo.header);
+}
+
+Gui.initViewer = function() {
   UrlParams.parse();
+
+  Gui.updateTranslations();
 
   Gui.updateLayout();
   $(window).on('resize', function() {
@@ -222,6 +248,7 @@ $(document).ready(function(e) {
 
   // map
   Map.createMap(FeatureInfo.parseResults);
+  Gui.updateLayout();
 
   // layer panel navigation
   $('#buttonTopics').on('tap', function() {
@@ -318,5 +345,9 @@ $(document).ready(function(e) {
   });
 
   // about popup
-  $('#aboutContent').html("Development version"); //TODO: custom config
+  $('#aboutContent').html(I18n.about.content);
+}
+
+$(document).ready(function(e) {
+  Gui.initViewer();
 });

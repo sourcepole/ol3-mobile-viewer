@@ -16,6 +16,7 @@ Config.data.layersUrl = function(topicName) {
   return "data/layers/layers_" + topicName + ".json";
 }
 
+Config.data.initialTopic = "geo_admin_pk";
 
 // map configuration
 Config.map = {};
@@ -36,5 +37,3 @@ Config.map.viewOptions = {
 Config.map.wmsParams = {
   'FORMAT': 'image/png; mode=8bit'
 };
-
-// TODO: translations
