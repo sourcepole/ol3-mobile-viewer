@@ -32,7 +32,8 @@ I18n.about = {
 I18n.layers = {
   topics: "Themen",
   layers: "Ebenen",
-  layerOrder: "Reihenfolge"
+  layerOrder: "Reihenfolge",
+  transparency: "Transparenz"
 }
 
 I18n.featureInfo = {

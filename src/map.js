@@ -111,7 +111,8 @@ Map.setTopicLayer = function() {
 
   // add new layer
   var wmsParams = $.extend(Config.map.wmsParams, {
-    'LAYERS': Map.visibleLayers().join(',')
+    'LAYERS': Map.visibleLayers().join(','),
+    'OPACITIES': null
   });
   if (Map.selection != null) {
     wmsParams['SELECTION'] = Map.selection;
@@ -141,9 +142,13 @@ Map.setTopicLayer = function() {
   Map.map.addLayer(layer);
 };
 
-Map.setLayerVisible = function(layername, visible) {
+Map.setLayerVisible = function(layername, visible, updateMap) {
   Map.layers[layername].visible = visible;
-  Map.refreshLayers();
+  if (updateMap) {
+    Map.mergeWmsParams({
+      'LAYERS': Map.visibleLayers().join(',')
+    });
+  }
 };
 
 Map.visibleLayers = function() {
@@ -157,9 +162,32 @@ Map.visibleLayers = function() {
   return visibleLayers;
 };
 
-Map.refreshLayers = function() {
+// transparency between 0 and 100
+Map.setLayerTransparency = function(layername, transparency, updateMap) {
+  Map.layers[layername].transparency = transparency;
+  if (updateMap) {
+    Map.mergeWmsParams({
+      'OPACITIES': Map.layerOpacities().join(',')
+    });
+  }
+}
+
+Map.layerOpacities = function() {
+  var layerOpacities = [];
+  for (var key in Map.layers) {
+    if (Map.layers[key].visible) {
+      // scale transparency[0..100] to opacity[255..0]
+      var opacity = Math.round((100 - Map.layers[key].transparency) / 100 * 255);
+      layerOpacities.push(opacity);
+    }
+  }
+  return layerOpacities;
+}
+
+Map.refresh = function() {
   Map.mergeWmsParams({
-    'LAYERS': Map.visibleLayers().join(',')
+    'LAYERS': Map.visibleLayers().join(','),
+    'OPACITIES': Map.layerOpacities().join(',')
   });
 }
 

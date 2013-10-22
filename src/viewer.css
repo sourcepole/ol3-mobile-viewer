@@ -99,6 +99,10 @@
   margin-bottom: -1px;
 }
 
+#listOrder li.selected{
+  background-color: lightgray;
+}
+
 /* properties */
 
 #properties .ui-field-contain .ui-slider-switch {

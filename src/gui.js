@@ -9,6 +9,9 @@ Gui.tracking = false;
 Gui.following = true;
 Gui.orientation = true;
 
+// currently selected layer in layer order panel
+Gui.selectedLayer = null;
+
 Gui.updateLayout = function() {
   // use full content height for map
   $('#map').height(window.innerHeight);
@@ -16,7 +19,7 @@ Gui.updateLayout = function() {
   // limit panels to screen height
   $('#panelTopics .ui-listview').height(window.innerHeight - 90);
   $('#panelLayerAll').height(window.innerHeight - 90);
-  $('#panelLayerOrder .ui-listview').height(window.innerHeight - 170);
+  $('#panelLayerOrder .ui-listview').height(window.innerHeight - 200);
   $('#panelFeatureInfo #featureInfoResults').height(window.innerHeight - 80);
   $('#panelSearch .ui-listview').height(window.innerHeight - 170);
   $('#properties').height(window.innerHeight - 80);
@@ -115,7 +118,8 @@ Gui.loadLayers = function(groups) {
     var layer = layers[i];
     Map.layers[layer.layername] = {
       title: layer.title,
-      visible: layer.visible
+      visible: layer.visible,
+      transparency: 0
     }
   }
 
@@ -134,6 +138,8 @@ Gui.resetLayerOrder = function() {
   }
   $('#listOrder').html(html);
   $('#listOrder').listview('refresh');
+
+  Gui.selectLayer(null);
 }
 
 // add/remove layer in layer order panel
@@ -154,6 +160,9 @@ Gui.updateLayerOrder = function(layer, layerAdded) {
 
 // update layer order in map
 Gui.onLayerOrderChanged = function(event, ui) {
+  // unselect layer
+  Gui.selectLayer(null);
+
   // get layer order from GUI
   var orderedLayers = {};
   $($('#listOrder li').get().reverse()).each(function(index) {
@@ -170,7 +179,27 @@ Gui.onLayerOrderChanged = function(event, ui) {
 
   // update map
   Map.layers = orderedLayers;
-  Map.refreshLayers();
+  Map.refresh();
+}
+
+// select layer in layer order panel
+Gui.selectLayer = function(layer) {
+  // unselect all layer buttons
+  $('#listOrder li').removeClass('selected');
+
+  Gui.selectedLayer = layer;
+  if (Gui.selectedLayer != null) {
+    // mark layer button
+    $('#listOrder li[data-layer="' + layer + '"]').addClass('selected');
+
+    // update slider
+    $('#sliderTransparency').val(Map.layers[layer].transparency).slider("refresh");
+    $('#sliderTransparency').slider("enable");
+  }
+  else {
+    $('#sliderTransparency').val(0).slider("refresh");
+    $('#sliderTransparency').slider("disable");
+  }
 }
 
 // show feature info results
@@ -282,6 +311,7 @@ Gui.updateTranslations = function() {
   $('#panelLayer #buttonTopics .ui-btn-text').html(I18n.layers.topics);
   $('#panelLayer #buttonLayerAll .ui-btn-text').html(I18n.layers.layers);
   $('#panelLayer #buttonLayerOrder .ui-btn-text').html(I18n.layers.layerOrder);
+  $('#panelLayer #sliderTransparency-label').html(I18n.layers.transparency);
 
   $('#panelFeatureInfo b').html(I18n.featureInfo.header);
 }
@@ -327,12 +357,25 @@ Gui.initViewer = function() {
     Gui.selectTopic($(this).data('topic'));
     $('#panelLayer').panel('close');
   });
+
   // layer change
   $('#panelLayerAll').delegate(':checkbox', 'change', function(e) {
-    Map.setLayerVisible($(this).data('layer'), $(this).is(':checked'));
+    Map.setLayerVisible($(this).data('layer'), $(this).is(':checked'), false);
     Gui.updateLayerOrder($(this).data('layer'), $(this).is(':checked'));
   });
   Gui.panelSelect('panelTopics');
+
+  // selection in layer order
+  $('#listOrder').delegate('li', 'vclick', function() {
+    Gui.selectLayer($(this).data('layer'));
+  });
+  // layer transparency
+  $('#sliderTransparency').on('slidestop', function() {
+    Map.setLayerTransparency(Gui.selectedLayer, $(this).val(), true);
+  }).parent().on('swipeleft',function(e,ui) {
+    // block panel close
+    e.stopPropagation();
+  });
 
   // compass
   $(document).on('maprotation', function(e) {

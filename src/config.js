@@ -35,5 +35,6 @@ Config.map.viewOptions = {
 };
 
 Config.map.wmsParams = {
-  'FORMAT': 'image/png; mode=8bit'
+  'FORMAT': 'image/png; mode=8bit',
+  'TRANSPARENT': null
 };
