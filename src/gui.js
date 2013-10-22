@@ -93,6 +93,7 @@ Gui.loadLayers = function(groups) {
 
       layers.push({
         layername: layer.layername,
+        title: layer.toclayertitle,
         wms_sort: layer.wms_sort,
         visible: layer.visini
       });
@@ -105,17 +106,71 @@ Gui.loadLayers = function(groups) {
   $('#panelLayerAll').html(html);
   $('#panelLayerAll').trigger('create');
 
-  // store layer visibilities sorted by wms_sort
+  // store layers sorted by wms_sort
   layers = layers.sort(function(a, b) {
     return a.wms_sort - b.wms_sort;
   });
   Map.layers = {};
   for (var i=0; i<layers.length; i++) {
     var layer = layers[i];
-    Map.layers[layer.layername] = layer.visible;
+    Map.layers[layer.layername] = {
+      title: layer.title,
+      visible: layer.visible
+    }
   }
 
   Map.setTopicLayer();
+  Gui.resetLayerOrder();
+}
+
+// fill layer order panel from visible layers
+Gui.resetLayerOrder = function() {
+  var html = '';
+  for (var layer in Map.layers) {
+    if (Map.layers[layer].visible) {
+      // NOTE: fill in reverse order, with layers drawn from bottom to top
+      html = '<li data-layer="' + layer + '">' + Map.layers[layer].title + '</li>' + html;
+    }
+  }
+  $('#listOrder').html(html);
+  $('#listOrder').listview('refresh');
+}
+
+// add/remove layer in layer order panel
+Gui.updateLayerOrder = function(layer, layerAdded) {
+  if (layerAdded) {
+    // add layer on top
+    var html = '<li data-layer="' + layer + '">' + Map.layers[layer].title + '</li>';
+    $('#listOrder').prepend(html);
+  }
+  else {
+    // remove layer
+    $('#listOrder li[data-layer="' + layer + '"]').remove();
+  }
+  $('#listOrder').listview('refresh');
+
+  Gui.onLayerOrderChanged(null, null);
+}
+
+// update layer order in map
+Gui.onLayerOrderChanged = function(event, ui) {
+  // get layer order from GUI
+  var orderedLayers = {};
+  $($('#listOrder li').get().reverse()).each(function(index) {
+    var layer = $(this).data('layer');
+    orderedLayers[layer] = Map.layers[layer];
+  });
+
+  // append inactive layers
+  for (layer in Map.layers) {
+    if (orderedLayers[layer] === undefined) {
+      orderedLayers[layer] = Map.layers[layer];
+    }
+  }
+
+  // update map
+  Map.layers = orderedLayers;
+  Map.refreshLayers();
 }
 
 // show feature info results
@@ -203,13 +258,8 @@ Gui.jumpToSearchResult = function(bbox) {
 
 // binds the reorder functionality to the visible layer list
 $(document).bind('pageinit', function() {
-  if ($('#listOrder').length > 0) {
-    $('#listOrder').sortable();
-    $('#listOrder').disableSelection();
-    $('#listOrder').bind('sortstop', function(event, ui) {
-      $('#listOrder').listview('refresh');
-    });
-  }
+  $('#listOrder').sortable();
+  $('#listOrder').bind('sortstop', Gui.onLayerOrderChanged);
 });
 
 Gui.updateTranslations = function() {
@@ -280,6 +330,7 @@ Gui.initViewer = function() {
   // layer change
   $('#panelLayerAll').delegate(':checkbox', 'change', function(e) {
     Map.setLayerVisible($(this).data('layer'), $(this).is(':checked'));
+    Gui.updateLayerOrder($(this).data('layer'), $(this).is(':checked'));
   });
   Gui.panelSelect('panelTopics');
 

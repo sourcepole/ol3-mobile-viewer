@@ -142,22 +142,26 @@ Map.setTopicLayer = function() {
 };
 
 Map.setLayerVisible = function(layername, visible) {
-  Map.layers[layername] = visible;
-  Map.mergeWmsParams({
-    'LAYERS': Map.visibleLayers().join(',')
-  });
+  Map.layers[layername].visible = visible;
+  Map.refreshLayers();
 };
 
 Map.visibleLayers = function() {
   // collect visible layers
   var visibleLayers = [];
   for (var key in Map.layers) {
-    if (Map.layers[key]) {
+    if (Map.layers[key].visible) {
       visibleLayers.push(key);
     }
   }
   return visibleLayers;
 };
+
+Map.refreshLayers = function() {
+  Map.mergeWmsParams({
+    'LAYERS': Map.visibleLayers().join(',')
+  });
+}
 
 // set WMS SELECTION parameter, disable if layer = null
 Map.setSelection = function(layer, ids) {

@@ -78,6 +78,10 @@
   background-color: lightgray;
 }
 
+#panelLayer .ui-navbar .ui-btn-inner {
+  padding: 0.7em 0 0.8em 0;
+}
+
 /* topics */
 
 #topicList li.selected {
