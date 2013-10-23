@@ -81,19 +81,18 @@ Map.createMap = function(featureInfoCallback) {
       clearTimeout(clickTimeout);
       clickTimeout = setTimeout(function() {
         Map.lastClickPos = e.getCoordinate();
-        if (Config.debug) {
-          /* DEBUG: use static xml file for demonstration purposes, to avoid cross domain issues */
-          $.ajax({
-            url: "data/get_feature_info_response.xml",
-            dataType: 'text'
-          }).done(function(data, status) {
-            featureInfoCallback([data]);
-          });
-        }
-        else {
+        if (Config.featureInfo.useWMSGetFeatureInfo) {
           Map.map.getFeatureInfo({
             pixel: e.getPixel(),
             success: featureInfoCallback
+          });
+        }
+        else {
+          $.ajax({
+            url: Config.featureInfo.url(Map.topic, e.getCoordinate(), Map.visibleLayers()),
+            dataType: 'text'
+          }).done(function(data, status) {
+            featureInfoCallback([data]);
           });
         }
       }, 200);
@@ -124,7 +123,7 @@ Map.setTopicLayer = function() {
     getFeatureInfoOptions: {
       method: 'xhr_get',
       params: {
-        INFO_FORMAT: 'text/xml'
+        INFO_FORMAT: Config.featureInfo.format
       }
     }
   };

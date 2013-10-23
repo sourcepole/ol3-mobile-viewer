@@ -203,7 +203,20 @@ Gui.selectLayer = function(layer) {
 }
 
 // show feature info results
-Gui.showFeatureInfoResults = function(results) {
+Gui.showFeatureInfoResults = function(data) {
+  if (Config.featureInfo.format === 'text/xml') {
+    FeatureInfo.parseResults(data);
+  }
+  else {
+    $('#featureInfoResults').html(data.join(''));
+  }
+
+  $('#panelFeatureInfo').panel('open');
+  Map.toggleClickMarker(true);
+}
+
+// convert XML feature info results to HTML
+Gui.showXMLFeatureInfoResults = function(results) {
   html = "";
   for (var i=0;i<results.length; i++) {
     var result = results[i];
@@ -240,10 +253,6 @@ Gui.showFeatureInfoResults = function(results) {
 
   $('#featureInfoResults').html(html);
   $('#featureInfoResults').trigger('create');
-
-  $('#panelFeatureInfo').panel('open');
-
-  Map.toggleClickMarker(true);
 }
 
 // show search results list
@@ -327,7 +336,7 @@ Gui.initViewer = function() {
   });
 
   // map
-  Map.createMap(FeatureInfo.parseResults);
+  Map.createMap(Gui.showFeatureInfoResults);
   Gui.updateLayout();
 
   // layer panel navigation
@@ -395,7 +404,7 @@ Gui.initViewer = function() {
   });
 
   // feature info
-  FeatureInfo.setCallback(Gui.showFeatureInfoResults);
+  FeatureInfo.setCallback(Gui.showXMLFeatureInfoResults);
 
   $('#panelFeatureInfo').on('panelclose', function() {
     Map.toggleClickMarker(false);
