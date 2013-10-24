@@ -6,7 +6,7 @@
       "title": "Pixelkarte",
       "icon":"img/geo_admin_pk.png",
       "categorytitle": "geo.admin.ch",
-      "categorysort": null,
+      "categorysort": 0,
       "categories_topics_sort":0,
       "wms_url":"http://wms.geo.admin.ch/"
     },
@@ -15,7 +15,7 @@
       "title": "Basisplan-AV farbig",
       "icon":"http://www.gl.ch/pictures/thumb/schnellzugriff_bpavf.png",
       "categorytitle": "Glarus",
-      "categorysort": null,
+      "categorysort": 1,
       "categories_topics_sort":0,
       "wms_url":"http://map.geo.gl.ch/wms/Public"
     },
@@ -24,7 +24,7 @@
       "title": "Pixelkarte als Hintergrund",
       "icon":"img/geo_admin_pk.png",
       "categorytitle": "Glarus",
-      "categorysort": null,
+      "categorysort": 1,
       "categories_topics_sort":0,
       "bg_topic": "geo_admin_pk",
       "wms_url":"http://map.geo.gl.ch/wms/Public"
