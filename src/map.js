@@ -13,8 +13,15 @@ Map.topics = {};
 Map.topic = null;
 // ordered layers (key = layer name)
 Map.layers = {};
+// current background topic
+Map.backgroundTopic = null;
+// current background WMS layers
+Map.backgroundLayers = null;
 // OpenLayers 3 map object
 Map.map = null;
+// OpenLayers 3 layer objects
+Map.topicLayer = null;
+Map.backgroundLayer = null;
 // OpenLayers 3 geolocation object
 Map.geolocation = null;
 // OpenLayers 3 DeviceOrientation object
@@ -104,15 +111,24 @@ Map.createMap = function(featureInfoCallback) {
   }
 };
 
-Map.setTopicLayer = function() {
-  // remove old layer
-  Map.map.removeLayer(Map.map.getLayers().getAt(0));
+Map.clearLayers = function() {
+  Map.map.getLayers().clear();
+  Map.topicLayer = null;
+  Map.backgroundLayer = null;
+  Map.backgroundTopic = null;
+  Map.backgroundLayers = null;  
+}
 
+Map.setTopicLayer = function() {
   // add new layer
-  var wmsParams = $.extend(Config.map.wmsParams, {
+  var wmsParams = $.extend({}, Config.map.wmsParams, {
     'LAYERS': Map.visibleLayers().join(','),
     'OPACITIES': null
   });
+  if (Map.backgroundTopic) {
+    // use transparent layer with background
+    wmsParams['TRANSPARENT'] = true;
+  }
   if (Map.selection != null) {
     wmsParams['SELECTION'] = Map.selection;
   }
@@ -127,19 +143,47 @@ Map.setTopicLayer = function() {
       }
     }
   };
-  var layer = null;
+  Map.topicLayer = null;
   if (Map.useTiledWMS) {
-    layer = new ol.layer.Tile({
+    Map.topicLayer = new ol.layer.Tile({
       source: new ol.source.TileWMS(wmsOptions)
     });
   }
   else {
-    layer = new ol.layer.Image({
+    Map.topicLayer = new ol.layer.Image({
       source: new ol.source.SingleImageWMS(wmsOptions)
     });
   }
-  Map.map.addLayer(layer);
+  Map.topicLayer.name = 'topic';
+
+  Map.map.addLayer(Map.topicLayer);
 };
+
+Map.setBackgroundLayer = function() {
+  var wmsParams = $.extend({}, Config.map.wmsParams, {
+    'LAYERS': Map.backgroundLayers
+  });
+  var wmsOptions = {
+    url: Map.topics[Map.backgroundTopic].wms_url,
+    params: wmsParams,
+    extent: Config.map.extent
+  };
+  Map.backgroundLayer = null;
+  if (Config.map.useTiledBackgroundWMS) {
+    Map.backgroundLayer = new ol.layer.Tile({
+      source: new ol.source.TileWMS(wmsOptions)
+    });
+  }
+  else {
+    Map.backgroundLayer = new ol.layer.Image({
+      source: new ol.source.SingleImageWMS(wmsOptions)
+    });
+  }
+  Map.backgroundLayer.name = 'background';
+
+  // add background as base layer
+  Map.map.getLayers().insertAt(0, Map.backgroundLayer);
+}
 
 Map.setLayerVisible = function(layername, visible, updateMap) {
   Map.layers[layername].visible = visible;
@@ -204,8 +248,8 @@ Map.setSelection = function(layer, ids) {
 }
 
 Map.mergeWmsParams = function(params) {
-  var source = Map.map.getLayers().getAt(0).getSource();
-  var newParams = $.extend(source.getParams(), params);
+  var source = Map.topicLayer.getSource();
+  var newParams = $.extend({}, source.getParams(), params);
   source.updateParams(newParams);
 }
 

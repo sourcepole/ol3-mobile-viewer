@@ -52,7 +52,10 @@ Gui.loadTopics = function(categories) {
       html +=    '  <p style="white-space:pre-wrap">' + topic.title + '</p>';
       html +=    '</li>';
 
-      Map.topics[topic.name] = {wms_url: topic.wms_url};
+      Map.topics[topic.name] = {
+        wms_url: topic.wms_url,
+        bg_topic: topic.bg_topic
+      };
     }
   }
 
@@ -64,8 +67,15 @@ Gui.loadTopics = function(categories) {
 }
 
 Gui.selectTopic = function(topic) {
+  Map.clearLayers();
   Map.topic = topic;
+  Map.backgroundTopic = Map.topics[Map.topic].bg_topic || null;
   Layers.loadLayers(Config.data.layersUrl(topic), Gui.loadLayers);
+  if (Map.backgroundTopic) {
+    // load background layers
+    Layers.loadLayers(Config.data.layersUrl(Map.backgroundTopic), Gui.loadBackgroundLayers);
+  }
+
   // mark topic button
   $('#topicList li.topic').removeClass('selected')
   $('#topicList li.topic[data-topic=' + topic + ']').addClass('selected');
@@ -131,6 +141,34 @@ Gui.loadLayers = function(groups) {
 
   Map.setTopicLayer();
   Gui.resetLayerOrder();
+}
+
+// add background layer
+Gui.loadBackgroundLayers = function(groups) {
+  // collect visible layers
+  var layers = [];
+  for (var i=0;i<groups.length; i++) {
+    var group = groups[i];
+    for (var j=0;j<group.layers.length; j++) {
+      var layer = group.layers[j];
+      if (layer.visini) {
+        layers.push({
+          layername: layer.layername,
+          wms_sort: layer.wms_sort
+        });
+      }
+    }
+  }
+  // sort by wms_sort
+  layers = layers.sort(function(a, b) {
+    return a.wms_sort - b.wms_sort;
+  });
+  var sortedLayers = [];
+  for (var i=0; i<layers.length; i++) {
+    sortedLayers.push(layers[i].layername);
+  }
+  Map.backgroundLayers = sortedLayers.join(',');
+  Map.setBackgroundLayer();
 }
 
 // fill layer order panel from visible layers

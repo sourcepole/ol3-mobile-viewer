@@ -20,6 +20,16 @@
       "wms_url":"http://map.geo.gl.ch/wms/Public"
     },
     {
+      "name":"background_test",
+      "title": "Pixelkarte als Hintergrund",
+      "icon":"img/geo_admin_pk.png",
+      "categorytitle": "Glarus",
+      "categorysort": null,
+      "categories_topics_sort":0,
+      "bg_topic": "geo_admin_pk",
+      "wms_url":"http://map.geo.gl.ch/wms/Public"
+    },
+    {
       "name":"grundplan_av",
       "title":"Grundplan Amtliche Vermessung mit Abstandslinien (schwarz/weiss)",
       "print_title":"Grundplan Amtliche Vermessung mit Abstandslinien (schwarz/weiss)",

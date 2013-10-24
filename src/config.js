@@ -79,3 +79,5 @@ Config.map.wmsParams = {
   'FORMAT': 'image/png; mode=8bit',
   'TRANSPARENT': null
 };
+
+Config.map.useTiledBackgroundWMS = true;
