@@ -4,6 +4,9 @@
 
 var Layers = {};
 
+// prefix to mark layers without group
+Layers.markerPrefix = "____";
+
 /**
  * get layers as JSON and return the layers grouped by groupname
  *
@@ -28,6 +31,10 @@ Layers.loadLayers = function(url, callback) {
     for (var i=0;i<wmslayers.length; i++) {
       var layer = wmslayers[i];
 
+      if (layer.groupname === null) {
+        // mark layers without group
+        layer.groupname = Layers.markerPrefix + layer.layername;
+      }
       if (groups[layer.groupname] === undefined) {
         groups[layer.groupname] = [];
       }

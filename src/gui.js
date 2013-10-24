@@ -75,11 +75,15 @@ Gui.selectTopic = function(topic) {
 Gui.loadLayers = function(groups) {
   html = "";
   var layers = [];
+  var markerPrefix = new RegExp(Layers.markerPrefix);
   for (var i=0;i<groups.length; i++) {
     var group = groups[i];
 
-    html += '<div data-role="collapsible" data-theme="c">';
-    html += '  <h3>' + group.title + '</h3>';
+    var hasGroup = !group.title.match(markerPrefix);
+    if (hasGroup) {
+      html += '<div data-role="collapsible" data-theme="c">';
+      html += '  <h3>' + group.title + '</h3>';
+    }
     html += '  <fieldset data-role="controlgroup">';
 
     for (var j=0;j<group.layers.length; j++) {
@@ -103,7 +107,9 @@ Gui.loadLayers = function(groups) {
     }
 
     html += '  </fieldset>';
-    html += '</div>';
+    if (hasGroup) {
+      html += '</div>';
+    }
   }
 
   $('#panelLayerAll').html(html);
