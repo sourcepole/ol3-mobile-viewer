@@ -4,6 +4,18 @@
   background-image: url("../img/glarus_logo.png");
 }
 
+/* topics list from Mapfish Appserver */
+/*
+#topicList li.ui-li.ui-li-static.ui-li-has-thumb {
+  padding: 10px 15px 0 61px;
+  min-height: 41px;
+}
+
+#topicList .ui-li-thumb {
+  padding: 5px;
+}
+*/
+
 /* HTML feature info from Mapfish Appserver */
 /*
 #featureInfoResults {
