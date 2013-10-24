@@ -21,9 +21,9 @@ Layers.markerPrefix = "____";
  */
 Layers.loadLayers = function(url, callback) {
   $.getJSON(url, function(data) {
-    // sort by toc_sort
+    // sort by reverse toc_sort
     var wmslayers = data.wmslayers.sort(function(a, b) {
-      return a.toc_sort - b.toc_sort;
+      return b.toc_sort - a.toc_sort;
     });
 
     // group by groupname
