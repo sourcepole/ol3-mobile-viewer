@@ -305,8 +305,8 @@ Map.toggleOrientation = function(enabled) {
     Map.deviceOrientation = new ol.DeviceOrientation();
 
     Map.deviceOrientation.on('change', function(event) {
-      var heading = event.target.getHeading();
-      if (Math.abs(Map.map.getView().getRotation() - heading) > 0.05) {
+      var heading = -event.target.getHeading();
+      if (Math.abs(Map.map.getView().getRotation() - heading) > 0.0175) {
         Map.setRotation(heading);
       }
     });
