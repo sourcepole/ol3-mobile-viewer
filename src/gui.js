@@ -482,13 +482,22 @@ Gui.initViewer = function() {
   $('#switchFollow').on('change', function(e) {
     Gui.following = $(this).val() == 'on';
     Map.toggleFollowing(Gui.tracking && Gui.following);
+  }).parent().on('swiperight',function(e,ui) {
+    // block panel close
+    e.stopPropagation();
   });
   $('#switchOrientation').on('change', function(e) {
     Gui.orientation = $(this).val() == 'on';
     Map.toggleOrientation(Gui.orientation);
+  }).parent().on('swiperight',function(e,ui) {
+    // block panel close
+    e.stopPropagation();
   });
   $('#switchScale').on('change', function(e) {
     Map.toggleScalebar($(this).val() == 'on');
+  }).parent().on('swiperight',function(e,ui) {
+    // block panel close
+    e.stopPropagation();
   });
 
   // about popup
