@@ -81,3 +81,6 @@ Config.map.wmsParams = {
 };
 
 Config.map.useTiledBackgroundWMS = true;
+
+Config.search = {};
+Config.search.queryPostfix = "ZH";

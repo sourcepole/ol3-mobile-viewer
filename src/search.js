@@ -11,7 +11,7 @@ var Search = {};
 Search.url = "https://api.geo.admin.ch/swisssearch/geocoding";
 
 // append query postfix to limit search results
-Search.queryPostfix = "GL";
+Search.queryPostfix = Config.search.queryPostfix;
 
 // callback with search result features
 Search.callback = null;
