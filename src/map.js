@@ -132,6 +132,7 @@ Map.setTopicLayer = function() {
     });
   }
   else {
+    wmsOptions['ratio'] = 1;
     Map.topicLayer = new ol.layer.Image({
       source: new ol.source.SingleImageWMS(wmsOptions)
     });
