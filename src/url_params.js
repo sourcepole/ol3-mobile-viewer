@@ -3,7 +3,7 @@
  *
  * parse URL parameters
  *
- * tiledWms=<boolean>: force tiled/untiled WMS
+ * tiledWms=<1|0>: force tiled/untiled WMS
  */
 
 var UrlParams = {};

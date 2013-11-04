@@ -41,24 +41,6 @@ Map.createMap = function(featureInfoCallback) {
   // map options
   var useCanvasRenderer = true; // FIXME: disable WEBGL renderer for now
 
-  // browser specific map setup
-  if (navigator.userAgent.match(/Mozilla.+Android.+Safari/)) {
-    // Android Safari
-    // Mozilla/5.0 (Linux; U; Android 4.0.3; en-gb; Transformer TF101 Build/IML74K) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Safari/534.30
-
-    // SingleImageWMS is not refreshed on pinch zoom
-    Map.useTiledWMS = true;
-  }
-  else if (navigator.userAgent.match(/Mozilla.+Android.+Firefox/)) {
-    // Android Firefox
-    // Mozilla/5.0 (Android; Tablet; rv:21.0) Gecko/21.0 Firefox/21.0
-
-    // SingleImageWMS is not refreshed on pinch zoom
-    Map.useTiledWMS = true;
-    // WEBGL renderer renders GL WMS as black image
-    useCanvasRenderer = true;
-  }
-
   // override from URL params
   if (UrlParams.params.tiledWms != undefined) {
     Map.useTiledWMS = UrlParams.params.tiledWms == 1;
