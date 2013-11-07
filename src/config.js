@@ -52,7 +52,7 @@ Config.featureInfo.useWMSGetFeatureInfo = false;
 Config.featureInfo.url = function(topicName, coordinate, layers) {
   return "/topics/query?" + $.param({
     bbox: [coordinate[0], coordinate[1], coordinate[0], coordinate[1]].join(','),
-    infoQuery: '{"queryTopics":["topic":"' + topicName + '","divCls":"legmain","layers":"' + layers.join(',') + '"}]}',
+    infoQuery: '{"queryTopics":[{"topic":"' + topicName + '","divCls":"legmain","layers":"' + layers.join(',') + '"}]}',
     mobile: 1
   });
 }
