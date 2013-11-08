@@ -85,6 +85,8 @@ Config.map.wmsParams = {
 
 Config.map.useTiledBackgroundWMS = true;
 
+Config.map.maxZoom = 17;
+
 // adjust to max zoom when location following is enabled
 Config.map.maxGeolocationZoom = 12;
 

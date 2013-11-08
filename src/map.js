@@ -63,6 +63,13 @@ Map.createMap = function(featureInfoCallback) {
     $.event.trigger({type: 'maprotation', rotation: Map.map.getView().getRotation()});
   });
 
+  Map.map.getView().on('change:resolution', function() {
+    // limit max zoom
+    if (Map.map.getView().getZoom() > Config.map.maxZoom) {
+      Map.map.getView().setZoom(Config.map.maxZoom)
+    }
+  });
+
   // feature info
   if (featureInfoCallback != null) {
     var clickTimeout = null;
