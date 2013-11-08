@@ -7,6 +7,7 @@ Config = {};
 // flag to activate debug code
 Config.debug = false;
 
+
 // data configuration
 Config.data = {};
 
@@ -17,6 +18,7 @@ Config.data.layersUrl = function(topicName) {
 }
 
 Config.data.initialTopic = "geo_admin_pk";
+
 
 // feature info
 Config.featureInfo = {};
@@ -59,6 +61,7 @@ Config.featureInfo.url = function(topicName, coordinate, layers) {
 // add styles for feature info results HTML to custom.css
 */
 
+
 // map configuration
 Config.map = {};
 
@@ -88,5 +91,9 @@ Config.map.maxGeolocationZoom = 12;
 // adjust to max zoom when jumping to search results
 Config.map.maxSearchZoom = 12;
 
+
+// search configuration
 Config.search = {};
-Config.search.queryPostfix = "ZH";
+
+// append this to the query string to limit search results e.g. to a canton ("ZH")
+Config.search.queryPostfix = "";
