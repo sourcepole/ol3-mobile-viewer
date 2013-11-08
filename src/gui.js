@@ -328,7 +328,7 @@ Gui.showSearchResults = function(results) {
 
 // bbox as [<minx>, <maxx>, <miny>, maxy>]
 Gui.jumpToSearchResult = function(bbox) {
-  Map.zoomToExtent(bbox, 13);
+  Map.zoomToExtent(bbox, Config.map.maxSearchZoom);
 
   // disable following
   $('#switchFollow').val('off');

@@ -85,5 +85,8 @@ Config.map.useTiledBackgroundWMS = true;
 // adjust to max zoom when location following is enabled
 Config.map.maxGeolocationZoom = 12;
 
+// adjust to max zoom when jumping to search results
+Config.map.maxSearchZoom = 12;
+
 Config.search = {};
 Config.search.queryPostfix = "ZH";
