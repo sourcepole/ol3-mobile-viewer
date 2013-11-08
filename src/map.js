@@ -266,7 +266,12 @@ Map.toggleTracking = function(enabled) {
 
   Map.geolocation.setTracking(enabled);
   $('#locationMarker').toggle(enabled);
-}
+
+  if (enabled) {
+    // always jump to first geolocation
+    Map.geolocation.on('change:position', Map.initialCenterOnLocation);
+  }
+};
 
 Map.toggleFollowing = function(enabled) {
   if (Map.geolocation != null) {
@@ -277,6 +282,12 @@ Map.toggleFollowing = function(enabled) {
       Map.geolocation.un('change:position', Map.centerOnLocation);
     }
   }
+};
+
+Map.initialCenterOnLocation = function() {
+  Map.centerOnLocation();
+  // disable after first update
+  Map.geolocation.un('change:position', Map.initialCenterOnLocation);
 };
 
 Map.centerOnLocation = function() {
