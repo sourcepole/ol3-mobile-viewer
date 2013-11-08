@@ -292,6 +292,10 @@ Map.initialCenterOnLocation = function() {
 
 Map.centerOnLocation = function() {
   Map.map.getView().setCenter(Map.geolocation.getPosition());
+  // adjust to max zoom
+  if (Map.map.getView().getZoom() > Config.map.maxGeolocationZoom) {
+    Map.map.getView().setZoom(Config.map.maxGeolocationZoom);
+  }
 };
 
 Map.toggleOrientation = function(enabled) {
