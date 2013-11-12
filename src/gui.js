@@ -47,10 +47,13 @@ Gui.loadTopics = function(categories) {
 
     for (var j=0;j<category.topics.length; j++) {
       var topic = category.topics[j];
-      html +=    '<li class="topic" data-topic="' + topic.name + '">';
-      html +=    '  <img src="' + topic.icon + '"/>';
-      html +=    '  <p style="white-space:pre-wrap">' + topic.title + '</p>';
-      html +=    '</li>';
+
+      if (topic.main_layer != false) {
+        html +=    '<li class="topic" data-topic="' + topic.name + '">';
+        html +=    '  <img src="' + topic.icon + '"/>';
+        html +=    '  <p style="white-space:pre-wrap">' + topic.title + '</p>';
+        html +=    '</li>';
+      }
 
       Map.topics[topic.name] = {
         wms_url: topic.wms_url,
