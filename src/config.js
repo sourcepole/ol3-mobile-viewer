@@ -85,13 +85,15 @@ Config.map.wmsParams = {
 
 Config.map.useTiledBackgroundWMS = true;
 
-Config.map.maxZoom = 17;
+// DPI for scale calculations
+Config.map.dpi = 96;
 
-// adjust to max zoom when location following is enabled
-Config.map.maxGeolocationZoom = 12;
-
-// adjust to max zoom when jumping to search results
-Config.map.maxSearchZoom = 12;
+// limit max zoom to this scale (e.g. minScaleDenom=500 for 1:500)
+Config.map.minScaleDenom = {
+  map: 1000, // if topic.minscale is not set
+  geolocation: 10000, // on location following
+  search: 10000 // jump to search results
+};
 
 
 // search configuration

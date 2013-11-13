@@ -19,6 +19,8 @@ Map.backgroundTopic = null;
 Map.backgroundLayers = null;
 // OpenLayers 3 map object
 Map.map = null;
+// min resolution to limit max zoom
+Map.minResolution = null;
 // OpenLayers 3 layer objects
 Map.topicLayer = null;
 Map.backgroundLayer = null;
@@ -63,10 +65,11 @@ Map.createMap = function(featureInfoCallback) {
     $.event.trigger({type: 'maprotation', rotation: Map.map.getView().getRotation()});
   });
 
+  Map.setMinScaleDenom(Config.map.minScaleDenom.map);
   Map.map.getView().on('change:resolution', function() {
     // limit max zoom
-    if (Map.map.getView().getZoom() > Config.map.maxZoom) {
-      Map.map.getView().setZoom(Config.map.maxZoom)
+    if (Map.map.getView().getResolution() < Map.minResolution) {
+      Map.map.getView().setResolution(Map.minResolution);
     }
   });
 
@@ -235,27 +238,46 @@ Map.setSelection = function(layer, ids) {
   Map.mergeWmsParams({
     'SELECTION': Map.selection
   });
-}
+};
 
 Map.mergeWmsParams = function(params) {
   var source = Map.topicLayer.getSource();
   var newParams = $.extend({}, source.getParams(), params);
   source.updateParams(newParams);
-}
+};
 
 // set map rotation in rad
 Map.setRotation = function(rotation) {
   Map.map.getView().setRotation(rotation);
 };
 
-// zoom to extent and clamp to max zoom level
-// extent as [<minx>, <maxx>, <miny>, maxy>]
-Map.zoomToExtent = function(extent, maxZoom) {
-  Map.map.getView().fitExtent(extent, Map.map.getSize())
-  if (Map.map.getView().getZoom() > maxZoom) {
-    Map.map.getView().setZoom(maxZoom)
+// get closest resolution for a scale
+Map.scaleDenomToResolution = function(scaleDenom) {
+  // resolution = scaleDenom / (metersPerUnit * dotsPerMeter)
+  var res = scaleDenom / (Map.map.getView().getProjection().getMetersPerUnit() * (Config.map.dpi / 0.0254));
+  return Map.map.getView().constrainResolution(res);
+};
+
+// set max zoom of map
+Map.setMinScaleDenom = function(scaleDenom) {
+  Map.minResolution = Map.scaleDenomToResolution(scaleDenom);
+  Map.clampToScale(scaleDenom);
+};
+
+// adjust max zoom
+Map.clampToScale = function(scaleDenom) {
+  var minRes = Map.scaleDenomToResolution(scaleDenom);
+  if (Map.map.getView().getResolution() < minRes) {
+    Map.map.getView().setResolution(minRes);
   }
 }
+
+// zoom to extent and clamp to max zoom level
+// extent as [<minx>, <maxx>, <miny>, maxy>]
+Map.zoomToExtent = function(extent, minScaleDenom) {
+  Map.map.getView().fitExtent(extent, Map.map.getSize());
+  Map.clampToScale(minScaleDenom);
+};
 
 Map.toggleTracking = function(enabled) {
   if (Map.geolocation == null) {
@@ -299,10 +321,7 @@ Map.initialCenterOnLocation = function() {
 
 Map.centerOnLocation = function() {
   Map.map.getView().setCenter(Map.geolocation.getPosition());
-  // adjust to max zoom
-  if (Map.map.getView().getZoom() > Config.map.maxGeolocationZoom) {
-    Map.map.getView().setZoom(Config.map.maxGeolocationZoom);
-  }
+  Map.clampToScale(Config.map.minScaleDenom.geolocation);
 };
 
 Map.toggleOrientation = function(enabled) {

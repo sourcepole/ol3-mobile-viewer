@@ -8,7 +8,8 @@
       "categorytitle": "geo.admin.ch",
       "categorysort": 0,
       "categories_topics_sort":0,
-      "wms_url":"http://wms.geo.admin.ch/"
+      "wms_url":"http://wms.geo.admin.ch/",
+      "minscale": 10000
     },
     {
       "name":"basisplan_av_farbig",

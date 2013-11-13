@@ -57,6 +57,7 @@ Gui.loadTopics = function(categories) {
 
       Map.topics[topic.name] = {
         wms_url: topic.wms_url,
+        minscale: topic.minscale,
         bg_topic: topic.bg_topic
       };
     }
@@ -72,6 +73,7 @@ Gui.loadTopics = function(categories) {
 Gui.selectTopic = function(topic) {
   Map.clearLayers();
   Map.topic = topic;
+  Map.setMinScaleDenom(Map.topics[Map.topic].minscale || Config.map.minScaleDenom.map);
   Map.backgroundTopic = Map.topics[Map.topic].bg_topic || null;
   Layers.loadLayers(Config.data.layersUrl(topic), Gui.loadLayers);
   if (Map.backgroundTopic) {
@@ -331,7 +333,7 @@ Gui.showSearchResults = function(results) {
 
 // bbox as [<minx>, <maxx>, <miny>, maxy>]
 Gui.jumpToSearchResult = function(bbox) {
-  Map.zoomToExtent(bbox, Config.map.maxSearchZoom);
+  Map.zoomToExtent(bbox, Config.map.minScaleDenom.search);
 
   // disable following
   $('#switchFollow').val('off');
