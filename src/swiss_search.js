@@ -33,7 +33,7 @@ SwissSearch.prototype.submit = function(searchParams, callback) {
   request.fail(function(jqXHR, status) {
     alert(I18n.search.failed + "\n" + jqXHR.status + ": " + jqXHR.statusText);
   });
-}
+};
 
 /**
  * parse search parameters and return URL parameters as hash
@@ -45,7 +45,7 @@ SwissSearch.prototype.parseSearchParams = function(searchParams) {
     services: this.services,
     query: query
   };
-}
+};
 
 /**
  * parse query result and invoke the callback with search result features
@@ -68,8 +68,8 @@ SwissSearch.prototype.parseResults = function(data, status, callback) {
     return {
       name: name,
       bbox: bbox
-    }
+    };
   });
 
   callback(results);
-}
+};

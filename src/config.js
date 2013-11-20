@@ -105,3 +105,29 @@ Config.map.minScaleDenom = {
  * queryPostfix: append this to the query string to limit search results e.g. to a canton ("ZH")
  */
 Config.search = new SwissSearch('swissnames', "");
+
+
+/**
+ * Mapfish Appserver search
+ */
+
+// create query URL from search params
+Config.mapfishUrl = function(searchParams) {
+  // DEBUG: sample static file for demonstration purposes
+  return "data/mapfish_search_response.json";
+/*
+  return "/search/fullsearch.json?" + $.param({
+    begriff: searchParams
+  });
+*/
+};
+
+// return feature name and bbox=[<minx>, <maxx>, <miny>, maxy>]
+Config.mapfishParseFeature = function(feature) {
+  return {
+    name: feature.begriff,
+    bbox: [feature.bbox_xmin, feature.bbox_xmax, feature.bbox_ymin, feature.bbox_ymax]
+  };
+};
+
+//Config.search = new MapfishSearch(Config.mapfishUrl, Config.mapfishParseFeature);
