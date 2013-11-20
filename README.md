@@ -12,6 +12,8 @@ Features:
 
 ## Customization
 
+* src/config.js
+* src/custom.css
 
 ## Runtime configuration
 

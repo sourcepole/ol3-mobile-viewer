@@ -467,7 +467,7 @@ Gui.initViewer = function() {
     var searchString = $(this).val();
     if (searchString != "") {
       // submit search
-      Search.submit(searchString, Gui.showSearchResults);
+      Config.search.submit(searchString, Gui.showSearchResults);
       // close virtual keyboard
       $('#searchInput').blur();
     }

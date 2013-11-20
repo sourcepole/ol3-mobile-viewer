@@ -97,7 +97,11 @@ Config.map.minScaleDenom = {
 
 
 // search configuration
-Config.search = {};
 
-// append this to the query string to limit search results e.g. to a canton ("ZH")
-Config.search.queryPostfix = "";
+/**
+ * SwissSearch
+ *
+ * services: SwissSearch services
+ * queryPostfix: append this to the query string to limit search results e.g. to a canton ("ZH")
+ */
+Config.search = new SwissSearch('swissnames', "");
