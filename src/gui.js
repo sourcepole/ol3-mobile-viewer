@@ -338,7 +338,7 @@ Gui.jumpToSearchResult = function(bbox) {
   // disable following
   $('#switchFollow').val('off');
   $('#switchFollow').slider('refresh');
-  Map.toggleFollowing(false);
+  Gui.toggleFollowing(false);
 
   $('#panelSearch').panel('close');
 }
@@ -374,6 +374,16 @@ Gui.updateTranslations = function() {
   $('#panelFeatureInfo b').html(I18n.featureInfo.header);
 }
 
+Gui.toggleFollowing = function(enabled) {
+  Gui.following = enabled;
+  Map.toggleFollowing(Gui.tracking && Gui.following);
+}
+
+Gui.toggleOrientation = function(enabled) {
+  Gui.orientation = enabled;
+  Map.toggleOrientation(Gui.orientation);
+}
+
 Gui.initViewer = function() {
   UrlParams.parse();
 
@@ -400,13 +410,15 @@ Gui.initViewer = function() {
   });
 
   // default properties
-  $('#switchFollow').val('on');
+  $('#switchFollow').val(Config.defaultProperties.following ? 'on' : 'off');
   $('#switchFollow').slider('refresh');
-  $('#switchOrientation').val('off');
+  Gui.toggleFollowing(Config.defaultProperties.following);
+  $('#switchOrientation').val(Config.defaultProperties.orientation ? 'on' : 'off');
   $('#switchOrientation').slider('refresh');
-  $('#switchScale').val('on');
+  Gui.toggleOrientation(Config.defaultProperties.orientation);
+  $('#switchScale').val(Config.defaultProperties.scalebar ? 'on' : 'off');
   $('#switchScale').slider('refresh');
-  Map.toggleScalebar(true);
+  Map.toggleScalebar(Config.defaultProperties.scalebar);
 
   // topics
   Topics.loadTopics(Config.data.topicsUrl, Gui.loadTopics);
@@ -487,15 +499,13 @@ Gui.initViewer = function() {
 
   // properties
   $('#switchFollow').on('change', function(e) {
-    Gui.following = $(this).val() == 'on';
-    Map.toggleFollowing(Gui.tracking && Gui.following);
+    Gui.toggleFollowing($(this).val() == 'on');
   }).parent().on('swiperight',function(e,ui) {
     // block panel close
     e.stopPropagation();
   });
   $('#switchOrientation').on('change', function(e) {
-    Gui.orientation = $(this).val() == 'on';
-    Map.toggleOrientation(Gui.orientation);
+    Gui.toggleOrientation($(this).val() == 'on');
   }).parent().on('swiperight',function(e,ui) {
     // block panel close
     e.stopPropagation();

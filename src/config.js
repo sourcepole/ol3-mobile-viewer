@@ -20,6 +20,14 @@ Config.data.layersUrl = function(topicName) {
 Config.data.initialTopic = "geo_admin_pk";
 
 
+// default properties
+Config.defaultProperties = {
+  following: true,
+  orientation: false,
+  scalebar: true
+};
+
+
 // feature info
 Config.featureInfo = {};
 
