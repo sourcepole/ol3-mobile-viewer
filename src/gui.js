@@ -470,6 +470,10 @@ Gui.initViewer = function() {
   $('#panelFeatureInfo').on('panelclose', function() {
     Map.toggleClickMarker(false);
   });
+  $('#featureInfoResults').parent().on('swipeleft',function(e,ui) {
+    // block panel close
+    e.stopPropagation();
+  });
 
   // search
   $('#searchInput').bind('change', function(e) {
