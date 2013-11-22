@@ -109,6 +109,11 @@
   float: right;
 }
 
+#dlgAbout .ui-title {
+  margin-left: 10%;
+  margin-right: 10%;
+}
+
 /* misc */
 
 .scrollable {
