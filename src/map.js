@@ -36,6 +36,8 @@ Map.selection = null;
 Map.lastClickPos = null;
 // click marker
 Map.clickMarker = null;
+// ignore clicks on map
+Map.ignoreClick = false;
 
 Map.useTiledWMS = false;
 
@@ -77,6 +79,9 @@ Map.createMap = function(featureInfoCallback) {
   if (featureInfoCallback != null) {
     var clickTimeout = null;
     Map.map.on('click', function(e) {
+      if (Map.ignoreClick) {
+        return;
+      }
       clearTimeout(clickTimeout);
       clickTimeout = setTimeout(function() {
         Map.lastClickPos = e.getCoordinate();
@@ -361,4 +366,8 @@ Map.toggleScalebar = function(enabled) {
   else {
     Map.map.removeControl(Map.scaleLine);
   }
+};
+
+Map.toggleClickHandler = function(enabled) {
+  Map.ignoreClick = !enabled;
 };

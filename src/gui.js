@@ -523,6 +523,14 @@ Gui.initViewer = function() {
 
   // about popup
   $('#aboutContent').html(I18n.about.content);
+
+  // workaround for erroneus map click despite open panels on iOS
+  $('#panelFeatureInfo, #panelLayer').on('panelopen', function() {
+    Map.toggleClickHandler(false);
+  });
+  $('#panelFeatureInfo, #panelLayer').on('panelclose', function() {
+    Map.toggleClickHandler(true);
+  });
 }
 
 $(document).ready(function(e) {
