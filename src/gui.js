@@ -13,8 +13,9 @@ Gui.orientation = true;
 Gui.selectedLayer = null;
 
 Gui.updateLayout = function() {
-  // use full content height for map
+  // use full content size for map
   $('#map').height(window.innerHeight);
+  $('#map').width(window.innerWidth);
 
   // limit panels to screen height
   $('#panelTopics .ui-listview').height(window.innerHeight - 90);
