@@ -287,7 +287,11 @@ Map.zoomToExtent = function(extent, minScaleDenom) {
 Map.toggleTracking = function(enabled) {
   if (Map.geolocation == null) {
     // create geolocation
-    Map.geolocation = new ol.Geolocation();
+    Map.geolocation = new ol.Geolocation({
+      trackingOptions: {
+        enableHighAccuracy: true
+      }
+    });
     Map.geolocation.bindTo('projection', Map.map.getView());
 
     // add geolocation marker
