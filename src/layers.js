@@ -8,16 +8,24 @@ var Layers = {};
 Layers.markerPrefix = "____";
 
 /**
- * get layers as JSON and return the layers grouped by groupname
+ * get layers as JSON and return the layers grouped by groupname and the layer tree structure
  *
- * [
- *   {
- *     title: <group>,
+ * {
+ *   groups: [
+ *     {
+ *       title: <group>,
+ *       layers: [
+ *         <layer data from wmslayers>
+ *       ]
+ *     }
+ *   ],
+ *   layertree: [ // layer hierarchy from optional layertree or generated from groups
+ *     name: <group/layername>,
  *     layers: [
- *       <layer data from wmslayers>
- *     ]
- *   }
- * ]
+ *        <group layers or empty>
+ *      ]
+ *   ]
+ * }
  */
 Layers.loadLayers = function(url, callback) {
   $.getJSON(url, function(data) {
@@ -51,6 +59,45 @@ Layers.loadLayers = function(url, callback) {
       }
     }
 
-    callback(sortedGroups);
+    // generate layertree if not in JSON
+    var layertree = data.layertree;
+    if (layertree === undefined) {
+      layertree = [];
+
+      var markerPrefix = new RegExp(Layers.markerPrefix);
+
+      for (var i=0;i<sortedGroups.length; i++) {
+        var group = sortedGroups[i];
+
+        var layers = null;
+        if (group.title.match(markerPrefix)) {
+          // layer without group
+          layers = layertree;
+        }
+        else {
+          // add group
+          var subtree = {
+            name: group.title,
+            layers: []
+          };
+          layertree.push(subtree);
+
+          layers = subtree.layers;
+        }
+
+        // add layers
+        for (var j=0;j<group.layers.length; j++) {
+          layers.push({
+            name: group.layers[j].layername,
+            layers: []
+          })
+        }
+      }
+    }
+
+    callback({
+      groups: sortedGroups,
+      layertree: layertree
+    });
   });
 }

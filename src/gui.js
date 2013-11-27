@@ -88,44 +88,61 @@ Gui.selectTopic = function(topic) {
 }
 
 // update layers list
-Gui.loadLayers = function(groups) {
+Gui.loadLayers = function(data) {
   html = "";
   var layers = [];
-  var markerPrefix = new RegExp(Layers.markerPrefix);
-  for (var i=0;i<groups.length; i++) {
-    var group = groups[i];
 
-    var hasGroup = !group.title.match(markerPrefix);
-    if (hasGroup) {
+  function fillLayertree(node, parent, depth) {
+    if (node.layers.length > 0) {
+      // add group
       html += '<div data-role="collapsible" data-theme="c">';
-      html += '  <h3>' + group.title + '</h3>';
+      html += '  <h3>' + node.name + '</h3>';
     }
-    html += '  <fieldset data-role="controlgroup">';
+    else {
+      // find layer parent group
+      var groupTitle = parent || Layers.markerPrefix + node.name;
+      var group = $.grep(data.groups, function(el) {
+        return el.title === groupTitle;
+      })[0];
+      if (group != undefined) {
+        // find layer in group
+        var layer = $.grep(group.layers, function(el) {
+          return el.layername === node.name;
+        })[0];
 
-    for (var j=0;j<group.layers.length; j++) {
-      var layer = group.layers[j];
-      html += '<label>';
-      html += '  <input type="checkbox" ';
-      html += '    name="' + layer.layername + '" ';
-      html += '    data-layer="' + layer.layername + '" ';
-      if (layer.visini) {
-        html += '    checked ';
+        // add layer
+        html += '<label>';
+        html += '  <input type="checkbox" ';
+        html += '    name="' + layer.layername + '" ';
+        html += '    data-layer="' + layer.layername + '" ';
+        if (layer.visini) {
+          html += '    checked ';
+        }
+        html += '  />' + layer.toclayertitle;
+        html += '</label>';
+
+        layers.push({
+          layername: layer.layername,
+          title: layer.toclayertitle,
+          wms_sort: layer.wms_sort,
+          visible: layer.visini
+        });
       }
-      html += '  />' + layer.toclayertitle;
-      html += '</label>';
-
-      layers.push({
-        layername: layer.layername,
-        title: layer.toclayertitle,
-        wms_sort: layer.wms_sort,
-        visible: layer.visini
-      });
     }
 
-    html += '  </fieldset>';
-    if (hasGroup) {
+    // traverse children
+    for (var i=0;i<node.layers.length; i++) {
+      fillLayertree(node.layers[i], node.name, depth + 1);
+    }
+
+    if (node.layers.length > 0) {
       html += '</div>';
     }
+  }
+
+  // fill layer tree
+  for (var i=0;i<data.layertree.length; i++) {
+    fillLayertree(data.layertree[i], null, 0);
   }
 
   $('#panelLayerAll').html(html);
@@ -150,8 +167,9 @@ Gui.loadLayers = function(groups) {
 }
 
 // add background layer
-Gui.loadBackgroundLayers = function(groups) {
+Gui.loadBackgroundLayers = function(data) {
   // collect visible layers
+  var groups = data.groups;
   var layers = [];
   for (var i=0;i<groups.length; i++) {
     var group = groups[i];
