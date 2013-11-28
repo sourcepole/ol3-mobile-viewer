@@ -590,10 +590,10 @@ Gui.initViewer = function() {
   $('#aboutContent').html(I18n.about.content);
 
   // workaround for erroneus map click despite open panels on iOS
-  $('#panelFeatureInfo, #panelLayer').on('panelopen', function() {
+  $('#panelFeatureInfo, #panelLayer, #panelSearch').on('panelopen', function() {
     Map.toggleClickHandler(false);
   });
-  $('#panelFeatureInfo, #panelLayer').on('panelclose', function() {
+  $('#panelFeatureInfo, #panelLayer, #panelSearch').on('panelclose', function() {
     Map.toggleClickHandler(true);
   });
 }
