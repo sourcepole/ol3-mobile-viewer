@@ -11,6 +11,10 @@ Gui.orientation = true;
 
 // currently selected layer in layer order panel
 Gui.selectedLayer = null;
+// original position of currently dragged layer in layer order panel
+Gui.draggedLayerIndex = null;
+// flag if layer order has been changed manually
+Gui.layerOrderChanged = false;
 
 Gui.updateLayout = function() {
   // use full content size for map
@@ -158,6 +162,7 @@ Gui.loadLayers = function(data) {
     Map.layers[layer.layername] = {
       title: layer.title,
       visible: layer.visible,
+      wms_sort: layer.wms_sort,
       transparency: 0
     }
   }
@@ -201,11 +206,13 @@ Gui.resetLayerOrder = function() {
   for (var layer in Map.layers) {
     if (Map.layers[layer].visible) {
       // NOTE: fill in reverse order, with layers drawn from bottom to top
-      html = '<li data-layer="' + layer + '">' + Map.layers[layer].title + '</li>' + html;
+      html = '<li data-layer="' + layer + '" data-wms_sort="' + Map.layers[layer].wms_sort + '">' + Map.layers[layer].title + '</li>' + html;
     }
   }
   $('#listOrder').html(html);
   $('#listOrder').listview('refresh');
+
+  Gui.layerOrderChanged = false;
 
   Gui.selectLayer(null);
 }
@@ -213,9 +220,35 @@ Gui.resetLayerOrder = function() {
 // add/remove layer in layer order panel
 Gui.updateLayerOrder = function(layer, layerAdded) {
   if (layerAdded) {
-    // add layer on top
-    var html = '<li data-layer="' + layer + '">' + Map.layers[layer].title + '</li>';
-    $('#listOrder').prepend(html);
+    var html = '<li data-layer="' + layer + '" data-wms_sort="' + Map.layers[layer].wms_sort + '">' + Map.layers[layer].title + '</li>';
+
+    if (Gui.layerOrderChanged) {
+      // add layer on top if layer order has been changed manually
+      $('#listOrder').prepend(html);
+    }
+    else {
+      // insert layer at wms_sort position
+      // find list element with lower sort order
+      var el = $('#listOrder li').filter(function() {
+        return $(this).data('wms_sort') < Map.layers[layer].wms_sort;
+      }).first();
+      if (el.length > 0) {
+        el.before(html);
+      }
+      else {
+        // find list element with higher sort order
+        el = $('#listOrder li').filter(function() {
+          return $(this).data('wms_sort') > Map.layers[layer].wms_sort;
+        }).last();
+        if (el.length > 0) {
+          el.after(html);
+        }
+        else {
+          // add layer on top
+          $('#listOrder').prepend(html);
+        }
+      }
+    }
   }
   else {
     // remove layer
@@ -226,8 +259,20 @@ Gui.updateLayerOrder = function(layer, layerAdded) {
   Gui.onLayerOrderChanged(null, null);
 }
 
+Gui.onLayerDrag = function(event, ui) {
+  // keep track of original position in layer order
+  Gui.draggedLayerIndex = $('#listOrder li').index(ui.item);
+}
+
 // update layer order in map
 Gui.onLayerOrderChanged = function(event, ui) {
+  if (ui != null) {
+    if ($('#listOrder li').index(ui.item) != Gui.draggedLayerIndex) {
+      // layer order has been changed manually
+      Gui.layerOrderChanged = true;
+    }
+  }
+
   // unselect layer
   Gui.selectLayer(null);
 
@@ -365,6 +410,7 @@ Gui.jumpToSearchResult = function(bbox) {
 // binds the reorder functionality to the visible layer list
 $(document).bind('pageinit', function() {
   $('#listOrder').sortable();
+  $('#listOrder').bind('sortstart', Gui.onLayerDrag);
   $('#listOrder').bind('sortstop', Gui.onLayerOrderChanged);
 });
 
