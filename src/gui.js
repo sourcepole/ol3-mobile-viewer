@@ -589,6 +589,10 @@ Gui.initViewer = function() {
   // about popup
   $('#aboutContent').html(I18n.about.content);
 
+  // toggle buttons
+  $('#buttonShare').toggle(!Config.gui.hideShareButton);
+  $('#buttonLogin').toggle(!Config.gui.hideLoginButton);
+
   // workaround for erroneus map click despite open panels on iOS
   $('#panelFeatureInfo, #panelLayer, #panelSearch').on('panelopen', function() {
     Map.toggleClickHandler(false);

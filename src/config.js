@@ -8,6 +8,13 @@ Config = {};
 Config.debug = false;
 
 
+// GUI
+Config.gui = {
+  hideShareButton: false,
+  hideLoginButton: false
+};
+
+
 // data configuration
 Config.data = {};
 
