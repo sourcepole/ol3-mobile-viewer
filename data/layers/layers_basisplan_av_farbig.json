@@ -60,6 +60,8 @@
             "groupname": "Basisplan-AV farbig",
             "layername": "BPAV10000 farbig",
             "toclayertitle": "BPAV10000 farbig",
+            "minscale": 5000,
+            "maxscale": 50000,
             "visini": true,
             "wms_sort": 4,
             "toc_sort": 6

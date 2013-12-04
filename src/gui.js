@@ -129,7 +129,9 @@ Gui.loadLayers = function(data) {
           layername: layer.layername,
           title: layer.toclayertitle,
           wms_sort: layer.wms_sort,
-          visible: layer.visini
+          visible: layer.visini,
+          minscale: layer.minscale,
+          maxscale: layer.maxscale
         });
       }
     }
@@ -163,6 +165,8 @@ Gui.loadLayers = function(data) {
       title: layer.title,
       visible: layer.visible,
       wms_sort: layer.wms_sort,
+      minscale: layer.minscale,
+      maxscale: layer.maxscale,
       transparency: 0
     }
   }

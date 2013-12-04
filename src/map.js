@@ -93,7 +93,7 @@ Map.createMap = function(featureInfoCallback) {
         }
         else {
           $.ajax({
-            url: Config.featureInfo.url(Map.topic, e.getCoordinate(), Map.visibleLayers()),
+            url: Config.featureInfo.url(Map.topic, e.getCoordinate(), Map.featureInfoLayers()),
             dataType: 'text'
           }).done(function(data, status) {
             featureInfoCallback([data]);
@@ -203,6 +203,31 @@ Map.visibleLayers = function() {
   return visibleLayers;
 };
 
+Map.featureInfoLayers = function() {
+  // collect visible layers for current scale
+  var featureInfoLayers = [];
+  var currentRes = Map.map.getView().getResolution();
+  for (var key in Map.layers) {
+    var layer = Map.layers[key];
+    if (layer.visible) {
+      var visible = true;
+
+      // check if layer is in scale range
+      if (layer.minscale != undefined) {
+        visible = (currentRes >= Map.scaleDenomToResolution(layer.minscale, false));
+      }
+      if (visible && layer.maxscale != undefined) {
+        visible = (currentRes <= Map.scaleDenomToResolution(layer.maxscale, false));
+      }
+
+      if (visible) {
+        featureInfoLayers.push(key);
+      }
+    }
+  }
+  return featureInfoLayers;
+}
+
 // transparency between 0 and 100
 Map.setLayerTransparency = function(layername, transparency, updateMap) {
   Map.layers[layername].transparency = transparency;
@@ -256,22 +281,28 @@ Map.setRotation = function(rotation) {
   Map.map.getView().setRotation(rotation);
 };
 
-// get closest resolution for a scale
-Map.scaleDenomToResolution = function(scaleDenom) {
+// get resolution for a scale
+// set closest to get closest view resolution
+Map.scaleDenomToResolution = function(scaleDenom, closest) {
   // resolution = scaleDenom / (metersPerUnit * dotsPerMeter)
   var res = scaleDenom / (Map.map.getView().getProjection().getMetersPerUnit() * (Config.map.dpi / 0.0254));
-  return Map.map.getView().constrainResolution(res);
+  if (closest) {
+    return Map.map.getView().constrainResolution(res);
+  }
+  else {
+    return res;
+  }
 };
 
 // set max zoom of map
 Map.setMinScaleDenom = function(scaleDenom) {
-  Map.minResolution = Map.scaleDenomToResolution(scaleDenom);
+  Map.minResolution = Map.scaleDenomToResolution(scaleDenom, true);
   Map.clampToScale(scaleDenom);
 };
 
 // adjust max zoom
 Map.clampToScale = function(scaleDenom) {
-  var minRes = Map.scaleDenomToResolution(scaleDenom);
+  var minRes = Map.scaleDenomToResolution(scaleDenom, true);
   if (Map.map.getView().getResolution() < minRes) {
     Map.map.getView().setResolution(minRes);
   }
