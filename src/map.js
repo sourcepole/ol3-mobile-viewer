@@ -120,7 +120,10 @@ Map.setTopicLayer = function() {
   // add new layer
   var wmsParams = $.extend({}, Config.map.wmsParams, {
     'LAYERS': Map.visibleLayers().join(','),
-    'OPACITIES': null
+    'OPACITIES': null,
+    'DPI': Config.map.dpi,
+    'MAP_RESOLUTION': Config.map.dpi,
+    'FORMAT_OPTIONS': "dpi:" + Config.map.dpi
   });
   if (Map.backgroundTopic) {
     // use transparent layer with background
