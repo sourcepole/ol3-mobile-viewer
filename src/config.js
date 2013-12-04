@@ -80,17 +80,39 @@ Config.featureInfo.url = function(topicName, coordinate, layers) {
 // map configuration
 Config.map = {};
 
+// DPI for scale calculations
+Config.map.dpi = 96;
+
 // ol.Extent
 Config.map.extent = [420000, 900000, 30000, 350000];
 
+Config.map.scaleDenoms = [2000000, 1000000, 400000, 200000, 80000, 40000, 20000, 10000, 8000, 6000, 4000, 2000, 1000, 500, 250, 100];
+
+Config.map.init = {
+  center: [660000, 190000],
+  zoom: 1
+};
+
+// ol.proj.Projection
+Config.map.projection = ol.proj.configureProj4jsProjection({
+  code: 'EPSG:21781',
+  extent: Config.map.extent
+});
+
+// calculate resolutions from scales
+Config.map.scaleDenomsToResolutions = function(scales) {
+  var resolutions = $.map(scales, function(scale, index) {
+    return scale / (Config.map.projection.getMetersPerUnit() * (Config.map.dpi / 0.0254));
+  });
+  return resolutions;
+};
+
 // ol.View2DOptions
 Config.map.viewOptions = {
-  projection: ol.proj.configureProj4jsProjection({
-    code: 'EPSG:21781',
-    extent: Config.map.extent
-  }),
-  center: [660000, 190000],
-  zoom: 2
+  projection: Config.map.projection,
+  resolutions: Config.map.scaleDenomsToResolutions(Config.map.scaleDenoms),
+  center: Config.map.init.center,
+  zoom: Config.map.init.zoom
 };
 
 Config.map.wmsParams = {
@@ -99,9 +121,6 @@ Config.map.wmsParams = {
 };
 
 Config.map.useTiledBackgroundWMS = true;
-
-// DPI for scale calculations
-Config.map.dpi = 96;
 
 // limit max zoom to this scale (e.g. minScaleDenom=500 for 1:500)
 Config.map.minScaleDenom = {
