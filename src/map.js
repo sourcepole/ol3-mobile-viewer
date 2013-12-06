@@ -28,6 +28,8 @@ Map.backgroundLayer = null;
 Map.geolocation = null;
 // OpenLayers 3 DeviceOrientation object
 Map.deviceOrientation = null;
+// device window orientation
+Map.windowOrientation = undefined;
 // OpenLayers 3 ScaleLine control
 Map.scaleLine = null;
 // WMS selection
@@ -367,12 +369,27 @@ Map.centerOnLocation = function() {
   Map.clampToScale(Config.map.minScaleDenom.geolocation);
 };
 
+Map.setWindowOrientation = function(orientation) {
+  Map.windowOrientation = orientation;
+  if (Map.deviceOrientation != null && Map.deviceOrientation.getTracking() && Map.deviceOrientation.getHeading() != undefined) {
+    Map.setRotation(Map.adjustedHeading(-Map.deviceOrientation.getHeading()));
+  }
+};
+
+Map.adjustedHeading = function(heading) {
+  if (Map.windowOrientation != undefined) {
+    // include window orientation (0, 90, -90 or 180)
+    heading -= Map.windowOrientation * Math.PI / 180.0;
+  }
+  return heading;
+};
+
 Map.toggleOrientation = function(enabled) {
   if (Map.deviceOrientation == null) {
     Map.deviceOrientation = new ol.DeviceOrientation();
 
     Map.deviceOrientation.on('change', function(event) {
-      var heading = -event.target.getHeading();
+      var heading = Map.adjustedHeading(-event.target.getHeading());
       if (Math.abs(Map.map.getView().getRotation() - heading) > 0.0175) {
         Map.setRotation(heading);
       }

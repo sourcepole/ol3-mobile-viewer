@@ -462,6 +462,10 @@ Gui.initViewer = function() {
   $(window).on('resize', function() {
     Gui.updateLayout();
   });
+  Map.setWindowOrientation(window.orientation);
+  $(window).on('orientationchange', function(e) {
+    Map.setWindowOrientation(window.orientation);
+  });
 
   // map
   Map.createMap(Gui.showFeatureInfoResults);
