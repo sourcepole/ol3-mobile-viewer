@@ -256,10 +256,15 @@ Map.layerOpacities = function() {
 }
 
 Map.refresh = function() {
-  Map.mergeWmsParams({
-    'LAYERS': Map.visibleLayers().join(','),
-    'OPACITIES': Map.layerOpacities().join(',')
-  });
+  var visibleLayers = Map.visibleLayers();
+  if (visibleLayers.length > 0) {
+    Map.mergeWmsParams({
+      'LAYERS': visibleLayers.join(','),
+      'OPACITIES': Map.layerOpacities().join(',')
+    });
+  }
+  // hide map layer if there are no visible layers
+  Map.topicLayer.setVisible(visibleLayers.length > 0);
 }
 
 // set WMS SELECTION parameter, disable if layer = null
