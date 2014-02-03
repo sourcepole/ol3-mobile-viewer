@@ -335,6 +335,12 @@ Map.toggleTracking = function(enabled) {
     });
     Map.geolocation.bindTo('projection', Map.map.getView());
 
+    Map.geolocation.on('error', function(error) {
+      if (error.code == error.PERMISSION_DENIED) {
+        alert(I18n.geolocation.permissionDeniedMessage);
+      };
+    });
+
     // add geolocation marker
     var marker = new ol.Overlay({
       element: ($('<div id="locationMarker"></div>'))
