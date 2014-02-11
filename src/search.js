@@ -11,7 +11,7 @@ Search.prototype = {
       * [
       *   {
       *     name: <visible name>,
-      *     bbox: [<minx>, <maxx>, <miny>, maxy>]
+      *     bbox: [<minx>, <miny>, <maxx>, maxy>]
       *   }
       * ]
       */

@@ -68,8 +68,6 @@
   background-image: url("../img/location.svg");
   width: 20px;
   height: 20px;
-  margin-left: -10px;
-  margin-bottom: -10px;
 }
 
 /* layer panel */
@@ -130,8 +128,6 @@
   background-image: url("../img/click.svg");
   width: 20px;
   height: 20px;
-  margin-left: -10px;
-  margin-bottom: -10px;
 }
 
 /* OpenLayers 3 */

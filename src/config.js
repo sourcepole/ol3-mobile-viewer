@@ -80,11 +80,11 @@ Config.featureInfo.url = function(topicName, coordinate, layers) {
 // map configuration
 Config.map = {};
 
-// DPI for scale calculations
+// DPI for scale calculations and WMS requests
 Config.map.dpi = 96;
 
-// ol.Extent
-Config.map.extent = [420000, 900000, 30000, 350000];
+// ol.Extent [<minx>, <miny>, <maxx>, maxy>]
+Config.map.extent = [420000, 30000, 900000, 350000];
 
 Config.map.scaleDenoms = [2000000, 1000000, 400000, 200000, 80000, 40000, 20000, 10000, 8000, 6000, 4000, 2000, 1000, 500, 250, 100];
 
@@ -114,6 +114,9 @@ Config.map.viewOptions = {
   center: Config.map.init.center,
   zoom: Config.map.init.zoom
 };
+
+// WMS server type ('geoserver', 'mapserver', 'qgis'), used for adding WMS dpi parameters
+Config.map.wmsServerType = 'qgis';
 
 Config.map.wmsParams = {
   'FORMAT': 'image/png; mode=8bit',
@@ -156,11 +159,11 @@ Config.mapfishUrl = function(searchParams) {
 */
 };
 
-// return feature name and bbox=[<minx>, <maxx>, <miny>, maxy>]
+// return feature name and bbox=[<minx>, <miny>, <maxx>, maxy>]
 Config.mapfishParseFeature = function(feature) {
   return {
     name: feature.begriff,
-    bbox: [feature.bbox_xmin, feature.bbox_xmax, feature.bbox_ymin, feature.bbox_ymax]
+    bbox: [feature.bbox_xmin, feature.bbox_ymin, feature.bbox_xmax, feature.bbox_ymax]
   };
 };
 

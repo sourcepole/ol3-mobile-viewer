@@ -54,12 +54,12 @@ Map.createMap = function(featureInfoCallback) {
 
   var renderers = ol.RendererHints.createFromQueryData();
   if (useCanvasRenderer) {
-    renderers = [ol.RendererHint.CANVAS, ol.RendererHint.WEBGL, ol.RendererHint.DOM];
+    renderers = ['canvas', 'webgl', 'dom'];
   }
 
   Map.map = new ol.Map({
     layers: [],
-    renderers: renderers,
+    renderer: renderers,
     target: 'map',
     view: new ol.View2D(Config.map.viewOptions),
     controls:[]
@@ -79,33 +79,32 @@ Map.createMap = function(featureInfoCallback) {
 
   // feature info
   if (featureInfoCallback != null) {
-    var clickTimeout = null;
-    Map.map.on('click', function(e) {
+    Map.map.on('singleclick', function(e) {
       if (Map.ignoreClick) {
         return;
       }
-      clearTimeout(clickTimeout);
-      clickTimeout = setTimeout(function() {
-        Map.lastClickPos = e.getCoordinate();
-        if (Config.featureInfo.useWMSGetFeatureInfo) {
-          Map.map.getFeatureInfo({
-            pixel: e.getPixel(),
-            success: featureInfoCallback
-          });
-        }
-        else {
-          $.ajax({
-            url: Config.featureInfo.url(Map.topic, e.getCoordinate(), Map.featureInfoLayers()),
-            dataType: 'text'
-          }).done(function(data, status) {
-            featureInfoCallback([data]);
-          });
-        }
-      }, 200);
-    });
-    Map.map.on('dblclick', function(e) {
-      // abort feature info on double click
-      clearTimeout(clickTimeout);
+      Map.lastClickPos = e.coordinate;
+      var url = null;
+      if (Config.featureInfo.useWMSGetFeatureInfo) {
+        var view = Map.map.getView();
+        url = Map.topicLayer.getSource().getGetFeatureInfoUrl(
+          e.coordinate,
+          view.getResolution(),
+          view.getProjection(),
+          {
+            'INFO_FORMAT': Config.featureInfo.format
+          }
+        );
+      }
+      else {
+        url = Config.featureInfo.url(Map.topic, e.coordinate, Map.featureInfoLayers())
+      }
+      $.ajax({
+        url: url,
+        dataType: 'text'
+      }).done(function(data, status) {
+        featureInfoCallback([data]);
+      });
     });
   }
 };
@@ -122,10 +121,7 @@ Map.setTopicLayer = function() {
   // add new layer
   var wmsParams = $.extend({}, Config.map.wmsParams, {
     'LAYERS': Map.visibleLayers().join(','),
-    'OPACITIES': null,
-    'DPI': Config.map.dpi,
-    'MAP_RESOLUTION': Config.map.dpi,
-    'FORMAT_OPTIONS': "dpi:" + Config.map.dpi
+    'OPACITIES': null
   });
   if (Map.backgroundTopic) {
     // use transparent layer with background
@@ -138,12 +134,8 @@ Map.setTopicLayer = function() {
     url: Map.topics[Map.topic].wms_url,
     params: wmsParams,
     extent: Config.map.extent,
-    getFeatureInfoOptions: {
-      method: 'xhr_get',
-      params: {
-        INFO_FORMAT: Config.featureInfo.format
-      }
-    }
+    serverType: Config.map.wmsServerType,
+    dpi: Config.map.dpi
   };
   Map.topicLayer = null;
   if (Map.useTiledWMS) {
@@ -154,7 +146,7 @@ Map.setTopicLayer = function() {
   else {
     wmsOptions['ratio'] = 1;
     Map.topicLayer = new ol.layer.Image({
-      source: new ol.source.SingleImageWMS(wmsOptions)
+      source: new ol.source.ImageWMS(wmsOptions)
     });
   }
   Map.topicLayer.name = 'topic';
@@ -169,7 +161,9 @@ Map.setBackgroundLayer = function() {
   var wmsOptions = {
     url: Map.topics[Map.backgroundTopic].wms_url,
     params: wmsParams,
-    extent: Config.map.extent
+    extent: Config.map.extent,
+    serverType: Config.map.wmsServerType,
+    dpi: Config.map.dpi
   };
   Map.backgroundLayer = null;
   if (Config.map.useTiledBackgroundWMS) {
@@ -179,7 +173,7 @@ Map.setBackgroundLayer = function() {
   }
   else {
     Map.backgroundLayer = new ol.layer.Image({
-      source: new ol.source.SingleImageWMS(wmsOptions)
+      source: new ol.source.ImageWMS(wmsOptions)
     });
   }
   Map.backgroundLayer.name = 'background';
@@ -319,7 +313,7 @@ Map.clampToScale = function(scaleDenom) {
 }
 
 // zoom to extent and clamp to max zoom level
-// extent as [<minx>, <maxx>, <miny>, maxy>]
+// extent as [<minx>, <miny>, <maxx>, maxy>]
 Map.zoomToExtent = function(extent, minScaleDenom) {
   Map.map.getView().fitExtent(extent, Map.map.getSize());
   Map.clampToScale(minScaleDenom);
@@ -343,7 +337,8 @@ Map.toggleTracking = function(enabled) {
 
     // add geolocation marker
     var marker = new ol.Overlay({
-      element: ($('<div id="locationMarker"></div>'))
+      element: ($('<div id="locationMarker"></div>')),
+      positioning: 'center-center'
     });
     Map.map.addOverlay(marker);
     marker.bindTo('position', Map.geolocation);
@@ -399,7 +394,7 @@ Map.toggleOrientation = function(enabled) {
   if (Map.deviceOrientation == null) {
     Map.deviceOrientation = new ol.DeviceOrientation();
 
-    Map.deviceOrientation.on('change', function(event) {
+    Map.deviceOrientation.on('change:heading', function(event) {
       var heading = Map.adjustedHeading(-event.target.getHeading());
       if (Math.abs(Map.map.getView().getRotation() - heading) > 0.0175) {
         Map.setRotation(heading);
@@ -413,7 +408,8 @@ Map.toggleOrientation = function(enabled) {
 Map.toggleClickMarker = function(enabled) {
   if (Map.clickMarker == null) {
     Map.clickMarker = new ol.Overlay({
-      element: ($('<div id="clickMarker"></div>'))
+      element: ($('<div id="clickMarker"></div>')),
+      positioning: 'center-center'
     });
     Map.map.addOverlay(Map.clickMarker);
   }

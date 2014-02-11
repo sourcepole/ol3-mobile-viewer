@@ -399,7 +399,7 @@ Gui.showSearchResults = function(results) {
   }
 }
 
-// bbox as [<minx>, <maxx>, <miny>, maxy>]
+// bbox as [<minx>, <miny>, <maxx>, maxy>]
 Gui.jumpToSearchResult = function(bbox) {
   Map.zoomToExtent(bbox, Config.map.minScaleDenom.search);
 

@@ -38,7 +38,7 @@ MapfishSearch.prototype.submit = function(searchParams, callback) {
  * [
  *   {
  *     name: <visible name>,
- *     bbox: [<minx>, <maxx>, <miny>, maxy>]
+ *     bbox: [<minx>, <miny>, <maxx>, maxy>]
  *   }
  * ]
  */

@@ -53,7 +53,7 @@ SwissSearch.prototype.parseSearchParams = function(searchParams) {
  * [
  *   {
  *     name: <visible name>,
- *     bbox: [<minx>, <maxx>, <miny>, maxy>]
+ *     bbox: [<minx>, <miny>, <maxx>, maxy>]
  *   }
  * ]
  */
@@ -62,12 +62,9 @@ SwissSearch.prototype.parseResults = function(data, status, callback) {
     // remove HTML tags and (<canton>)
     var name = value.label.replace(/<\/?[^>]+(>|$)/g, "").replace(/\s\([A-Z]{2}\)/, "");
 
-    // reorder bbox coords
-    var bbox = [value.bbox[0], value.bbox[2], value.bbox[1], value.bbox[3]];
-
     return {
       name: name,
-      bbox: bbox
+      bbox: value.bbox
     };
   });
 
