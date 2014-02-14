@@ -9,6 +9,8 @@ Gui.tracking = false;
 Gui.following = true;
 Gui.orientation = true;
 
+// flag if this is the load on startup
+Gui.initialLoad = true;
 // currently selected layer in layer order panel
 Gui.selectedLayer = null;
 // original position of currently dragged layer in layer order panel
@@ -72,7 +74,7 @@ Gui.loadTopics = function(categories) {
   $('#topicList').listview('refresh');
 
   // select initial topic
-  Gui.selectTopic(Config.data.initialTopic);
+  Gui.selectTopic(Config.permalink.initialTopic || Config.data.initialTopic);
 }
 
 Gui.selectTopic = function(topic) {
@@ -87,7 +89,7 @@ Gui.selectTopic = function(topic) {
   }
 
   // mark topic button
-  $('#topicList li.topic').removeClass('selected')
+  $('#topicList li.topic').removeClass('selected');
   $('#topicList li.topic[data-topic=' + topic + ']').addClass('selected');
 }
 
@@ -171,6 +173,11 @@ Gui.loadLayers = function(data) {
     }
   }
 
+  Gui.layerOrderChanged = false;
+  if (Gui.initialLoad) {
+    Gui.applyPermalink();
+    Gui.initialLoad = false;
+  }
   Map.setTopicLayer();
   Gui.resetLayerOrder();
 }
@@ -215,8 +222,6 @@ Gui.resetLayerOrder = function() {
   }
   $('#listOrder').html(html);
   $('#listOrder').listview('refresh');
-
-  Gui.layerOrderChanged = false;
 
   Gui.selectLayer(null);
 }
@@ -288,7 +293,7 @@ Gui.onLayerOrderChanged = function(event, ui) {
   });
 
   // append inactive layers
-  for (layer in Map.layers) {
+  for (var layer in Map.layers) {
     if (orderedLayers[layer] === undefined) {
       orderedLayers[layer] = Map.layers[layer];
     }
@@ -399,7 +404,7 @@ Gui.showSearchResults = function(results) {
   }
 }
 
-// bbox as [<minx>, <miny>, <maxx>, maxy>]
+// bbox as [<minx>, <miny>, <maxx>, <maxy>]
 Gui.jumpToSearchResult = function(bbox) {
   Map.zoomToExtent(bbox, Config.map.minScaleDenom.search);
 
@@ -453,8 +458,75 @@ Gui.toggleOrientation = function(enabled) {
   Map.toggleOrientation(Gui.orientation);
 }
 
+Gui.applyPermalink = function() {
+  // visible layers and layer order
+  if (Config.permalink.visibleLayers != null) {
+    var layers = [];
+    var layerOrderChanged = false;
+    var lastIndex = -1;
+    for (var layer in Map.layers) {
+      var index = $.inArray(layer, Config.permalink.visibleLayers);
+      var visible = (index != -1);
+
+      // override layer visibility
+      Map.layers[layer].visible = visible;
+
+      // update layer tree
+      $('#panelLayerAll :checkbox[data-layer="' + layer + '"]').attr('checked', visible).checkboxradio('refresh');
+
+      if (visible) {
+        layers.push({
+          layername: layer,
+          sort: index
+        });
+        // check if layer order differs from original
+        if (!layerOrderChanged) {
+          layerOrderChanged = (index < lastIndex);
+          lastIndex = index;
+        }
+      }
+    }
+    layers = layers.sort(function(a, b) {
+      return a.sort - b.sort;
+    });
+
+    // update layer order in map
+    var orderedLayers = {};
+    for (var i=0; i<layers.length; i++) {
+      var layer = layers[i].layername;
+      // append active layers
+      orderedLayers[layer] = Map.layers[layer];
+    }
+    // append inactive layers
+    for (var layer in Map.layers) {
+      if (orderedLayers[layer] === undefined) {
+        orderedLayers[layer] = Map.layers[layer];
+      }
+    }
+    Map.layers = orderedLayers;
+    Gui.layerOrderChanged = layerOrderChanged;
+  }
+
+  // opacities
+  if (Config.permalink.opacities != null) {
+    for (var layer in Config.permalink.opacities) {
+      if (Map.layers[layer] != undefined) {
+        // scale opacity[255..0] to transparency[0..100]
+        var transparency = Math.round((255 - Config.permalink.opacities[layer]) / 255 * 100);
+        Map.layers[layer].transparency = transparency;
+      }
+    }
+  }
+
+  // selection
+  if (Config.permalink.selection != null) {
+    Map.selection = Config.permalink.selection;
+  }
+}
+
 Gui.initViewer = function() {
   UrlParams.parse();
+  Config.permalink.read(UrlParams.params);
 
   Gui.updateTranslations();
 
@@ -470,6 +542,10 @@ Gui.initViewer = function() {
   // map
   Map.createMap(Gui.showFeatureInfoResults);
   Gui.updateLayout();
+
+  if (Config.permalink.startExtent != null) {
+    Map.zoomToExtent(Config.permalink.startExtent, null);
+  }
 
   // layer panel navigation
   $('#buttonTopics').on('tap', function() {

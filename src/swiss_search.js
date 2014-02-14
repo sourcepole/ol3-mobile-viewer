@@ -53,7 +53,7 @@ SwissSearch.prototype.parseSearchParams = function(searchParams) {
  * [
  *   {
  *     name: <visible name>,
- *     bbox: [<minx>, <miny>, <maxx>, maxy>]
+ *     bbox: [<minx>, <miny>, <maxx>, <maxy>]
  *   }
  * ]
  */

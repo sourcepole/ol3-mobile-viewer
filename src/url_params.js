@@ -2,8 +2,6 @@
  * UrlParams
  *
  * parse URL parameters
- *
- * tiledWms=<1|0>: force tiled/untiled WMS
  */
 
 var UrlParams = {};
@@ -22,6 +20,9 @@ UrlParams.parse = function() {
     // older IE
     urlString = window.location.href;
   }
+  // replace spaces encoded as '+'
+  urlString = urlString.replace(/\+/g, ' ');
+  urlString = decodeURI(urlString);
 
   var urlArray = urlString.split('?');
   if (urlArray.length > 1) {

@@ -83,7 +83,7 @@ Config.map = {};
 // DPI for scale calculations and WMS requests
 Config.map.dpi = 96;
 
-// ol.Extent [<minx>, <miny>, <maxx>, maxy>]
+// ol.Extent [<minx>, <miny>, <maxx>, <maxy>]
 Config.map.extent = [420000, 30000, 900000, 350000];
 
 Config.map.scaleDenoms = [2000000, 1000000, 400000, 200000, 80000, 40000, 20000, 10000, 8000, 6000, 4000, 2000, 1000, 500, 250, 100];
@@ -159,7 +159,7 @@ Config.mapfishUrl = function(searchParams) {
 */
 };
 
-// return feature name and bbox=[<minx>, <miny>, <maxx>, maxy>]
+// return feature name and bbox=[<minx>, <miny>, <maxx>, <maxy>]
 Config.mapfishParseFeature = function(feature) {
   return {
     name: feature.begriff,
@@ -168,3 +168,7 @@ Config.mapfishParseFeature = function(feature) {
 };
 
 //Config.search = new MapfishSearch(Config.mapfishUrl, Config.mapfishParseFeature);
+
+
+// permalink configuration
+Config.permalink = new Permalink();

@@ -48,8 +48,8 @@ Map.createMap = function(featureInfoCallback) {
   var useCanvasRenderer = true; // FIXME: disable WEBGL renderer for now
 
   // override from URL params
-  if (UrlParams.params.tiledWms != undefined) {
-    Map.useTiledWMS = UrlParams.params.tiledWms == 1;
+  if (Config.permalink.useTiledWMS != null) {
+    Map.useTiledWMS = Config.permalink.useTiledWMS;
   }
 
   var renderers = ol.RendererHints.createFromQueryData();
@@ -121,7 +121,7 @@ Map.setTopicLayer = function() {
   // add new layer
   var wmsParams = $.extend({}, Config.map.wmsParams, {
     'LAYERS': Map.visibleLayers().join(','),
-    'OPACITIES': null
+    'OPACITIES': Map.layerOpacities()
   });
   if (Map.backgroundTopic) {
     // use transparent layer with background
@@ -232,21 +232,29 @@ Map.setLayerTransparency = function(layername, transparency, updateMap) {
   Map.layers[layername].transparency = transparency;
   if (updateMap) {
     Map.mergeWmsParams({
-      'OPACITIES': Map.layerOpacities().join(',')
+      'OPACITIES': Map.layerOpacities()
     });
   }
 }
 
 Map.layerOpacities = function() {
   var layerOpacities = [];
+  var opacitiesActive = false;
   for (var key in Map.layers) {
     if (Map.layers[key].visible) {
       // scale transparency[0..100] to opacity[255..0]
       var opacity = Math.round((100 - Map.layers[key].transparency) / 100 * 255);
       layerOpacities.push(opacity);
+      opacitiesActive = opacitiesActive || (opacity != 255);
     }
   }
-  return layerOpacities;
+  if (opacitiesActive) {
+    return layerOpacities.join(',');
+  }
+  else {
+    // remove OPACITIES param
+    return null;
+  }
 }
 
 Map.refresh = function() {
@@ -254,7 +262,7 @@ Map.refresh = function() {
   if (visibleLayers.length > 0) {
     Map.mergeWmsParams({
       'LAYERS': visibleLayers.join(','),
-      'OPACITIES': Map.layerOpacities().join(',')
+      'OPACITIES': Map.layerOpacities()
     });
   }
   // hide map layer if there are no visible layers
@@ -316,7 +324,9 @@ Map.clampToScale = function(scaleDenom) {
 // extent as [<minx>, <miny>, <maxx>, maxy>]
 Map.zoomToExtent = function(extent, minScaleDenom) {
   Map.map.getView().fitExtent(extent, Map.map.getSize());
-  Map.clampToScale(minScaleDenom);
+  if (minScaleDenom != null) {
+    Map.clampToScale(minScaleDenom);
+  }
 };
 
 Map.toggleTracking = function(enabled) {

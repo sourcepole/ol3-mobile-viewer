@@ -14,7 +14,7 @@
     {
       "name":"basisplan_av_farbig",
       "title": "Basisplan-AV farbig",
-      "icon":"http://www.gl.ch/pictures/thumb/schnellzugriff_bpavf.png",
+      "icon":"img/basisplan_av_farbig.png",
       "categorytitle": "Glarus",
       "categorysort": 1,
       "categories_topics_sort":0,

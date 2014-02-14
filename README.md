@@ -22,7 +22,13 @@ Features:
 
 ### URL parameters
 
-* tiledWms=1|0: force tiled/untiled WMS
+* tiledWms=1|0 : force tiled/untiled WMS
+* topic=TOPIC_NAME : initial topic
+* startExtent=MINX,MINY,MAXX,MAXY : initial map extent
+* visibleLayers=COMMA_SEPARATED_LAYER_NAMES : initially visible layers in that order
+* opacities={LAYER_NAME:OPACITY[255..0]} as JSON : initial layer opacities
+    e.g. opacities={"Pixelkarte 25":192,"BBFlaechen_farbig":128}
+* selection=LAYER_NAME:COMMA_SEPARATED_FEATURE_IDS : feature selection
 
 ## Contributions
 
