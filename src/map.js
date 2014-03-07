@@ -376,6 +376,12 @@ Map.toggleFollowing = function(enabled) {
 
 Map.initialCenterOnLocation = function() {
   Map.centerOnLocation();
+  if (Config.map.initialGeolocationMaxScale != null) {
+    var maxRes = Map.scaleDenomToResolution(Config.map.initialGeolocationMaxScale, true);
+    if (Map.map.getView().getResolution() > maxRes) {
+      Map.map.getView().setResolution(maxRes);
+    }
+  }
   // disable after first update
   Map.geolocation.un('change:position', Map.initialCenterOnLocation);
 };
