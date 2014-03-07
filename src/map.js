@@ -92,7 +92,8 @@ Map.createMap = function(featureInfoCallback) {
           view.getResolution(),
           view.getProjection(),
           {
-            'INFO_FORMAT': Config.featureInfo.format
+            'INFO_FORMAT': Config.featureInfo.format,
+            'FEATURE_COUNT': Config.featureInfo.wmsMaxFeatures
           }
         );
       }

@@ -44,6 +44,9 @@ Config.featureInfo.format = 'text/xml';
 // enable this to use WMS GetFeatureInfo requests
 Config.featureInfo.useWMSGetFeatureInfo = false;
 
+// max number of features per layer for WMS GetFeatureInfo requests (null to use WMS default)
+Config.featureInfo.wmsMaxFeatures = null;
+
 /**
  * custom feature info URL when not using WMS GetFeatureInfo
  *
