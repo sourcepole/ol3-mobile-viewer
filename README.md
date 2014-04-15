@@ -30,6 +30,10 @@ Features:
     e.g. opacities={"Pixelkarte 25":192,"BBFlaechen_farbig":128}
 * selection=LAYER_NAME:COMMA_SEPARATED_FEATURE_IDS : feature selection
 
+## Screencast
+
+[![OL3 Mobile Viewer Screencast](http://img.youtube.com/vi/htphVHMkCOo/0.jpg)](http://youtu.be/htphVHMkCOo)
+
 ## Contributions
 
 Fork this repository and send us a pull request.
