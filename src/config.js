@@ -15,6 +15,14 @@ Config.gui = {
 };
 
 
+// login (if hideLoginButton is false)
+Config.login = new Login();
+
+/* Configuration for Mapfish Appserver:
+Config.login = new MapfishLogin();
+*/
+
+
 // data configuration
 Config.data = {};
 
@@ -23,6 +31,14 @@ Config.data.topicsUrl = "data/topics.json";
 Config.data.layersUrl = function(topicName) {
   return "data/layers/layers_" + topicName + ".json";
 }
+
+/* Configuration for Mapfish Appserver:
+Config.data.topicsUrl = "/topics.json?gbapp=default";
+
+Config.data.layersUrl = function(topicName) {
+return "/layers.json?topic=" + topicName;
+}
+*/
 
 Config.data.initialTopic = "geo_admin_pk";
 

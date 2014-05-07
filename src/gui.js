@@ -436,9 +436,15 @@ Gui.updateTranslations = function() {
   $('#panelProperties .ui-slider-label:contains(Ein)').html(I18n.properties.on);
   $('#panelProperties .ui-slider-label:contains(Aus)').html(I18n.properties.off);
   $('#panelProperties #buttonLogo .ui-btn-text').html(I18n.properties.about);
-  $('#panelProperties #dlgAbout h1').html(I18n.about.header);
+  $('#dlgAbout h1').html(I18n.about.header);
   $('#panelProperties #buttonShare .ui-btn-text').html(I18n.properties.share);
   $('#panelProperties #buttonLogin .ui-btn-text').html(I18n.properties.login);
+  $('#dlgLogin h1').html(I18n.login.header);
+  $('#dlgLogin label[for=user]').html(I18n.login.user);
+  $('#dlgLogin label[for=password]').html(I18n.login.password);
+  $('#dlgLogin #buttonSignIn .ui-btn-text').html(I18n.login.signIn);
+  $('#dlgLogin #buttonLoginCancel .ui-btn-text').html(I18n.login.cancel);
+  $('#panelProperties #buttonSignOut .ui-btn-text').html(I18n.login.signOut);
 
   $('#panelLayer #buttonTopics .ui-btn-text').html(I18n.layers.topics);
   $('#panelLayer #buttonLayerAll .ui-btn-text').html(I18n.layers.layers);
@@ -522,6 +528,40 @@ Gui.applyPermalink = function() {
   if (Config.permalink.selection != null) {
     Map.selection = Config.permalink.selection;
   }
+}
+
+Gui.loginStatus = function(result) {
+  if (result.success) {
+    $('#buttonSignOut .ui-btn-text').html(I18n.login.signOut + " - " + result.user);
+  }
+  Gui.toggleLogin(result.success);
+}
+
+Gui.login = function(result) {
+  if (result.success) {
+    // reload topics
+    Topics.loadTopics(Config.data.topicsUrl, Gui.loadTopics);
+
+    $('#dlgLogin').popup('close');
+    $('#buttonSignOut .ui-btn-text').html(I18n.login.signOut + " - " + result.user);
+    Gui.toggleLogin(true);
+    $('#panelProperties').panel('close');
+  }
+  else {
+    alert(I18n.login.signInFailed);
+  }
+}
+
+Gui.logout = function() {
+  // reload topics
+  Topics.loadTopics(Config.data.topicsUrl, Gui.loadTopics);
+
+  Gui.toggleLogin(false);
+}
+
+Gui.toggleLogin = function(signedIn) {
+  $('#buttonLogin').toggle(!signedIn);
+  $('#buttonSignOut').toggle(signedIn);
 }
 
 Gui.initViewer = function() {
@@ -676,6 +716,22 @@ Gui.initViewer = function() {
   // toggle buttons
   $('#buttonShare').toggle(!Config.gui.hideShareButton);
   $('#buttonLogin').toggle(!Config.gui.hideLoginButton);
+  $('#buttonSignOut').hide();
+
+  if (!Config.gui.hideLoginButton) {
+    // login
+    $('#buttonSignIn').on('tap', function() {
+      Config.login.signIn($('#user').val(), $('#password').val(), Gui.login);
+    });
+    $('#buttonLoginCancel').on('tap', function() {
+      $('#dlgLogin').popup('close');
+    });
+    $('#buttonSignOut').on('tap', function() {
+      Config.login.signOut(Gui.logout);
+    });
+    // initial login status
+    Config.login.status(Gui.loginStatus);
+  }
 
   // workaround for erroneus map click despite open panels on iOS
   $('#panelFeatureInfo, #panelLayer, #panelSearch').on('panelopen', function() {

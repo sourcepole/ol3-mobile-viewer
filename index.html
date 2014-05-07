@@ -35,6 +35,8 @@
     <script src="src/url_params.js"></script>
     <script src="src/translations.js"></script>
     <script src="src/permalink.js"></script>
+    <script src="src/login.js"></script>
+    <script src="src/mapfish_login.js"></script>
     <script src="src/search.js"></script>
     <script src="src/mapfish_search.js"></script>
     <script src="src/swiss_search.js"></script>
@@ -98,8 +100,24 @@
               <a href="#" id="buttonShare" data-role="button" data-inline="true">Share</a>
             </div>
             <div>
-              <a href="#" id="buttonLogin" data-role="button" data-inline="true">Login</a>
+              <a href="#dlgLogin" id="buttonLogin" data-rel="popup" data-position-to="window" data-role="button" data-inline="true">Login</a>
+              <a href="#" id="buttonSignOut"  data-role="button" data-inline="true">Logout</a>
             </div>
+
+            <div data-role="popup" id="dlgLogin" class="ui-corner-all" data-theme="c" data-overlay-theme="a">
+              <div data-role="header" data-theme="c" class="ui-corner-top">
+                <h1>Login</h1>
+              </div>
+              <div id="loginContent" data-role="content" data-theme="c" class="ui-corner-bottom ui-content">
+                <label for="user">Benutzer:</label>
+                <input type="text" name="user" id="user" value="">
+                <label for="password">Passwort:</label>
+                <input type="password" name="password" id="password" value="">
+                <a href="#" id="buttonSignIn" data-role="button" data-theme="b" data-inline="true">Anmelden</a>
+                <a href="#" id="buttonLoginCancel" data-role="button" data-inline="true">Abbrechen</a>
+              </div>
+            </div>
+
           </div>
         </div>
       </div>

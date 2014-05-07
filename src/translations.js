@@ -46,3 +46,15 @@ I18n.featureInfo = {
 I18n.geolocation = {
   permissionDeniedMessage: "Die Geolokalisierung ist für diese Seite deaktiviert.\n\nBitte überprüfen Sie Ihre Browser-Einstellungen, um die Berechtigung zurückzusetzen."
 };
+
+I18n.login = {
+  header: "Login",
+  user: "Benutzer",
+  password: "Passwort",
+  signIn: "Anmelden",
+  cancel: "Abbrechen",
+  signOut: "Abmelden",
+  signInFailed: "Benutzername oder Passwort nicht korrekt",
+  signOutFailed: "Abmelden fehlgeschlagen",
+  statusFailed: "Login Status fehlgeschlagen"
+};

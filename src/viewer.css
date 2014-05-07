@@ -118,6 +118,12 @@
   margin-right: 10%;
 }
 
+#buttonSignOut .ui-btn-inner {
+  max-width: 220px;
+  text-overflow: ellipsis;
+  white-space: normal;
+}
+
 /* misc */
 
 .scrollable {
