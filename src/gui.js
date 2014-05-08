@@ -4,6 +4,9 @@
 
 var Gui = {};
 
+// login status
+Gui.signedIn = false;
+
 // location tracking
 Gui.tracking = false;
 Gui.following = true;
@@ -439,6 +442,7 @@ Gui.updateTranslations = function() {
   $('#dlgAbout h1').html(I18n.about.header);
   $('#panelProperties #buttonShare .ui-btn-text').html(I18n.properties.share);
   $('#panelProperties #buttonLogin .ui-btn-text').html(I18n.properties.login);
+  $('#panelProperties #buttonLoginSSL .ui-btn-text').html(I18n.properties.login);
   $('#dlgLogin h1').html(I18n.login.header);
   $('#dlgLogin label[for=user]').html(I18n.login.user);
   $('#dlgLogin label[for=password]').html(I18n.login.password);
@@ -528,11 +532,22 @@ Gui.applyPermalink = function() {
   if (Config.permalink.selection != null) {
     Map.selection = Config.permalink.selection;
   }
+
+  // login
+  if (Config.permalink.openLogin) {
+    if (Config.sslLogin && UrlParams.useSSL && !Gui.signedIn) {
+      // open login form
+      $('#panelProperties').panel('open');
+      $('#dlgLogin').popup('open');
+    }
+  }
 }
 
 Gui.loginStatus = function(result) {
   if (result.success) {
+    $('#dlgLogin').popup('close');
     $('#buttonSignOut .ui-btn-text').html(I18n.login.signOut + " - " + result.user);
+    $('#panelProperties').panel('close');
   }
   Gui.toggleLogin(result.success);
 }
@@ -560,6 +575,7 @@ Gui.logout = function() {
 }
 
 Gui.toggleLogin = function(signedIn) {
+  Gui.signedIn = signedIn;
   $('#buttonLogin').toggle(!signedIn);
   $('#buttonSignOut').toggle(signedIn);
 }
@@ -716,21 +732,39 @@ Gui.initViewer = function() {
   // toggle buttons
   $('#buttonShare').toggle(!Config.gui.hideShareButton);
   $('#buttonLogin').toggle(!Config.gui.hideLoginButton);
+  $('#buttonLoginSSL').hide();
   $('#buttonSignOut').hide();
 
+  // login
   if (!Config.gui.hideLoginButton) {
-    // login
-    $('#buttonSignIn').on('tap', function() {
-      Config.login.signIn($('#user').val(), $('#password').val(), Gui.login);
-    });
-    $('#buttonLoginCancel').on('tap', function() {
-      $('#dlgLogin').popup('close');
-    });
-    $('#buttonSignOut').on('tap', function() {
-      Config.login.signOut(Gui.logout);
-    });
-    // initial login status
-    Config.login.status(Gui.loginStatus);
+    if (Config.sslLogin && !UrlParams.useSSL) {
+      // link to secure login
+      var url = UrlParams.baseUrl.replace(/^http:/, "https:");
+      var params = $.extend(
+        {
+          openLogin: true
+        },
+        UrlParams.params
+      );
+      url += "?" + $.param(params);
+      $('#buttonLoginSSL').attr('href', url);
+      $('#buttonLoginSSL').show();
+      $('#buttonLogin').hide();
+    }
+    else {
+      // login
+      $('#buttonSignIn').on('tap', function() {
+        Config.login.signIn($('#user').val(), $('#password').val(), Gui.login);
+      });
+      $('#buttonLoginCancel').on('tap', function() {
+        $('#dlgLogin').popup('close');
+      });
+      $('#buttonSignOut').on('tap', function() {
+        Config.login.signOut(Gui.logout);
+      });
+      // initial login status
+      Config.login.status(Gui.loginStatus);
+    }
   }
 
   // workaround for erroneus map click despite open panels on iOS

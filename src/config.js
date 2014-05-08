@@ -18,6 +18,9 @@ Config.gui = {
 // login (if hideLoginButton is false)
 Config.login = new Login();
 
+// enable this to redirect to HTTPS before login
+Config.sslLogin = false;
+
 /* Configuration for Mapfish Appserver:
 Config.login = new MapfishLogin();
 */

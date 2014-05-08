@@ -39,6 +39,9 @@ Permalink.prototype = {
     if (urlParams.topic != undefined) {
       this.initialTopic = urlParams.topic;
     }
+    if (urlParams.openLogin != undefined) {
+      this.openLogin = urlParams.openLogin;
+    }
 
     // QGIS Web-Client permalink parameters
     if (urlParams.startExtent != undefined) {
