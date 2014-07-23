@@ -10,8 +10,13 @@ Search.prototype = {
       *
       * [
       *   {
-      *     name: <visible name>,
-      *     bbox: [<minx>, <miny>, <maxx>, <maxy>]
+      *     category: <category>, // null to hide
+      *     results: [
+      *       {
+      *         name: <visible name>,
+      *         bbox: [<minx>, <miny>, <maxx>, <maxy>]
+      *       }
+      *     ]
       *   }
       * ]
       */

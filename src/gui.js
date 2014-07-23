@@ -384,16 +384,25 @@ Gui.showXMLFeatureInfoResults = function(results) {
 Gui.showSearchResults = function(results) {
   html = "";
   for (var i=0;i<results.length; i++) {
-    var result = results[i];
+    var categoryResults = results[i];
 
-    if (result.bbox != null) {
-      html += '<li data-bbox="' + result.bbox.join(',') + '">';
+    // category title
+    if (categoryResults.category != null) {
+      html += '<li class="category-title">' + categoryResults.category + '</li>';
     }
-    else {
-      html += '<li>';
+
+    // results
+    for (var j=0;j<categoryResults.results.length; j++) {
+      var result = categoryResults.results[j];
+      if (result.bbox != null) {
+        html += '<li data-bbox="' + result.bbox.join(',') + '">';
+      }
+      else {
+        html += '<li>';
+      }
+      html += '  <a href="#">' + result.name + '</a>';
+      html += '</li>';
     }
-    html += '  <a href="#">' + result.name + '</a>';
-    html += '</li>';
   }
 
   $('#searchResultsList').html(html);

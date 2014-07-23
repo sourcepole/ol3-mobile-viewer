@@ -216,6 +216,9 @@
   border-radius: 9px;
 }
 
+#searchResultsList .ui-li.category-title {
+  margin-left: -12px;
+}
 #searchResultsList .ui-li .ui-btn-text a.ui-link-inherit {
   font-weight: normal;
   margin-left: -12px;

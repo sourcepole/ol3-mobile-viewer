@@ -1,24 +1,24 @@
 /**
- * Mapfish Appserver search
+ * WSGI search from QGIS Web Client
  */
 
-function MapfishSearch(urlCallback, parseFeatureCallback) {
-  // create query URL from search params
-  this.urlCallback = urlCallback;
-
-  // get feature name and bbox
-  this.parseFeatureCallback = parseFeatureCallback;
+function WsgiSearch(url) {
+  // search URL
+  this.url = url;
 };
 
 // inherit from Search
-MapfishSearch.prototype = new Search();
+WsgiSearch.prototype = new Search();
 
 /**
  * submit search query
  */
-MapfishSearch.prototype.submit = function(searchParams, callback) {
+WsgiSearch.prototype.submit = function(searchParams, callback) {
   var request = $.ajax({
-    url: this.urlCallback(searchParams),
+    url: this.url,
+    data: {
+      query: $.trim(searchParams)
+    },
     dataType: 'json',
     context: this
   });
@@ -47,18 +47,26 @@ MapfishSearch.prototype.submit = function(searchParams, callback) {
  *   }
  * ]
  */
-MapfishSearch.prototype.parseResults = function(data, status, callback) {
+WsgiSearch.prototype.parseResults = function(data, status, callback) {
   // group by category
   var categories = {};
-  for (var i=0; i<data.features.length; i++) {
-    var feature = this.parseFeatureCallback(data.features[i]);
-    var category = feature.category;
-    if (categories[category] === undefined) {
+  var category = null;
+  for (var i=0; i<data.results.length; i++) {
+    var result = data.results[i];
+    if (result.bbox == null) {
       // add category
-      categories[category] = [];
+      category = result.displaytext;
+      if (categories[category] === undefined) {
+        categories[category] = [];
+      }
     }
-    // add feature to category
-    categories[category].push(feature);
+    else {
+      // add result to current category
+      categories[category].push({
+        name: result.displaytext,
+        bbox: result.bbox
+      })
+    }
   }
 
   // convert to search results

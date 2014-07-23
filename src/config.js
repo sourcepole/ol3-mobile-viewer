@@ -187,12 +187,19 @@ Config.mapfishUrl = function(searchParams) {
 // return feature name and bbox=[<minx>, <miny>, <maxx>, <maxy>]
 Config.mapfishParseFeature = function(feature) {
   return {
+    category: feature.kategorie,
     name: feature.begriff,
     bbox: [feature.bbox_xmin, feature.bbox_ymin, feature.bbox_xmax, feature.bbox_ymax]
   };
 };
 
 //Config.search = new MapfishSearch(Config.mapfishUrl, Config.mapfishParseFeature);
+
+
+/**
+ * WSGI search
+ */
+//Config.search = new WsgiSearch("/wsgi/search.wsgi");
 
 
 // permalink configuration

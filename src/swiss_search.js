@@ -52,8 +52,13 @@ SwissSearch.prototype.parseSearchParams = function(searchParams) {
  *
  * [
  *   {
- *     name: <visible name>,
- *     bbox: [<minx>, <miny>, <maxx>, <maxy>]
+ *     category: <category>, // null to hide
+ *     results: [
+ *       {
+ *         name: <visible name>,
+ *         bbox: [<minx>, <miny>, <maxx>, <maxy>]
+ *       }
+ *     ]
  *   }
  * ]
  */
@@ -68,5 +73,8 @@ SwissSearch.prototype.parseResults = function(data, status, callback) {
     };
   });
 
-  callback(results);
+  callback([{
+    category: null,
+    results: results
+  }]);
 };
