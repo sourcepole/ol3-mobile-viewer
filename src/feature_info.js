@@ -81,5 +81,5 @@ FeatureInfo.parseResults = function(featureInfos) {
     });
   }
 
-  FeatureInfo.callback(results);
+  FeatureInfo.callback(results.reverse());
 }
