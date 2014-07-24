@@ -136,7 +136,8 @@ Gui.loadLayers = function(data) {
           wms_sort: layer.wms_sort,
           visible: layer.visini,
           minscale: layer.minscale,
-          maxscale: layer.maxscale
+          maxscale: layer.maxscale,
+          hidden_attributes: layer.hidden_attributes
         });
       }
     }
@@ -172,6 +173,7 @@ Gui.loadLayers = function(data) {
       wms_sort: layer.wms_sort,
       minscale: layer.minscale,
       maxscale: layer.maxscale,
+      hidden_attributes: layer.hidden_attributes,
       transparency: 0
     }
   }
@@ -345,15 +347,20 @@ Gui.showXMLFeatureInfoResults = function(results) {
   html = "";
   for (var i=0;i<results.length; i++) {
     var result = results[i];
+    var layer = Map.layers[result.layer];
 
     var layerTitle = result.layer;
-    if (Map.layers[result.layer] != undefined) {
-      layerTitle = Map.layers[result.layer].title;
+    if (layer != undefined) {
+      layerTitle = layer.title;
     }
 
     html += '<div data-role="collapsible"  data-collapsed="false" data-theme="c">';
     html += '  <h3>' + layerTitle + '</h3>';
 
+    var hiddenAttributes = [];
+    if (layer != undefined && layer.hidden_attributes != undefined) {
+      hiddenAttributes = layer.hidden_attributes;
+    }
     for (var j=0; j<result.features.length; j++) {
       var feature = result.features[j];
       var title = feature.id === null ? I18n.featureInfo.raster : I18n.featureInfo.feature + feature.id;
@@ -365,10 +372,13 @@ Gui.showXMLFeatureInfoResults = function(results) {
       for (var k=0; k<feature.attributes.length; k++) {
         var attribute = feature.attributes[k];
 
-        html += '  <li>';
-        html += '    <span class="name">' + attribute.name + ': </span>';
-        html += '    <span class="value">' + attribute.value + '</span>';
-        html += '  </li>';
+        // skip hidden attributes
+        if ($.inArray(attribute.name, hiddenAttributes) == -1) {
+          html += '  <li>';
+          html += '    <span class="name">' + attribute.name + ': </span>';
+          html += '    <span class="value">' + attribute.value + '</span>';
+          html += '  </li>';
+        }
       }
 
       html += '  </ul>'

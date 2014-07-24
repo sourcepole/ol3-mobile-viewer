@@ -26,7 +26,8 @@
             "toclayertitle": "BBFlaechen farbig",
             "visini": false,
             "wms_sort": 3,
-            "toc_sort": 3
+            "toc_sort": 3,
+            "hidden_attributes": ["EGID"]
         },
         {
             "topic": "basisplan_av_farbig",
