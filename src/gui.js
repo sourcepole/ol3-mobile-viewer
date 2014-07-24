@@ -346,8 +346,13 @@ Gui.showXMLFeatureInfoResults = function(results) {
   for (var i=0;i<results.length; i++) {
     var result = results[i];
 
+    var layerTitle = result.layer;
+    if (Map.layers[result.layer] != undefined) {
+      layerTitle = Map.layers[result.layer].title;
+    }
+
     html += '<div data-role="collapsible"  data-collapsed="false" data-theme="c">';
-    html += '  <h3>' + result.layer + '</h3>';
+    html += '  <h3>' + layerTitle + '</h3>';
 
     for (var j=0; j<result.features.length; j++) {
       var feature = result.features[j];
