@@ -44,24 +44,15 @@ Map.ignoreClick = false;
 Map.useTiledWMS = false;
 
 Map.createMap = function(featureInfoCallback) {
-  // map options
-  var useCanvasRenderer = true; // FIXME: disable WEBGL renderer for now
-
   // override from URL params
   if (Config.permalink.useTiledWMS != null) {
     Map.useTiledWMS = Config.permalink.useTiledWMS;
   }
 
-  var renderers = ol.RendererHints.createFromQueryData();
-  if (useCanvasRenderer) {
-    renderers = ['canvas', 'webgl', 'dom'];
-  }
-
   Map.map = new ol.Map({
     layers: [],
-    renderer: renderers,
     target: 'map',
-    view: new ol.View2D(Config.map.viewOptions),
+    view: new ol.View(Config.map.viewOptions),
     controls:[]
   });
 

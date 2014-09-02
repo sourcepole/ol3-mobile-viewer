@@ -116,10 +116,8 @@ Config.map.init = {
 };
 
 // ol.proj.Projection
-Config.map.projection = ol.proj.configureProj4jsProjection({
-  code: 'EPSG:21781',
-  extent: Config.map.extent
-});
+Config.map.projection = ol.proj.get('EPSG:21781');
+Config.map.projection.setExtent(Config.map.extent);
 
 // calculate resolutions from scales
 Config.map.scaleDenomsToResolutions = function(scales) {
@@ -129,7 +127,7 @@ Config.map.scaleDenomsToResolutions = function(scales) {
   return resolutions;
 };
 
-// ol.View2DOptions
+// ol.View options
 Config.map.viewOptions = {
   projection: Config.map.projection,
   resolutions: Config.map.scaleDenomsToResolutions(Config.map.scaleDenoms),
