@@ -104,7 +104,7 @@ Gui.loadLayers = function(data) {
   function fillLayertree(node, parent, depth) {
     if (node.layers.length > 0) {
       // add group
-      html += '<div data-role="collapsible" data-theme="c">';
+      html += '<div data-role="collapsible" data-theme="c" data-groupcheckbox="true">';
       html += '  <h3>' + node.name + '</h3>';
     }
     else {
@@ -159,6 +159,19 @@ Gui.loadLayers = function(data) {
 
   $('#panelLayerAll').html(html);
   $('#panelLayerAll').trigger('create');
+
+  // root group change (NOTE: add binding after building the layer tree, to skip events during creation)
+  $('#panelLayerAll').children('.ui-collapsible[data-groupcheckbox=true]').bind('groupchange', function(e) {
+    var visibleLayers = Map.visibleLayers();
+    $(this).find(':checkbox').each(function(index) {
+      var layerVisible = (visibleLayers.indexOf($(this).data('layer')) != -1);
+      if (layerVisible != $(this).is(':checked')) {
+        // layer visibility changed
+        Map.setLayerVisible($(this).data('layer'), $(this).is(':checked'), false);
+        Gui.updateLayerOrder($(this).data('layer'), $(this).is(':checked'));
+      }
+    })
+  });
 
   // store layers sorted by wms_sort
   layers = layers.sort(function(a, b) {
@@ -506,7 +519,7 @@ Gui.applyPermalink = function() {
       Map.layers[layer].visible = visible;
 
       // update layer tree
-      $('#panelLayerAll :checkbox[data-layer="' + layer + '"]').attr('checked', visible).checkboxradio('refresh');
+      $('#panelLayerAll :checkbox[data-layer="' + layer + '"]').prop('checked', visible).checkboxradio('refresh');
 
       if (visible) {
         layers.push({
@@ -659,8 +672,11 @@ Gui.initViewer = function() {
 
   // layer change
   $('#panelLayerAll').delegate(':checkbox', 'change', function(e) {
-    Map.setLayerVisible($(this).data('layer'), $(this).is(':checked'), false);
-    Gui.updateLayerOrder($(this).data('layer'), $(this).is(':checked'));
+    var layerVisible = (Map.visibleLayers().indexOf($(this).data('layer')) != -1);
+    if (layerVisible != $(this).is(':checked')) {
+      Map.setLayerVisible($(this).data('layer'), $(this).is(':checked'), false);
+      Gui.updateLayerOrder($(this).data('layer'), $(this).is(':checked'));
+    }
   });
   Gui.panelSelect('panelTopics');
 

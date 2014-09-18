@@ -158,6 +158,33 @@
   opacity: 0.6;
 }
 
+/* jQuery mobile custom widgets  */
+
+/* collapsible group checkbox */
+.ui-collapsible[data-groupcheckbox=true] .ui-collapsible-heading-toggle {
+  float: right;
+  width: calc(100% - 43px);
+  border-radius: 0 0.6em 0.6em 0 !important;
+}
+.ui-collapsible-groupcheckbox {
+  width: 40px;
+  border-radius: 0.6em 0 0 0.6em !important;
+}
+.ui-collapsible-groupcheckbox .ui-btn-inner {
+  padding-left: inherit !important;
+}
+.ui-collapsible-groupcheckbox .ui-icon {
+  background-color: rgba(0,​ 0,​ 0,​ 0.4);
+  border-radius: 3px;
+}
+.ui-collapsible-groupcheckbox.ui-collapsible-groupcheckbox-button-checked .ui-icon {
+  background-color: #4596ce;
+}
+.ui-collapsible-groupcheckbox.ui-collapsible-groupcheckbox-button-somechecked .ui-icon {
+  background-image: url("../img/icon_tristate.png");
+  background-position: 0 0;
+}
+
 /* jQuery mobile */
 
 .ui-content {
