@@ -2,12 +2,15 @@
  * Mapfish Appserver search
  */
 
-function MapfishSearch(urlCallback, parseFeatureCallback) {
+function MapfishSearch(urlCallback, parseFeatureCallback, highlightWmsUrl) {
   // create query URL from search params
   this.urlCallback = urlCallback;
 
   // get feature name and bbox
   this.parseFeatureCallback = parseFeatureCallback;
+
+  // WMS URL for highlighting the selected search result
+  this.highlightWmsUrl = highlightWmsUrl;
 };
 
 // inherit from Search
@@ -40,7 +43,12 @@ MapfishSearch.prototype.submit = function(searchParams, callback) {
  *     category: <category>, // null to hide
  *     results: [
  *       {
+ *         category: <category used for grouping>,
  *         name: <visible name>,
+ *         highlight: {
+ *           fid: <fid>,
+ *           layer: <WMS layer name>,
+ *         },
  *         bbox: [<minx>, <miny>, <maxx>, <maxy>]
  *       }
  *     ]
@@ -69,4 +77,37 @@ MapfishSearch.prototype.parseResults = function(data, status, callback) {
     };
   });
   callback(results);
+};
+
+/**
+ * create and add a highlight layer for the selected search result
+ *
+ * use Mapfish WMS SELECTION parameters for highlighting
+ *
+ * highlight = {
+ *   fid: <fid>,
+ *   layer: <WMS layer name>,
+ * }
+ * callback(<OL3 layer>): add highlight layer to map
+ */
+MapfishSearch.prototype.highlight = function(highlight, callback) {
+  // create highlight layer
+  var layer = new ol.layer.Image({
+    source: new ol.source.ImageWMS({
+      url: this.highlightWmsUrl,
+      params: $.extend({}, Config.map.wmsParams, {
+        LAYERS: '',
+        'SELECTION[LAYER]': highlight.layer,
+        'SELECTION[PROPERTY]': 'fid',
+        'SELECTION[VALUES]': highlight.fid,
+        TRANSPARENT: true
+      }),
+      extent: Config.map.extent,
+      serverType: Config.map.wmsServerType,
+      dpi: Config.map.dpi
+    })
+  });
+
+  // add to map
+  callback(layer);
 };

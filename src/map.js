@@ -24,6 +24,7 @@ Map.minResolution = null;
 // OpenLayers 3 layer objects
 Map.topicLayer = null;
 Map.backgroundLayer = null;
+Map.highlightLayer = null;
 // OpenLayers 3 geolocation object
 Map.geolocation = null;
 // OpenLayers 3 DeviceOrientation object
@@ -172,7 +173,21 @@ Map.setBackgroundLayer = function() {
 
   // add background as base layer
   Map.map.getLayers().insertAt(0, Map.backgroundLayer);
-}
+};
+
+Map.setHighlightLayer = function(layer) {
+  if (Map.highlightLayer != null) {
+    // remove highlight layer
+    Map.map.removeLayer(Map.highlightLayer);
+    Map.highlightLayer = null;
+  }
+
+  if (layer != null) {
+    // add new highlight layer
+    Map.highlightLayer = layer;
+    Map.map.addLayer(Map.highlightLayer);
+  }
+};
 
 Map.setLayerVisible = function(layername, visible, updateMap) {
   Map.layers[layername].visible = visible;

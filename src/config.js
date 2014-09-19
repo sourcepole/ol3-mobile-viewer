@@ -182,16 +182,23 @@ Config.mapfishUrl = function(searchParams) {
 */
 };
 
-// return feature name and bbox=[<minx>, <miny>, <maxx>, <maxy>]
+// return category, feature name, highlighting data and bbox=[<minx>, <miny>, <maxx>, <maxy>]
 Config.mapfishParseFeature = function(feature) {
   return {
     category: feature.kategorie,
     name: feature.begriff,
+    highlight: {
+      fid: feature.fid,
+      layer: "FullSearch" + feature.kategorie
+    },
     bbox: [feature.bbox_xmin, feature.bbox_ymin, feature.bbox_xmax, feature.bbox_ymax]
   };
 };
 
-//Config.search = new MapfishSearch(Config.mapfishUrl, Config.mapfishParseFeature);
+// WMS URL for highlighting the selected search result
+Config.mapfishHighlightWmsUrl = "/wms/FullSearch";
+
+//Config.search = new MapfishSearch(Config.mapfishUrl, Config.mapfishParseFeature, Config.mapfishHighlightWmsUrl);
 
 
 /**

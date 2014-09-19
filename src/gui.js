@@ -410,30 +410,26 @@ Gui.showXMLFeatureInfoResults = function(results) {
 
 // show search results list
 Gui.showSearchResults = function(results) {
-  html = "";
+  $('#searchResultsList').empty();
+
   for (var i=0;i<results.length; i++) {
     var categoryResults = results[i];
 
     // category title
     if (categoryResults.category != null) {
-      html += '<li class="category-title">' + categoryResults.category + '</li>';
+      $('#searchResultsList').append($('<li class="category-title">' + categoryResults.category + '</li>'));
     }
 
     // results
     for (var j=0;j<categoryResults.results.length; j++) {
       var result = categoryResults.results[j];
-      if (result.bbox != null) {
-        html += '<li data-bbox="' + result.bbox.join(',') + '">';
-      }
-      else {
-        html += '<li>';
-      }
-      html += '  <a href="#">' + result.name + '</a>';
-      html += '</li>';
+      var li = $('<li><a href="#">' + result.name + '</a></li>');
+      li.data('bbox', result.bbox);
+      li.data('highlight', result.highlight);
+      $('#searchResultsList').append(li);
     }
   }
 
-  $('#searchResultsList').html(html);
   $('#searchResultsList').listview('refresh');
 
   $('#searchResults').show();
@@ -441,6 +437,9 @@ Gui.showSearchResults = function(results) {
   // automatically jump to single result
   if (results.length === 1 && results[0].bbox != null) {
     Gui.jumpToSearchResult(results[0].bbox);
+    if (results[0].highlight != undefined) {
+      Config.search.highlight(results[0].highlight, Map.setHighlightLayer);
+    }
   }
 }
 
@@ -724,6 +723,8 @@ Gui.initViewer = function() {
   $('#searchInput').bind('change', function(e) {
     // reset search panel
     $('#searchResults').hide();
+    // reset highlight
+    Map.setHighlightLayer(null);
 
     var searchString = $(this).val();
     if (searchString != "") {
@@ -732,17 +733,13 @@ Gui.initViewer = function() {
       // close virtual keyboard
       $('#searchInput').blur();
     }
-    else {
-      // reset selection
-      Map.setSelection(null, []);
-    }
   });
   $('#searchResultsList').delegate('li', 'vclick', function() {
     if ($(this).data('bbox') != null) {
-      var bbox = $.map($(this).data('bbox').split(','), function(value, index) {
-        return parseFloat(value);
-      });
-      Gui.jumpToSearchResult(bbox);
+      Gui.jumpToSearchResult($(this).data('bbox'));
+    }
+    if ($(this).data('highlight') != undefined) {
+      Config.search.highlight($(this).data('highlight'), Map.setHighlightLayer);
     }
   });
 
