@@ -42,7 +42,7 @@ UrlParams.parse = function() {
     var kvPairs = urlArray[1].split('&');
     for (var i=0; i<kvPairs.length; i++) {
       var kvPair = kvPairs[i].split('=');
-      UrlParams.params[kvPair[0]] = kvPair[1];
+      UrlParams.params[decodeURIComponent(kvPair[0])] = decodeURIComponent(kvPair[1]);
     }
   }
-}
+};

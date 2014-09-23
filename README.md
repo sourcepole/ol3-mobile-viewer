@@ -24,11 +24,21 @@ Features:
 
 * tiledWms=1|0 : force tiled/untiled WMS
 * topic=TOPIC_NAME : initial topic
-* startExtent=MINX,MINY,MAXX,MAXY : initial map extent
-* visibleLayers=COMMA_SEPARATED_LAYER_NAMES : initially visible layers in that order
+* background=BACKGROUND_TOPIC_NAME : initial background topic
+* extent=MINX,MINY,MAXX,MAXY : initial map extent
+* center=X,Y : initial map center
+* scale=SCALE : initial map scale
+* zoom=ZOOM_LEVEL : initial map zoom level
+* activeLayers=COMMA_SEPARATED_LAYER_NAMES : initially visible layers in that order
+* inactiveLayers=COMMA_SEPARATED_LAYER_NAMES : initially invisible layers
 * opacities={LAYER_NAME:OPACITY[255..0]} as JSON : initial layer opacities
     e.g. opacities={"Pixelkarte 25":192,"BBFlaechen_farbig":128}
-* selection=LAYER_NAME:COMMA_SEPARATED_FEATURE_IDS : feature selection
+
+Parameter precedence:
+
+* extent before center, scale, zoom
+* scale before zoom
+* activeLayers before inactiveLayers
 
 ## Screencast
 

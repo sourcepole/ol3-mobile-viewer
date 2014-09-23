@@ -24,6 +24,8 @@ Map.minResolution = null;
 // OpenLayers 3 layer objects
 Map.topicLayer = null;
 Map.backgroundLayer = null;
+Map.selectionLayer = null;
+Map.redliningLayer = null;
 Map.highlightLayer = null;
 // OpenLayers 3 geolocation object
 Map.geolocation = null;
@@ -33,8 +35,6 @@ Map.deviceOrientation = null;
 Map.windowOrientation = undefined;
 // OpenLayers 3 ScaleLine control
 Map.scaleLine = null;
-// WMS selection
-Map.selection = null;
 // last click position
 Map.lastClickPos = null;
 // click marker
@@ -107,7 +107,10 @@ Map.clearLayers = function() {
   Map.topicLayer = null;
   Map.backgroundLayer = null;
   Map.backgroundTopic = null;
-  Map.backgroundLayers = null;  
+  Map.backgroundLayers = null;
+  Map.selectionLayer = null;
+  Map.redliningLayer = null;
+  Map.highlightLayer = null;
 }
 
 Map.setTopicLayer = function() {
@@ -119,9 +122,6 @@ Map.setTopicLayer = function() {
   if (Map.backgroundTopic) {
     // use transparent layer with background
     wmsParams['TRANSPARENT'] = true;
-  }
-  if (Map.selection != null) {
-    wmsParams['SELECTION'] = Map.selection;
   }
   var wmsOptions = {
     url: Map.topics[Map.topic].wms_url,
@@ -175,6 +175,46 @@ Map.setBackgroundLayer = function() {
   Map.map.getLayers().insertAt(0, Map.backgroundLayer);
 };
 
+Map.setSelectionLayer = function(layer) {
+  if (Map.selectionLayer != null) {
+    // remove selection layer
+    Map.map.removeLayer(Map.selectionLayer);
+    Map.selectionLayer = null;
+  }
+
+  if (layer != null) {
+    // add new selection layer on top
+    Map.selectionLayer = layer;
+    Map.map.addLayer(Map.selectionLayer);
+  }
+};
+
+Map.toggleSelectionLayer = function(visible) {
+  if (Map.selectionLayer != null) {
+    Map.selectionLayer.setVisible(visible);
+  }
+};
+
+Map.setRedliningLayer = function(layer) {
+  if (Map.redliningLayer != null) {
+    // remove redlining layer
+    Map.map.removeLayer(Map.redliningLayer);
+    Map.redliningLayer = null;
+  }
+
+  if (layer != null) {
+    // add new redlining layer on top
+    Map.redliningLayer = layer;
+    Map.map.addLayer(Map.redliningLayer);
+  }
+};
+
+Map.toggleRedliningLayer = function(visible) {
+  if (Map.redliningLayer != null) {
+    Map.redliningLayer.setVisible(visible);
+  }
+};
+
 Map.setHighlightLayer = function(layer) {
   if (Map.highlightLayer != null) {
     // remove highlight layer
@@ -183,7 +223,7 @@ Map.setHighlightLayer = function(layer) {
   }
 
   if (layer != null) {
-    // add new highlight layer
+    // add new highlight layer on top
     Map.highlightLayer = layer;
     Map.map.addLayer(Map.highlightLayer);
   }
@@ -276,19 +316,6 @@ Map.refresh = function() {
   Map.topicLayer.setVisible(visibleLayers.length > 0);
 }
 
-// set WMS SELECTION parameter, disable if layer = null
-Map.setSelection = function(layer, ids) {
-  if (layer == null) {
-    Map.selection = null;
-  }
-  else {
-    Map.selection = layer + ":" + ids.join(',');
-  }
-  Map.mergeWmsParams({
-    'SELECTION': Map.selection
-  });
-};
-
 Map.mergeWmsParams = function(params) {
   var source = Map.topicLayer.getSource();
   var newParams = $.extend({}, source.getParams(), params);
@@ -334,6 +361,23 @@ Map.zoomToExtent = function(extent, minScaleDenom) {
   if (minScaleDenom != null) {
     Map.clampToScale(minScaleDenom);
   }
+};
+
+// center map
+// center as [<x>, <y>]
+Map.setCenter = function(center) {
+  Map.map.getView().setCenter(center);
+};
+
+// zoom to scale
+Map.setScale = function(scaleDenom) {
+  var res = Map.scaleDenomToResolution(scaleDenom, true);
+  Map.map.getView().setResolution(res);
+};
+
+// zoom to zoom level
+Map.setZoom = function(zoom) {
+  Map.map.getView().setZoom(zoom);
 };
 
 Map.toggleTracking = function(enabled) {

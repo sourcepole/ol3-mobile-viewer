@@ -33,6 +33,8 @@ I18n.layers = {
   topics: "Themen",
   layers: "Ebenen",
   layerOrder: "Reihenfolge",
+  selection: "Selektion",
+  redlining: "Redlining",
   transparency: "Transparenz"
 };
 

@@ -33,7 +33,7 @@ Gui.updateLayout = function() {
   $('#panelFeatureInfo #featureInfoResults').height(window.innerHeight - 80);
   $('#panelSearch .ui-listview').height(window.innerHeight - 170);
   $('#properties').height(window.innerHeight - 80);
-}
+};
 
 // show selected panel
 Gui.panelSelect = function(panel) {
@@ -44,7 +44,7 @@ Gui.panelSelect = function(panel) {
   $('#buttonTopics').toggleClass('selected', panel === 'panelTopics');
   $('#buttonLayerAll').toggleClass('selected', panel === 'panelLayerAll');
   $('#buttonLayerOrder').toggleClass('selected', panel === 'panelLayerOrder');
-}
+};
 
 // fill topics list
 Gui.loadTopics = function(categories) {
@@ -78,13 +78,19 @@ Gui.loadTopics = function(categories) {
 
   // select initial topic
   Gui.selectTopic(Config.permalink.initialTopic || Config.data.initialTopic);
-}
+};
 
 Gui.selectTopic = function(topic) {
   Map.clearLayers();
   Map.topic = topic;
   Map.setMinScaleDenom(Map.topics[Map.topic].minscale || Config.map.minScaleDenom.map);
   Map.backgroundTopic = Map.topics[Map.topic].bg_topic || null;
+  if (Gui.initialLoad) {
+    // background topic from permalink
+    if (Config.permalink.initialBackgroundTopic) {
+      Map.backgroundTopic = Config.permalink.initialBackgroundTopic;
+    }
+  }
   Layers.loadLayers(Config.data.layersUrl(topic), Gui.loadLayers);
   if (Map.backgroundTopic) {
     // load background layers
@@ -94,7 +100,7 @@ Gui.selectTopic = function(topic) {
   // mark topic button
   $('#topicList li.topic').removeClass('selected');
   $('#topicList li.topic[data-topic=' + topic + ']').addClass('selected');
-}
+};
 
 // update layers list
 Gui.loadLayers = function(data) {
@@ -198,7 +204,10 @@ Gui.loadLayers = function(data) {
   }
   Map.setTopicLayer();
   Gui.resetLayerOrder();
-}
+
+  // add any overlays from permalink
+  Config.permalink.addOverlays(Gui.setSelectionLayer, Gui.setRedliningLayer);
+};
 
 // add background layer
 Gui.loadBackgroundLayers = function(data) {
@@ -227,7 +236,49 @@ Gui.loadBackgroundLayers = function(data) {
   }
   Map.backgroundLayers = sortedLayers.join(',');
   Map.setBackgroundLayer();
-}
+};
+
+// add selection overlay layer
+Gui.setSelectionLayer = function(layer) {
+  if (layer != null) {
+    // add layer button
+    var html = '<label><input type="checkbox" name="_selection_" data-selection="true" checked>' + I18n.layers.selection + '</label>';
+    $('#panelLayerAll').append(html);
+    $('#panelLayerAll').trigger('create');
+
+    // selection toggle
+    $('#panelLayerAll :checkbox[data-selection=true]').bind('change', function(e) {
+      Map.toggleSelectionLayer($(this).is(':checked'));
+    })
+  }
+  else {
+    // remove layer button
+    $('#panelLayerAll :checkbox[data-selection=true]').parent('.ui-checkbox:first').remove();
+  }
+
+  Map.setSelectionLayer(layer);
+};
+
+// add redlining overlay layer
+Gui.setRedliningLayer = function(layer) {
+  if (layer != null) {
+    // add layer button
+    var html = '<label><input type="checkbox" name="_redlining_" data-redlining="true" checked>' + I18n.layers.redlining + '</label>';
+    $('#panelLayerAll').append(html);
+    $('#panelLayerAll').trigger('create');
+
+    // redlining toggle
+    $('#panelLayerAll :checkbox[data-redlining=true]').bind('change', function(e) {
+      Map.toggleRedliningLayer($(this).is(':checked'));
+    })
+  }
+  else {
+    // remove layer button
+    $('#panelLayerAll :checkbox[data-redlining=true]').parent('.ui-checkbox:first').remove();
+  }
+
+  Map.setRedliningLayer(layer);
+};
 
 // fill layer order panel from visible layers
 Gui.resetLayerOrder = function() {
@@ -242,7 +293,7 @@ Gui.resetLayerOrder = function() {
   $('#listOrder').listview('refresh');
 
   Gui.selectLayer(null);
-}
+};
 
 // add/remove layer in layer order panel
 Gui.updateLayerOrder = function(layer, layerAdded) {
@@ -284,12 +335,12 @@ Gui.updateLayerOrder = function(layer, layerAdded) {
   $('#listOrder').listview('refresh');
 
   Gui.onLayerOrderChanged(null, null);
-}
+};
 
 Gui.onLayerDrag = function(event, ui) {
   // keep track of original position in layer order
   Gui.draggedLayerIndex = $('#listOrder li').index(ui.item);
-}
+};
 
 // update layer order in map
 Gui.onLayerOrderChanged = function(event, ui) {
@@ -320,7 +371,7 @@ Gui.onLayerOrderChanged = function(event, ui) {
   // update map
   Map.layers = orderedLayers;
   Map.refresh();
-}
+};
 
 // select layer in layer order panel
 Gui.selectLayer = function(layer) {
@@ -340,7 +391,7 @@ Gui.selectLayer = function(layer) {
     $('#sliderTransparency').val(0).slider("refresh");
     $('#sliderTransparency').slider("disable");
   }
-}
+};
 
 // show feature info results
 Gui.showFeatureInfoResults = function(data) {
@@ -353,7 +404,7 @@ Gui.showFeatureInfoResults = function(data) {
 
   $('#panelFeatureInfo').panel('open');
   Map.toggleClickMarker(true);
-}
+};
 
 // convert XML feature info results to HTML
 Gui.showXMLFeatureInfoResults = function(results) {
@@ -406,7 +457,7 @@ Gui.showXMLFeatureInfoResults = function(results) {
 
   $('#featureInfoResults').html(html);
   $('#featureInfoResults').trigger('create');
-}
+};
 
 // show search results list
 Gui.showSearchResults = function(results) {
@@ -441,7 +492,7 @@ Gui.showSearchResults = function(results) {
       Config.search.highlight(results[0].highlight, Map.setHighlightLayer);
     }
   }
-}
+};
 
 // bbox as [<minx>, <miny>, <maxx>, <maxy>]
 Gui.jumpToSearchResult = function(bbox) {
@@ -453,7 +504,7 @@ Gui.jumpToSearchResult = function(bbox) {
   Gui.toggleFollowing(false);
 
   $('#panelSearch').panel('close');
-}
+};
 
 // binds the reorder functionality to the visible layer list
 $(document).bind('pageinit', function() {
@@ -492,35 +543,58 @@ Gui.updateTranslations = function() {
   $('#panelLayer #sliderTransparency-label').html(I18n.layers.transparency);
 
   $('#panelFeatureInfo b').html(I18n.featureInfo.header);
-}
+};
 
 Gui.toggleFollowing = function(enabled) {
   Gui.following = enabled;
   Map.toggleFollowing(Gui.tracking && Gui.following);
-}
+};
 
 Gui.toggleOrientation = function(enabled) {
   Gui.orientation = enabled;
   Map.toggleOrientation(Gui.orientation);
-}
+};
 
 Gui.applyPermalink = function() {
-  // visible layers and layer order
-  if (Config.permalink.visibleLayers != null) {
+  // map extent
+  if (Config.permalink.startExtent != null) {
+    Map.zoomToExtent(Config.permalink.startExtent, null);
+  }
+  else {
+    if (Config.permalink.startCenter != null) {
+      Map.setCenter(Config.permalink.startCenter);
+    }
+    if (Config.permalink.startScale != null) {
+      Map.setScale(Config.permalink.startScale);
+    }
+    else if (Config.permalink.startZoom != null) {
+      Map.setZoom(Config.permalink.startZoom);
+    }
+  }
+
+  var toggleLayer = function(layer, active) {
+    // override layer visibility
+    Map.layers[layer].visible = active;
+
+    // update layer tree
+    var checkbox = $('#panelLayerAll :checkbox[data-layer="' + layer + '"]');
+    if (checkbox.is(':checked') != active) {
+      checkbox.prop('checked', active).checkboxradio('refresh').trigger('change');
+    }
+  };
+
+  if (Config.permalink.activeLayers != null) {
+    // active layers and layer order
     var layers = [];
     var layerOrderChanged = false;
     var lastIndex = -1;
     for (var layer in Map.layers) {
-      var index = $.inArray(layer, Config.permalink.visibleLayers);
-      var visible = (index != -1);
+      var index = $.inArray(layer, Config.permalink.activeLayers);
+      var active = (index != -1);
 
-      // override layer visibility
-      Map.layers[layer].visible = visible;
+      toggleLayer(layer, active);
 
-      // update layer tree
-      $('#panelLayerAll :checkbox[data-layer="' + layer + '"]').prop('checked', visible).checkboxradio('refresh');
-
-      if (visible) {
+      if (active) {
         layers.push({
           layername: layer,
           sort: index
@@ -552,6 +626,16 @@ Gui.applyPermalink = function() {
     Map.layers = orderedLayers;
     Gui.layerOrderChanged = layerOrderChanged;
   }
+  else if (Config.permalink.inactiveLayers != null) {
+    // keep layer visibilities from topic and additionally turn off inactiveLayers
+    for (var layer in Map.layers) {
+      var index = $.inArray(layer, Config.permalink.inactiveLayers);
+      if (index != -1) {
+        // turn off layer
+        toggleLayer(layer, false);
+      }
+    }
+  }
 
   // opacities
   if (Config.permalink.opacities != null) {
@@ -564,11 +648,6 @@ Gui.applyPermalink = function() {
     }
   }
 
-  // selection
-  if (Config.permalink.selection != null) {
-    Map.selection = Config.permalink.selection;
-  }
-
   // login
   if (Config.permalink.openLogin) {
     if (Config.sslLogin && UrlParams.useSSL && !Gui.signedIn) {
@@ -577,7 +656,7 @@ Gui.applyPermalink = function() {
       $('#dlgLogin').popup('open');
     }
   }
-}
+};
 
 Gui.loginStatus = function(result) {
   if (result.success) {
@@ -586,7 +665,7 @@ Gui.loginStatus = function(result) {
     $('#panelProperties').panel('close');
   }
   Gui.toggleLogin(result.success);
-}
+};
 
 Gui.login = function(result) {
   if (result.success) {
@@ -601,25 +680,22 @@ Gui.login = function(result) {
   else {
     alert(I18n.login.signInFailed);
   }
-}
+};
 
 Gui.logout = function() {
   // reload topics
   Topics.loadTopics(Config.data.topicsUrl, Gui.loadTopics);
 
   Gui.toggleLogin(false);
-}
+};
 
 Gui.toggleLogin = function(signedIn) {
   Gui.signedIn = signedIn;
   $('#buttonLogin').toggle(!signedIn);
   $('#buttonSignOut').toggle(signedIn);
-}
+};
 
 Gui.initViewer = function() {
-  UrlParams.parse();
-  Config.permalink.read(UrlParams.params);
-
   Gui.updateTranslations();
 
   Gui.updateLayout();
@@ -634,10 +710,6 @@ Gui.initViewer = function() {
   // map
   Map.createMap(Gui.showFeatureInfoResults);
   Gui.updateLayout();
-
-  if (Config.permalink.startExtent != null) {
-    Map.zoomToExtent(Config.permalink.startExtent, null);
-  }
 
   // layer panel navigation
   $('#buttonTopics').on('tap', function() {
@@ -670,7 +742,7 @@ Gui.initViewer = function() {
   });
 
   // layer change
-  $('#panelLayerAll').delegate(':checkbox', 'change', function(e) {
+  $('#panelLayerAll').delegate(':checkbox[data-layer]', 'change', function(e) {
     var layerVisible = (Map.visibleLayers().indexOf($(this).data('layer')) != -1);
     if (layerVisible != $(this).is(':checked')) {
       Map.setLayerVisible($(this).data('layer'), $(this).is(':checked'), false);
@@ -811,8 +883,9 @@ Gui.initViewer = function() {
   $('#panelFeatureInfo, #panelLayer, #panelSearch').on('panelclose', function() {
     Map.toggleClickHandler(true);
   });
-}
+};
 
 $(document).ready(function(e) {
-  Gui.initViewer();
+  UrlParams.parse();
+  Config.permalink.read(UrlParams.params, Gui.initViewer);
 });

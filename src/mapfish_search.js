@@ -104,9 +104,11 @@ MapfishSearch.prototype.highlight = function(highlight, callback) {
       }),
       extent: Config.map.extent,
       serverType: Config.map.wmsServerType,
-      dpi: Config.map.dpi
+      dpi: Config.map.dpi,
+      ratio: 1
     })
   });
+  layer.name = 'highlight';
 
   // add to map
   callback(layer);

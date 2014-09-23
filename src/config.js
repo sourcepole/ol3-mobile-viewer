@@ -209,3 +209,6 @@ Config.mapfishHighlightWmsUrl = "/wms/FullSearch";
 
 // permalink configuration
 Config.permalink = new Permalink();
+
+//Config.permalink = new MapfishPermalink();
+//Config.permalink = new QgisPermalink();

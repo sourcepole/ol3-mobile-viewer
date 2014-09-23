@@ -3,54 +3,96 @@
  *
  * tiledWms=<1|0>: force tiled/untiled WMS
  * topic=<topic name>
- * startExtent=<minx>,<miny>,<maxx>,<maxy>
- * visibleLayers=<comma separated layer names>
+ * background=<background topic name>
+ * extent=<minx>,<miny>,<maxx>,<maxy>
+ * center=<x>,<y>
+ * scale=<scale>
+ * zoom=<zoom>
+ * activeLayers=<comma separated layer names>
+ * inactiveLayers=<comma separated layer names>
  * opacities=<JSON of {<layer name>:<opacity[255..0]>}>
- * selection=<layer name>:<comma separated feature ids>
+ *
+ * openLogin=<boolean>: open login dialog after redirect when using SSL
+ *
+ * Parameter precedence:
+ *   extent before center, scale, zoom
+ *   scale before zoom
+ *   activeLayers before inactiveLayers
  */
 
 function Permalink() {
-  // <1|0>
+  // <boolean>
   this.useTiledWMS = null;
   // <topic name>
   this.initialTopic = null;
+  // <background topic name>
+  this.initialBackgroundTopic = null;
   // [<minx>, <miny>, <maxx>, <maxy>]
   this.startExtent = null;
+  // [<x>, <y>]
+  this.startCenter = null;
+  // <scale>
+  this.startScale = null;
+  // <zoom>
+  this.startZoom = null;
   // [<layer name>]
-  this.visibleLayers = null;
+  this.activeLayers = null;
+  // [<layer name>]
+  this.inactiveLayers = null;
   // {<layer name>:<opacity[255..0]>}
   this.opacities = null;
-  // <layer name>:<comma separated feature ids>
-  this.selection = null;
+  // <boolean>
+  this.openLogin = null;
 };
 
 Permalink.prototype = {
   /**
-   * read URL parameters to setup map accordingly
+   * read URL parameters to setup map accordingly and invoke the callback to init the viewer
    *
    * urlParams = {
    *   <key>: <value>
    * }
+   * callback(): init viewer
    */
-  read: function(urlParams) {
+  read: function(urlParams, callback) {
     if (urlParams.tiledWms != undefined) {
       this.useTiledWMS = (urlParams.tiledWms == 1);
     }
+    if (urlParams.openLogin != undefined) {
+      this.openLogin = (urlParams.openLogin == 'true');
+    }
+
     if (urlParams.topic != undefined) {
       this.initialTopic = urlParams.topic;
     }
-    if (urlParams.openLogin != undefined) {
-      this.openLogin = urlParams.openLogin;
+    if (urlParams.background != undefined) {
+      this.initialBackgroundTopic = urlParams.background;
     }
 
-    // QGIS Web-Client permalink parameters
-    if (urlParams.startExtent != undefined) {
-      this.startExtent = $.map(urlParams.startExtent.split(','), function(value, index) {
+    // map extent
+    if (urlParams.extent != undefined) {
+      this.startExtent = $.map(urlParams.extent.split(','), function(value, index) {
         return parseFloat(value);
       });
     }
-    if (urlParams.visibleLayers != undefined) {
-      this.visibleLayers = urlParams.visibleLayers.split(',');
+    if (urlParams.center != undefined) {
+      this.startCenter = $.map(urlParams.center.split(','), function(value, index) {
+        return parseFloat(value);
+      });
+    }
+    if (urlParams.scale != undefined) {
+      this.startScale = parseFloat(urlParams.scale);
+    }
+    if (urlParams.zoom != undefined) {
+      this.startZoom = parseFloat(urlParams.zoom);
+    }
+
+    // layers
+    if (urlParams.activeLayers != undefined) {
+      this.activeLayers = urlParams.activeLayers.split(',');
+    }
+    if (urlParams.inactiveLayers != undefined) {
+      this.inactiveLayers = urlParams.inactiveLayers.split(',');
     }
     if (urlParams.opacities != undefined) {
       try {
@@ -60,10 +102,20 @@ Permalink.prototype = {
         alert("opacities:\n" + e);
       }
     }
-    if (urlParams.selection != undefined) {
-      this.selection = urlParams.selection;
+
+    if (callback != undefined) {
+      // init viewer
+      callback();
     }
-  }
+  },
+
+  /**
+   * add any selection or redlining layers after loading topic layers
+   * 
+   * selectionCallback(<OL3 layer>): add selection layer to map
+   * redliningCallback(<OL3 layer>): add redlining layer to map
+   */
+  addOverlays: function(selectionCallback, redliningCallback) {}
 };
 
 /**
@@ -75,11 +127,15 @@ function CustomPermalink() {};
 // inherit from Permalink
 CustomPermalink.prototype = new Permalink();
 
-CustomPermalink.prototype.read = function(urlParams) {
+CustomPermalink.prototype.read = function(urlParams, callback) {
   // default permalink parameters
-  Permalink.prototype.read.apply(this, arguments)
+  Permalink.prototype.read.call(this, urlParams);
 
   // custom permalink handling
-}
-*/
 
+  // init viewer
+  callback();
+};
+
+CustomPermalink.prototype.addOverlays = function(selectionCallback, redliningCallback) {};
+*/
