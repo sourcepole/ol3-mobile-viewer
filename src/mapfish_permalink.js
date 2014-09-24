@@ -11,9 +11,13 @@
  * selproperty=<selection property>
  * selvalues=<selection values>
  * redlining=<WKT geometries + JSON text labels>
+ * locate=<locate type>
+ * locations=<locate params>
  */
 
-function MapfishPermalink() {
+function MapfishPermalink(locateUrlCallback) {
+  // locateUrlCallback(locate, locations)
+  this.locateUrlCallback = locateUrlCallback;
   /**
    * {
    *   seltopic: <selection topic>,
@@ -75,8 +79,27 @@ MapfishPermalink.prototype.read = function(urlParams, callback) {
     this.redlining = urlParams.redlining;
   }
 
-  // init viewer
-  callback();
+  // locate
+  if (urlParams.locate != undefined && urlParams.locations != undefined) {
+    var url = this.locateUrlCallback(urlParams.locate, urlParams.locations);
+
+    // request location
+    var self = this;
+    $.getJSON(url, function(data) {
+      if (data.success) {
+        self.startExtent = data.bbox;
+        self.selection = data.selection;
+        // set topic if not defined in location
+        self.selection.topic = self.selection.topic || urlParams.topic || Config.data.initialTopic;
+      }
+      // init viewer
+      callback();
+    });
+  }
+  else {
+    // init viewer
+    callback();
+  }
 };
 
 /**

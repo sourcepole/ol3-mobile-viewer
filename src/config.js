@@ -172,7 +172,7 @@ Config.search = new SwissSearch('swissnames', "");
  */
 
 // create query URL from search params
-Config.mapfishUrl = function(searchParams) {
+Config.mapfishSearchUrl = function(searchParams) {
   // DEBUG: sample static file for demonstration purposes
   return "data/mapfish_search_response.json";
 /*
@@ -198,7 +198,7 @@ Config.mapfishParseFeature = function(feature) {
 // WMS URL for highlighting the selected search result
 Config.mapfishHighlightWmsUrl = "/wms/FullSearch";
 
-//Config.search = new MapfishSearch(Config.mapfishUrl, Config.mapfishParseFeature, Config.mapfishHighlightWmsUrl);
+//Config.search = new MapfishSearch(Config.mapfishSearchUrl, Config.mapfishParseFeature, Config.mapfishHighlightWmsUrl);
 
 
 /**
@@ -210,5 +210,22 @@ Config.mapfishHighlightWmsUrl = "/wms/FullSearch";
 // permalink configuration
 Config.permalink = new Permalink();
 
-//Config.permalink = new MapfishPermalink();
+
+/**
+ * Mapfish Appserver permalink
+ */
+
+// create locate URL from locate and locations params
+Config.mapfishLocateUrl = function(locate, locations) {
+  return "/locate/" + locate + "?" + $.param({
+    locations: locations
+  });
+};
+
+//Config.permalink = new MapfishPermalink(Config.mapfishLocateUrl);
+
+
+/**
+ * QGIS Web Client permalink
+ */
 //Config.permalink = new QgisPermalink();
