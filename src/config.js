@@ -33,7 +33,7 @@ Config.data.topicsUrl = "data/topics.json";
 
 Config.data.layersUrl = function(topicName) {
   return "data/layers/layers_" + topicName + ".json";
-}
+};
 
 /* Configuration for Mapfish Appserver:
 Config.data.topicsUrl = "/topics.json?gbapp=default";
@@ -83,7 +83,7 @@ Config.featureInfo.url = function(topicName, coordinate, layers) {
     // sample HTML results
     return "data/get_feature_info_response.html";
   }
-}
+};
 
 /* Configuration for Mapfish Appserver:
 Config.featureInfo.format = 'text/html';
@@ -204,7 +204,7 @@ Config.mapfishHighlightWmsUrl = "/wms/FullSearch";
 /**
  * WSGI search
  */
-//Config.search = new WsgiSearch("/wsgi/search.wsgi");
+//Config.search = new WsgiSearch("/wsgi/search.wsgi", "/wsgi/getSearchGeom.wsgi", false);
 
 
 // permalink configuration
