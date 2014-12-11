@@ -90,7 +90,7 @@ Layers.loadLayers = function(url, callback) {
           layers.push({
             name: group.layers[j].layername,
             layers: []
-          })
+          });
         }
       }
     }
@@ -100,4 +100,4 @@ Layers.loadLayers = function(url, callback) {
       layertree: layertree
     });
   });
-}
+};

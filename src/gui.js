@@ -50,7 +50,7 @@ Gui.panelSelect = function(panel) {
 Gui.loadTopics = function(categories) {
   html = "";
   Map.topics = {};
-  for (var i=0;i<categories.length; i++) {
+  for (var i=0; i<categories.length; i++) {
     var category = categories[i];
 
     html += '<li data-role="list-provider">' + category.title + '</li>';
@@ -59,10 +59,10 @@ Gui.loadTopics = function(categories) {
       var topic = category.topics[j];
 
       if (topic.main_layer != false) {
-        html +=    '<li class="topic" data-topic="' + topic.name + '">';
-        html +=    '  <img src="' + topic.icon + '"/>';
-        html +=    '  <p style="white-space:pre-wrap">' + topic.title + '</p>';
-        html +=    '</li>';
+        html += '<li class="topic" data-topic="' + topic.name + '">';
+        html +=   '<img src="' + topic.icon + '"/>';
+        html +=   '<p style="white-space:pre-wrap">' + topic.title + '</p>';
+        html += '</li>';
       }
 
       Map.topics[topic.name] = {
@@ -123,7 +123,7 @@ Gui.loadLayers = function(data) {
     if (node.layers.length > 0) {
       // add group
       html += '<div data-role="collapsible" data-theme="c" data-groupcheckbox="true">';
-      html += '  <h3>' + node.name + '</h3>';
+      html +=   '<h3>' + node.name + '</h3>';
     }
     else {
       // find layer parent group
@@ -139,13 +139,13 @@ Gui.loadLayers = function(data) {
 
         // add layer
         html += '<label>';
-        html += '  <input type="checkbox" ';
-        html += '    name="' + layer.layername + '" ';
-        html += '    data-layer="' + layer.layername + '" ';
+        html +=   '<input type="checkbox" ';
+        html +=     'name="' + layer.layername + '" ';
+        html +=     'data-layer="' + layer.layername + '" ';
         if (layer.visini) {
-          html += '    checked ';
+          html +=   'checked ';
         }
-        html += '  />' + layer.toclayertitle;
+        html +=   '>' + layer.toclayertitle;
         html += '</label>';
 
         layers.push({
@@ -161,7 +161,7 @@ Gui.loadLayers = function(data) {
     }
 
     // traverse children
-    for (var i=0;i<node.layers.length; i++) {
+    for (var i=0; i<node.layers.length; i++) {
       fillLayertree(node.layers[i], node.name, depth + 1);
     }
 
@@ -171,7 +171,7 @@ Gui.loadLayers = function(data) {
   }
 
   // fill layer tree
-  for (var i=0;i<data.layertree.length; i++) {
+  for (var i=0; i<data.layertree.length; i++) {
     fillLayertree(data.layertree[i], null, 0);
   }
 
@@ -188,7 +188,7 @@ Gui.loadLayers = function(data) {
         Map.setLayerVisible($(this).data('layer'), $(this).is(':checked'), false);
         Gui.updateLayerOrder($(this).data('layer'), $(this).is(':checked'));
       }
-    })
+    });
   });
 
   // store layers sorted by wms_sort
@@ -206,7 +206,7 @@ Gui.loadLayers = function(data) {
       maxscale: layer.maxscale,
       hidden_attributes: layer.hidden_attributes,
       transparency: 0
-    }
+    };
   }
 
   Gui.layerOrderChanged = false;
@@ -254,7 +254,7 @@ Gui.loadBackgroundLayers = function(data) {
   // collect visible layers
   var groups = data.groups;
   var layers = [];
-  for (var i=0;i<groups.length; i++) {
+  for (var i=0; i<groups.length; i++) {
     var group = groups[i];
     for (var j=0;j<group.layers.length; j++) {
       var layer = group.layers[j];
@@ -302,7 +302,7 @@ Gui.setupOverlayTopics = function(overlayTopics) {
       html +=     'name="overlayTopic_' + overlayTopic + '" ';
       html +=     'data-overlay_topic="' + overlayTopic + '" ';
       html +=     'checked';
-      html +=   '/>' + Map.topics[overlayTopic].title;
+      html +=   '>' + Map.topics[overlayTopic].title;
       html += '</label>';
     }
 
@@ -330,7 +330,7 @@ Gui.addOverlayTopicLayer = function(topic) {
     // collect visible layers
     var groups = data.groups;
     var layers = [];
-    for (var i=0;i<groups.length; i++) {
+    for (var i=0; i<groups.length; i++) {
       var group = groups[i];
       for (var j=0;j<group.layers.length; j++) {
         var layer = group.layers[j];
@@ -366,7 +366,7 @@ Gui.setSelectionLayer = function(layer) {
     // selection toggle
     $('#panelLayerAll :checkbox[data-selection=true]').bind('change', function(e) {
       Map.toggleSelectionLayer($(this).is(':checked'));
-    })
+    });
   }
   else {
     // remove layer button
@@ -387,7 +387,7 @@ Gui.setRedliningLayer = function(layer) {
     // redlining toggle
     $('#panelLayerAll :checkbox[data-redlining=true]').bind('change', function(e) {
       Map.toggleRedliningLayer($(this).is(':checked'));
-    })
+    });
   }
   else {
     // remove layer button
@@ -526,7 +526,7 @@ Gui.showFeatureInfoResults = function(data) {
 // convert XML feature info results to HTML
 Gui.showXMLFeatureInfoResults = function(results) {
   html = "";
-  for (var i=0;i<results.length; i++) {
+  for (var i=0; i<results.length; i++) {
     var result = results[i];
     var layer = Map.layers[result.layer];
 
@@ -536,7 +536,7 @@ Gui.showXMLFeatureInfoResults = function(results) {
     }
 
     html += '<div data-role="collapsible"  data-collapsed="false" data-theme="c">';
-    html += '  <h3>' + layerTitle + '</h3>';
+    html +=   '<h3>' + layerTitle + '</h3>';
 
     var hiddenAttributes = [];
     if (layer != undefined && layer.hidden_attributes != undefined) {
@@ -547,22 +547,22 @@ Gui.showXMLFeatureInfoResults = function(results) {
       var title = feature.id === null ? I18n.featureInfo.raster : I18n.featureInfo.feature + feature.id;
 
       html += '<div data-role="collapsible"  data-collapsed="false" data-theme="c">';
-      html += '  <h3>' + title + '</h3>';
-      html += '  <ul data-role="listview">'
+      html +=   '<h3>' + title + '</h3>';
+      html +=   '<ul data-role="listview">';
 
       for (var k=0; k<feature.attributes.length; k++) {
         var attribute = feature.attributes[k];
 
         // skip hidden attributes
         if ($.inArray(attribute.name, hiddenAttributes) == -1) {
-          html += '  <li>';
-          html += '    <span class="name">' + attribute.name + ': </span>';
-          html += '    <span class="value">' + attribute.value + '</span>';
-          html += '  </li>';
+          html += '<li>';
+          html +=   '<span class="name">' + attribute.name + ': </span>';
+          html +=   '<span class="value">' + attribute.value + '</span>';
+          html += '</li>';
         }
       }
 
-      html += '  </ul>'
+      html +=   '</ul>';
       html += '</div>';
     }
 
@@ -580,7 +580,7 @@ Gui.showXMLFeatureInfoResults = function(results) {
 Gui.showSearchResults = function(results) {
   $('#searchResultsList').empty();
 
-  for (var i=0;i<results.length; i++) {
+  for (var i=0; i<results.length; i++) {
     var categoryResults = results[i];
 
     // category title

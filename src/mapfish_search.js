@@ -11,7 +11,7 @@ function MapfishSearch(urlCallback, parseFeatureCallback, highlightWmsUrl) {
 
   // WMS URL for highlighting the selected search result
   this.highlightWmsUrl = highlightWmsUrl;
-};
+}
 
 // inherit from Search
 MapfishSearch.prototype = new Search();

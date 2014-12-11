@@ -12,7 +12,7 @@ FeatureInfo.callback = null;
 
 FeatureInfo.setCallback = function(callback) {
   FeatureInfo.callback = callback;
-}
+};
 
 /**
  * parse contents of GetFeatureInfo results and invoke the callback
@@ -82,4 +82,4 @@ FeatureInfo.parseResults = function(featureInfos) {
   }
 
   FeatureInfo.callback(results.reverse());
-}
+};

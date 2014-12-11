@@ -30,7 +30,7 @@ function MapfishPermalink(locateUrlCallback) {
   this.selection = null;
   // WKT + attributes
   this.redlining = null;
-};
+}
 
 // inherit from Permalink
 MapfishPermalink.prototype = new Permalink();

@@ -92,7 +92,7 @@ Map.createMap = function(featureInfoCallback) {
         );
       }
       else {
-        url = Config.featureInfo.url(Map.topic, e.coordinate, Map.featureInfoLayers())
+        url = Config.featureInfo.url(Map.topic, e.coordinate, Map.featureInfoLayers());
       }
       $.ajax({
         url: url,
@@ -114,7 +114,7 @@ Map.clearLayers = function() {
   Map.redliningLayer = null;
   Map.highlightLayer = null;
   Map.overlayLayers = {};
-}
+};
 
 Map.setTopicLayer = function() {
   // add new layer
@@ -328,7 +328,7 @@ Map.featureInfoLayers = function() {
     }
   }
   return featureInfoLayers;
-}
+};
 
 // transparency between 0 and 100
 Map.setLayerTransparency = function(layername, transparency, updateMap) {
@@ -338,7 +338,7 @@ Map.setLayerTransparency = function(layername, transparency, updateMap) {
       'OPACITIES': Map.layerOpacities()
     });
   }
-}
+};
 
 Map.layerOpacities = function() {
   var layerOpacities = [];
@@ -358,7 +358,7 @@ Map.layerOpacities = function() {
     // remove OPACITIES param
     return null;
   }
-}
+};
 
 Map.refresh = function() {
   var visibleLayers = Map.visibleLayers();
@@ -370,7 +370,7 @@ Map.refresh = function() {
   }
   // hide map layer if there are no visible layers
   Map.topicLayer.setVisible(visibleLayers.length > 0);
-}
+};
 
 Map.mergeWmsParams = function(params) {
   var source = Map.topicLayer.getSource();
@@ -408,7 +408,7 @@ Map.clampToScale = function(scaleDenom) {
   if (Map.map.getView().getResolution() < minRes) {
     Map.map.getView().setResolution(minRes);
   }
-}
+};
 
 // zoom to extent and clamp to max zoom level
 // extent as [<minx>, <miny>, <maxx>, maxy>]
@@ -449,7 +449,7 @@ Map.toggleTracking = function(enabled) {
     Map.geolocation.on('error', function(error) {
       if (error.code == error.PERMISSION_DENIED) {
         alert(I18n.geolocation.permissionDeniedMessage);
-      };
+      }
     });
 
     // add geolocation marker

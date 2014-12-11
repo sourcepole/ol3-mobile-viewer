@@ -6,7 +6,7 @@ function MapfishLogin() {
   this.statusUrl = "/session/login";
   this.signInUrl = "/session/sign_in";
   this.signOutUrl = "/session/sign_out";
-};
+}
 
 // inherit from Login
 MapfishLogin.prototype = new Login();

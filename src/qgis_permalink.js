@@ -5,7 +5,7 @@
  * visibleLayers=<comma separated layer names>
  */
 
-function QgisPermalink() {};
+function QgisPermalink() {}
 
 // inherit from Permalink
 QgisPermalink.prototype = new Permalink();

@@ -2,7 +2,7 @@
  * Search base class
  */
 
-function Search() {};
+function Search() {}
 
 Search.prototype = {
     /**

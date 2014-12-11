@@ -46,7 +46,7 @@ function Permalink() {
   this.opacities = null;
   // <boolean>
   this.openLogin = null;
-};
+}
 
 Permalink.prototype = {
   /**

@@ -9,7 +9,7 @@ function SwissSearch(services, queryPostfix) {
 
   // append query postfix to limit search results
   this.queryPostfix = queryPostfix;
-};
+}
 
 // inherit from Search
 SwissSearch.prototype = new Search();

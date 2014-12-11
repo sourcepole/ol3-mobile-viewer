@@ -2,7 +2,7 @@
  * Login base class
  */
 
-function Login() {};
+function Login() {}
 
 Login.prototype = {
   /**
