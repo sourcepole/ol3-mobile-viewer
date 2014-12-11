@@ -178,6 +178,12 @@ Map.setBackgroundLayer = function() {
   Map.map.getLayers().insertAt(0, Map.backgroundLayer);
 };
 
+Map.toggleBackgroundLayer = function(visible) {
+  if (Map.backgroundLayer != null) {
+    Map.backgroundLayer.setVisible(visible);
+  }
+};
+
 Map.clearOverlayLayers = function() {
   for (var layer in Map.overlayLayers) {
     // remove overlay layer

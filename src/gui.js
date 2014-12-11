@@ -68,6 +68,7 @@ Gui.loadTopics = function(categories) {
       Map.topics[topic.name] = {
         title: topic.title,
         wms_url: topic.wms_url,
+        background_layer: topic.background_layer,
         overlay_layer: topic.overlay_layer,
         minscale: topic.minscale,
         bg_topic: topic.bg_topic,
@@ -87,6 +88,8 @@ Gui.selectTopic = function(topic) {
   Map.clearLayers();
   Map.topic = topic;
   Map.setMinScaleDenom(Map.topics[Map.topic].minscale || Config.map.minScaleDenom.map);
+
+  // background topic
   Map.backgroundTopic = Map.topics[Map.topic].bg_topic || null;
   if (Gui.initialLoad) {
     // background topic from permalink
@@ -94,8 +97,14 @@ Gui.selectTopic = function(topic) {
       Map.backgroundTopic = Config.permalink.initialBackgroundTopic;
     }
   }
+  if (Map.topics[Map.backgroundTopic] == undefined || !Map.topics[Map.backgroundTopic].background_layer) {
+    // invalid background topic
+    Map.backgroundTopic = null;
+  }
+
+  // load layers
   Layers.loadLayers(Config.data.layersUrl(topic), Gui.loadLayers);
-  if (Map.backgroundTopic) {
+  if (Map.backgroundTopic != null) {
     // load background layers
     Layers.loadLayers(Config.data.layersUrl(Map.backgroundTopic), Gui.loadBackgroundLayers);
   }
@@ -219,6 +228,18 @@ Gui.loadLayers = function(data) {
     }
   }
   Gui.setupOverlayTopics(overlayTopics);
+
+  if (Map.backgroundTopic) {
+    // add background layer button
+    var html = '<label><input type="checkbox" name="_background_" data-background="true" checked>' + I18n.layers.background + '</label>';
+    $('#panelLayerAll').append(html);
+    $('#panelLayerAll').trigger('create');
+
+    // background toggle
+    $('#panelLayerAll :checkbox[data-background=true]').bind('change', function(e) {
+      Map.toggleBackgroundLayer($(this).is(':checked'));
+    });
+  }
 
   // add any overlays from permalink
   Config.permalink.addOverlays(Gui.setSelectionLayer, Gui.setRedliningLayer);

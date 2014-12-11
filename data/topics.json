@@ -9,6 +9,7 @@
       "categorysort": 0,
       "categories_topics_sort": 0,
       "wms_url":"http://wms.geo.admin.ch/",
+      "background_layer": true,
       "minscale": 10000
     },
     {
