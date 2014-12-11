@@ -27,6 +27,8 @@ Map.backgroundLayer = null;
 Map.selectionLayer = null;
 Map.redliningLayer = null;
 Map.highlightLayer = null;
+// overlay layers (key = topic name)
+Map.overlayLayers = {};
 // OpenLayers 3 geolocation object
 Map.geolocation = null;
 // OpenLayers 3 DeviceOrientation object
@@ -111,6 +113,7 @@ Map.clearLayers = function() {
   Map.selectionLayer = null;
   Map.redliningLayer = null;
   Map.highlightLayer = null;
+  Map.overlayLayers = {};
 }
 
 Map.setTopicLayer = function() {
@@ -173,6 +176,53 @@ Map.setBackgroundLayer = function() {
 
   // add background as base layer
   Map.map.getLayers().insertAt(0, Map.backgroundLayer);
+};
+
+Map.clearOverlayLayers = function() {
+  for (var layer in Map.overlayLayers) {
+    // remove overlay layer
+    Map.map.removeLayer(layer);
+  }
+  Map.overlayLayers = {};
+};
+
+Map.addOverlayLayer = function(overlayTopic, overlayLayers) {
+  var wmsParams = $.extend({}, Config.map.wmsParams, {
+    'LAYERS': overlayLayers.join(','),
+    'TRANSPARENT': true
+  });
+  var wmsOptions = {
+    url: Map.topics[overlayTopic].wms_url,
+    params: wmsParams,
+    extent: Config.map.extent,
+    serverType: Config.map.wmsServerType,
+    dpi: Config.map.dpi
+  };
+  var overlayLayer = null;
+  if (Config.map.useTiledOverlayWMS) {
+    overlayLayer = new ol.layer.Tile({
+      source: new ol.source.TileWMS(wmsOptions)
+    });
+  }
+  else {
+    overlayLayer = new ol.layer.Image({
+      source: new ol.source.ImageWMS(wmsOptions)
+    });
+  }
+  overlayLayer.name = 'overlay_' + overlayTopic;
+
+  if (Map.overlayLayers[overlayTopic] != undefined) {
+    // remove any existing layer for this overlay topic
+    Map.map.removeLayer(Map.overlayLayers[overlayTopic]);
+  }
+  Map.overlayLayers[overlayTopic] = overlayLayer;
+  Map.map.addLayer(overlayLayer);
+};
+
+Map.toggleOverlayLayer = function(overlayTopic, visible) {
+  if (Map.overlayLayers[overlayTopic] != undefined) {
+    Map.overlayLayers[overlayTopic].setVisible(visible);
+  }
 };
 
 Map.setSelectionLayer = function(layer) {

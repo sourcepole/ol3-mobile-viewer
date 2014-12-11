@@ -66,9 +66,11 @@ Gui.loadTopics = function(categories) {
       }
 
       Map.topics[topic.name] = {
+        title: topic.title,
         wms_url: topic.wms_url,
         minscale: topic.minscale,
-        bg_topic: topic.bg_topic
+        bg_topic: topic.bg_topic,
+        overlay_topics: topic.overlay_topics
       };
     }
   }
@@ -205,6 +207,10 @@ Gui.loadLayers = function(data) {
   Map.setTopicLayer();
   Gui.resetLayerOrder();
 
+  // add any overlay topics
+  var overlayTopics = Map.topics[Map.topic].overlay_topics || [];
+  Gui.setupOverlayTopics(overlayTopics);
+
   // add any overlays from permalink
   Config.permalink.addOverlays(Gui.setSelectionLayer, Gui.setRedliningLayer);
 };
@@ -236,6 +242,78 @@ Gui.loadBackgroundLayers = function(data) {
   }
   Map.backgroundLayers = sortedLayers.join(',');
   Map.setBackgroundLayer();
+};
+
+// add layer group for overlay topics
+Gui.setupOverlayTopics = function(overlayTopics) {
+  // remove overlays
+  Map.clearOverlayLayers();
+  $('#overlayTopics').remove();
+
+  if (overlayTopics.length > 0) {
+    // add overlay group to layer tree
+    var html = '<div id="overlayTopics" data-role="collapsible" data-theme="c" data-groupcheckbox="false">';
+    html +=      '<h3>' + I18n.layers.overlays + '</h3>';
+
+    // add overlay layers to group (from bottom to top)
+    for (var i=overlayTopics.length - 1; i>=0; i--) {
+      var overlayTopic = overlayTopics[i];
+      html += '<label>';
+      html +=   '<input type="checkbox" ';
+      html +=     'name="overlayTopic_' + overlayTopic + '" ';
+      html +=     'data-overlay_topic="' + overlayTopic + '" ';
+      html +=     'checked';
+      html +=   '/>' + Map.topics[overlayTopic].title;
+      html += '</label>';
+    }
+
+    html += '</div>';
+
+    $('#panelLayerAll').append(html);
+    $('#panelLayerAll').trigger('create');
+
+    // add overlay layers (last on top)
+    for (var i=0; i<overlayTopics.length; i++) {
+      Gui.addOverlayTopicLayer(overlayTopics[i]);
+    }
+
+    // overlay toggle
+    $('#panelLayerAll :checkbox[data-overlay_topic]').bind('change', function(e) {
+      Map.toggleOverlayLayer($(this).data('overlay_topic'), $(this).is(':checked'));
+    });
+  }
+};
+
+// add overlay layer
+Gui.addOverlayTopicLayer = function(topic) {
+  // load overlay topic layers
+  Layers.loadLayers(Config.data.layersUrl(topic), function(data) {
+    // collect visible layers
+    var groups = data.groups;
+    var layers = [];
+    for (var i=0;i<groups.length; i++) {
+      var group = groups[i];
+      for (var j=0;j<group.layers.length; j++) {
+        var layer = group.layers[j];
+        if (layer.visini) {
+          layers.push({
+            layername: layer.layername,
+            wms_sort: layer.wms_sort
+          });
+        }
+      }
+    }
+    // sort by wms_sort
+    layers = layers.sort(function(a, b) {
+      return a.wms_sort - b.wms_sort;
+    });
+    var sortedLayers = [];
+    for (var i=0; i<layers.length; i++) {
+      sortedLayers.push(layers[i].layername);
+    }
+    // add overlay layer
+    Map.addOverlayLayer(topic, sortedLayers);
+  });
 };
 
 // add selection overlay layer

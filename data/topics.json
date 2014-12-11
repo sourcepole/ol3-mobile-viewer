@@ -7,7 +7,7 @@
       "icon":"img/geo_admin_pk.png",
       "categorytitle": "geo.admin.ch",
       "categorysort": 0,
-      "categories_topics_sort":0,
+      "categories_topics_sort": 0,
       "wms_url":"http://wms.geo.admin.ch/",
       "minscale": 10000
     },
@@ -17,7 +17,7 @@
       "icon":"img/basisplan_av_farbig.png",
       "categorytitle": "Glarus",
       "categorysort": 1,
-      "categories_topics_sort":0,
+      "categories_topics_sort": 0,
       "wms_url":"http://map.geo.gl.ch/wms/Public"
     },
     {
@@ -26,9 +26,41 @@
       "icon":"img/geo_admin_pk.png",
       "categorytitle": "Glarus",
       "categorysort": 1,
-      "categories_topics_sort":0,
-      "bg_topic": "geo_admin_pk",
-      "wms_url":"http://map.geo.gl.ch/wms/Public"
+      "categories_topics_sort": 1,
+      "wms_url":"http://map.geo.gl.ch/wms/Public",
+      "bg_topic": "geo_admin_pk"
+    },
+    {
+      "name":"overlay_test",
+      "title": "Pixelkarte 25 mit Überlagerung",
+      "icon":"img/pk25grau.png",
+      "categorytitle": "Glarus",
+      "categorysort": 1,
+      "categories_topics_sort": 2,
+      "wms_url":"http://map.geo.gl.ch/wms/Public",
+      "overlay_topics": ["overlay_ch", "overlay_places"]
+    },
+    {
+      "name":"overlay_ch",
+      "title": "Überlagerung CH-Rahmen",
+      "icon":"img/geo_admin_pk.png",
+      "categorytitle": "Glarus",
+      "categorysort": 1,
+      "categories_topics_sort": 3,
+      "wms_url":"http://map.geo.gl.ch/wms/Public",
+      "main_layer": false,
+      "overlay_layer": true
+    },
+    {
+      "name":"overlay_places",
+      "title": "Überlagerung Ortsangaben",
+      "icon":"img/geo_admin_pk.png",
+      "categorytitle": "Glarus",
+      "categorysort": 1,
+      "categories_topics_sort": 4,
+      "wms_url":"http://map.geo.gl.ch/wms/Public",
+      "main_layer": false,
+      "overlay_layer": true
     },
     {
       "name":"grundplan_av",

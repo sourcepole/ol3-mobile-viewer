@@ -144,6 +144,7 @@ Config.map.wmsParams = {
 };
 
 Config.map.useTiledBackgroundWMS = true;
+Config.map.useTiledOverlayWMS = false;
 
 // limit max zoom to this scale (e.g. minScaleDenom=500 for 1:500)
 Config.map.minScaleDenom = {
