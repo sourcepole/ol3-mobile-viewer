@@ -68,6 +68,7 @@ Gui.loadTopics = function(categories) {
       Map.topics[topic.name] = {
         title: topic.title,
         wms_url: topic.wms_url,
+        overlay_layer: topic.overlay_layer,
         minscale: topic.minscale,
         bg_topic: topic.bg_topic,
         overlay_topics: topic.overlay_topics
@@ -202,17 +203,29 @@ Gui.loadLayers = function(data) {
   Gui.layerOrderChanged = false;
   if (Gui.initialLoad) {
     Gui.applyPermalink();
-    Gui.initialLoad = false;
   }
   Map.setTopicLayer();
   Gui.resetLayerOrder();
 
   // add any overlay topics
   var overlayTopics = Map.topics[Map.topic].overlay_topics || [];
+  if (Gui.initialLoad && Config.permalink.initialOverlayTopics != null) {
+    // add any additional overlay topics from permalink
+    for (var i=0; i<Config.permalink.initialOverlayTopics.length; i++) {
+      var overlayTopic = Config.permalink.initialOverlayTopics[i];
+      if (overlayTopics.indexOf(overlayTopic) == -1) {
+        overlayTopics.push(overlayTopic);
+      }
+    }
+  }
   Gui.setupOverlayTopics(overlayTopics);
 
   // add any overlays from permalink
   Config.permalink.addOverlays(Gui.setSelectionLayer, Gui.setRedliningLayer);
+
+  if (Gui.initialLoad) {
+    Gui.initialLoad = false;
+  }
 };
 
 // add background layer
@@ -246,6 +259,11 @@ Gui.loadBackgroundLayers = function(data) {
 
 // add layer group for overlay topics
 Gui.setupOverlayTopics = function(overlayTopics) {
+  // filter overlayable topics
+  overlayTopics = $.grep(overlayTopics, function(topic, index) {
+    return Map.topics[topic] != undefined && Map.topics[topic].overlay_layer;
+  });
+
   // remove overlays
   Map.clearOverlayLayers();
   $('#overlayTopics').remove();

@@ -2,6 +2,7 @@
  * Mapfish Appserver permalink
  *
  * back=<background topic name>
+ * over=<comma separated overlay topic names>
  * x=<x>
  * y=<y>
  * scale=<scale>
@@ -49,6 +50,10 @@ MapfishPermalink.prototype.read = function(urlParams, callback) {
   // background topic
   if (urlParams.back != undefined) {
     this.initialBackgroundTopic = urlParams.back;
+  }
+  // overlay topics
+  if (urlParams.over != undefined) {
+    this.initialOverlayTopics = urlParams.over.split(',');
   }
 
   // map extent

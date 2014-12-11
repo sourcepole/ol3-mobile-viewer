@@ -25,6 +25,7 @@ Features:
 * tiledWms=1|0 : force tiled/untiled WMS
 * topic=TOPIC_NAME : initial topic
 * background=BACKGROUND_TOPIC_NAME : initial background topic
+* overlays=COMMA_SEPARATED_OVERLAY_TOPIC_NAMES : initial overlay topics
 * extent=MINX,MINY,MAXX,MAXY : initial map extent
 * center=X,Y : initial map center
 * scale=SCALE : initial map scale

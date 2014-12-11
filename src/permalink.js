@@ -4,6 +4,7 @@
  * tiledWms=<1|0>: force tiled/untiled WMS
  * topic=<topic name>
  * background=<background topic name>
+ * overlays=<comma separated overlay topic names>
  * extent=<minx>,<miny>,<maxx>,<maxy>
  * center=<x>,<y>
  * scale=<scale>
@@ -27,6 +28,8 @@ function Permalink() {
   this.initialTopic = null;
   // <background topic name>
   this.initialBackgroundTopic = null;
+  // [<overlay topic name>]
+  this.initialOverlayTopics = null;
   // [<minx>, <miny>, <maxx>, <maxy>]
   this.startExtent = null;
   // [<x>, <y>]
@@ -67,6 +70,9 @@ Permalink.prototype = {
     }
     if (urlParams.background != undefined) {
       this.initialBackgroundTopic = urlParams.background;
+    }
+    if (urlParams.overlays != undefined) {
+      this.initialOverlayTopics = urlParams.overlays.split(',');
     }
 
     // map extent
