@@ -81,14 +81,23 @@ Map.createMap = function(featureInfoCallback) {
       var url = null;
       if (Config.featureInfo.useWMSGetFeatureInfo) {
         var view = Map.map.getView();
+        var params = {
+          'INFO_FORMAT': Config.featureInfo.format,
+          'FEATURE_COUNT': Config.featureInfo.wmsMaxFeatures
+        };
+        if (Config.map.wmsServerType == 'qgis') {
+          // add tolerances
+          $.extend(params, {
+            FI_POINT_TOLERANCE: Config.featureInfo.tolerances.point * e.frameState.pixelRatio,
+            FI_LINE_TOLERANCE: Config.featureInfo.tolerances.line * e.frameState.pixelRatio,
+            FI_POLYGON_TOLERANCE: Config.featureInfo.tolerances.polygon * e.frameState.pixelRatio
+          });
+        }
         url = Map.topicLayer.getSource().getGetFeatureInfoUrl(
           e.coordinate,
           view.getResolution(),
           view.getProjection(),
-          {
-            'INFO_FORMAT': Config.featureInfo.format,
-            'FEATURE_COUNT': Config.featureInfo.wmsMaxFeatures
-          }
+          params
         );
       }
       else {

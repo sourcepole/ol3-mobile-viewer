@@ -67,6 +67,18 @@ Config.featureInfo.useWMSGetFeatureInfo = false;
 Config.featureInfo.wmsMaxFeatures = null;
 
 /**
+ * Tolerances for WMS GetFeatureInfo requests on QGIS Server
+ *
+ * tolerance values are in pixels at map dpi and will be scaled with
+ * the actual pixel ratio value for high resolution rendering
+ */
+Config.featureInfo.tolerances = {
+  point: 16,
+  line: 8,
+  polygon: 4
+};
+
+/**
  * custom feature info URL when not using WMS GetFeatureInfo
  *
  * topicName: current topic
