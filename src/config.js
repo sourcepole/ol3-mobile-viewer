@@ -242,3 +242,11 @@ Config.mapfishLocateUrl = function(locate, locations) {
  * QGIS Web Client permalink
  */
 //Config.permalink = new QgisPermalink();
+
+
+/**
+ * called after viewer init
+ *
+ * e.g. setup custom click handlers here
+ */
+Config.customInitViewer = function() {};

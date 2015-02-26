@@ -43,10 +43,12 @@ Map.lastClickPos = null;
 Map.clickMarker = null;
 // ignore clicks on map
 Map.ignoreClick = false;
+// map click handlers (key = handler name)
+Map.singleClickHandlers = {};
 
 Map.useTiledWMS = false;
 
-Map.createMap = function(featureInfoCallback) {
+Map.createMap = function() {
   // override from URL params
   if (Config.permalink.useTiledWMS != null) {
     Map.useTiledWMS = Config.permalink.useTiledWMS;
@@ -71,46 +73,18 @@ Map.createMap = function(featureInfoCallback) {
     }
   });
 
-  // feature info
-  if (featureInfoCallback != null) {
-    Map.map.on('singleclick', function(e) {
-      if (Map.ignoreClick) {
-        return;
-      }
+  Map.map.on('singleclick', function(e) {
+    if (!Map.ignoreClick) {
       Map.lastClickPos = e.coordinate;
-      var url = null;
-      if (Config.featureInfo.useWMSGetFeatureInfo) {
-        var view = Map.map.getView();
-        var params = {
-          'INFO_FORMAT': Config.featureInfo.format,
-          'FEATURE_COUNT': Config.featureInfo.wmsMaxFeatures
-        };
-        if (Config.map.wmsServerType == 'qgis') {
-          // add tolerances
-          $.extend(params, {
-            FI_POINT_TOLERANCE: Config.featureInfo.tolerances.point * e.frameState.pixelRatio,
-            FI_LINE_TOLERANCE: Config.featureInfo.tolerances.line * e.frameState.pixelRatio,
-            FI_POLYGON_TOLERANCE: Config.featureInfo.tolerances.polygon * e.frameState.pixelRatio
-          });
+
+      for (var name in Map.singleClickHandlers) {
+        var handler = Map.singleClickHandlers[name];
+        if (handler.isActive()) {
+          handler.handleEvent(e);
         }
-        url = Map.topicLayer.getSource().getGetFeatureInfoUrl(
-          e.coordinate,
-          view.getResolution(),
-          view.getProjection(),
-          params
-        );
       }
-      else {
-        url = Config.featureInfo.url(Map.topic, e.coordinate, Map.featureInfoLayers());
-      }
-      $.ajax({
-        url: url,
-        dataType: 'text'
-      }).done(function(data, status) {
-        featureInfoCallback([data]);
-      });
-    });
-  }
+    }
+  });
 };
 
 Map.clearLayers = function() {
@@ -339,6 +313,17 @@ Map.featureInfoLayers = function() {
   return featureInfoLayers;
 };
 
+// coordinate: [x, y]
+Map.getGetFeatureInfoUrl = function(coordinate, params) {
+  var view = Map.map.getView();
+  return Map.topicLayer.getSource().getGetFeatureInfoUrl(
+    coordinate,
+    view.getResolution(),
+    view.getProjection(),
+    params
+  );
+};
+
 // transparency between 0 and 100
 Map.setLayerTransparency = function(layername, transparency, updateMap) {
   Map.layers[layername].transparency = transparency;
@@ -562,6 +547,34 @@ Map.toggleScalebar = function(enabled) {
   }
 };
 
-Map.toggleClickHandler = function(enabled) {
+// do not forward click events to click handlers if disabled
+Map.toggleClickHandling = function(enabled) {
   Map.ignoreClick = !enabled;
+};
+
+// register a MapClickHandler under a name
+Map.registerClickHandler = function(name, handler) {
+  Map.singleClickHandlers[name] = handler;
+};
+
+// unregister a MapClickHandler by name
+Map.unregisterClickHandler = function(name) {
+  if (Map.singleClickHandlers[name]) {
+    Map.singleClickHandlers[name].toggle(false);
+    delete Map.singleClickHandlers[name];
+  }
+};
+
+// activate a MapClickHandler by name (null to deactivate all)
+Map.activateClickHandler = function(name) {
+  // deactivate other handlers
+  for (var key in Map.singleClickHandlers) {
+    var handler = Map.singleClickHandlers[key];
+    handler.toggle(false);
+  }
+
+  // activate requested handler
+  if (name != null && Map.singleClickHandlers[name]) {
+    Map.singleClickHandlers[name].toggle(true);
+  }
 };

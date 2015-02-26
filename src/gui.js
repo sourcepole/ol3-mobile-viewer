@@ -513,7 +513,7 @@ Gui.selectLayer = function(layer) {
 // show feature info results
 Gui.showFeatureInfoResults = function(data) {
   if (Config.featureInfo.format === 'text/xml') {
-    FeatureInfo.parseResults(data);
+    Gui.showXMLFeatureInfoResults(data);
   }
   else {
     $('#featureInfoResults').html(data.join(''));
@@ -825,7 +825,7 @@ Gui.initViewer = function() {
   });
 
   // map
-  Map.createMap(Gui.showFeatureInfoResults);
+  Map.createMap();
   Gui.updateLayout();
 
   // layer panel navigation
@@ -898,7 +898,9 @@ Gui.initViewer = function() {
   });
 
   // feature info
-  FeatureInfo.setCallback(Gui.showXMLFeatureInfoResults);
+  var featureInfo = new FeatureInfo(Gui.showFeatureInfoResults);
+  Map.registerClickHandler('featureInfo', featureInfo);
+  Map.activateClickHandler('featureInfo');
 
   $('#panelFeatureInfo').on('panelclose', function() {
     Map.toggleClickMarker(false);
@@ -995,11 +997,14 @@ Gui.initViewer = function() {
 
   // workaround for erroneus map click despite open panels on iOS
   $('#panelFeatureInfo, #panelLayer, #panelSearch').on('panelopen', function() {
-    Map.toggleClickHandler(false);
+    Map.toggleClickHandling(false);
   });
   $('#panelFeatureInfo, #panelLayer, #panelSearch').on('panelclose', function() {
-    Map.toggleClickHandler(true);
+    Map.toggleClickHandling(true);
   });
+
+  // invoke custom post viewer init
+  Config.customInitViewer();
 };
 
 $(document).ready(function(e) {
