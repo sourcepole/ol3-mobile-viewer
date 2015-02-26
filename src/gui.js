@@ -1,5 +1,8 @@
 /**
  * jQuery Mobile GUI
+ *
+ * events:
+ *   topiclayersloaded({topic: <topic>}) 
  */
 
 var Gui = {};
@@ -247,6 +250,8 @@ Gui.loadLayers = function(data) {
   if (Gui.initialLoad) {
     Gui.initialLoad = false;
   }
+
+  $.event.trigger({type: 'topiclayersloaded', topic: Map.topic});
 };
 
 // add background layer
