@@ -366,6 +366,11 @@ Map.refresh = function() {
   Map.topicLayer.setVisible(visibleLayers.length > 0);
 };
 
+// force redraw
+Map.redraw = function() {
+  Map.mergeWmsParams({t: new Date().getTime()});
+};
+
 Map.mergeWmsParams = function(params) {
   var source = Map.topicLayer.getSource();
   var newParams = $.extend({}, source.getParams(), params);
