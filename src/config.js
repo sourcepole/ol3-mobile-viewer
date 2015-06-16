@@ -11,7 +11,8 @@ Config.debug = false;
 // GUI
 Config.gui = {
   hideShareButton: false,
-  hideLoginButton: false
+  hideLoginButton: false,
+  useLayertreeGroupCheckboxes: true
 };
 
 

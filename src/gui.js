@@ -51,7 +51,7 @@ Gui.panelSelect = function(panel) {
 
 // fill topics list
 Gui.loadTopics = function(categories) {
-  html = "";
+  var html = "";
   Map.topics = {};
   for (var i=0; i<categories.length; i++) {
     var category = categories[i];
@@ -119,13 +119,17 @@ Gui.selectTopic = function(topic) {
 
 // update layers list
 Gui.loadLayers = function(data) {
-  html = "";
+  var html = "";
   var layers = [];
 
   function fillLayertree(node, parent, depth) {
     if (node.layers.length > 0) {
       // add group
-      html += '<div data-role="collapsible" data-theme="c" data-groupcheckbox="true">';
+      html += '<div data-role="collapsible" data-theme="c"';
+      if (Config.gui.useLayertreeGroupCheckboxes) {
+        html += ' data-groupcheckbox="true"';
+      }
+      html += '>';
       html +=   '<h3>' + node.name + '</h3>';
     }
     else {
@@ -541,7 +545,7 @@ Gui.showFeatureInfoResults = function(data) {
 
 // convert XML feature info results to HTML
 Gui.showXMLFeatureInfoResults = function(results) {
-  html = "";
+  var html = "";
   for (var i=0; i<results.length; i++) {
     var result = results[i];
     var layer = Map.layers[result.layer];
