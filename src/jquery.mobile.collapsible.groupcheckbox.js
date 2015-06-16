@@ -88,6 +88,8 @@
 
             // check children checkboxes
             collapsibleContent.children('.ui-checkbox').find(':checkbox').prop('checked', checked).checkboxradio('refresh');
+            // check children checkboxes that are not yet enhanced
+            collapsibleContent.children('label').find(':checkbox').prop('checked', checked);
 
             // update group checkbox
             updateGroupCheckbox();
@@ -100,7 +102,7 @@
         var updateGroupCheckbox = function(event) {
           // collect children checkboxes
           var groupCheckboxChildren = collapsibleContent.children('.ui-collapsible[data-groupcheckbox=true]');
-          var checkboxChildren = collapsibleContent.children('.ui-checkbox').find(':checkbox');
+          var checkboxChildren = collapsibleContent.children('.ui-checkbox, label').find(':checkbox');
 
           var hasPartiallyCheckedChildren = groupCheckboxChildren.is('.ui-collapsible-groupcheckbox-somechecked');
           var hasCheckedChildren = groupCheckboxChildren.is('.ui-collapsible-groupcheckbox-checked') || checkboxChildren.is(':checked');
@@ -139,13 +141,12 @@
           }
         };
 
+        // initial state after creation
+        updateGroupCheckbox();
+
         // sync to children checkboxes
         collapsibleContent.delegate('> .ui-collapsible[data-groupcheckbox=true]', 'groupchange', updateGroupCheckbox);
-        collapsibleContent.delegate('> .ui-checkbox :checkbox', 'change', updateGroupCheckbox);
-
-        // initial state after creation
-        collapsibleContent.delegate('> .ui-collapsible[data-groupcheckbox=true]', 'collapsiblecreate', updateGroupCheckbox);
-        collapsibleContent.delegate('> .ui-checkbox :checkbox', 'checkboxradiocreate', updateGroupCheckbox);
+        collapsibleContent.delegate('> .ui-checkbox :checkbox', 'change checkboxradiocreate', updateGroupCheckbox);
       }
     }
   });

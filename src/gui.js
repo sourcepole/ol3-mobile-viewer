@@ -143,6 +143,7 @@ Gui.loadLayers = function(data) {
         // add layer
         html += '<label>';
         html +=   '<input type="checkbox" ';
+        html +=     'data-role="none" '; // prevent auto-enhancement by jQuery Mobile
         html +=     'name="' + layer.layername + '" ';
         html +=     'data-layer="' + layer.layername + '" ';
         if (layer.visini) {
@@ -180,6 +181,16 @@ Gui.loadLayers = function(data) {
 
   $('#panelLayerAll').html(html);
   $('#panelLayerAll').trigger('create');
+
+  // enhance checkboxes of group children when expanding for the first time
+  function enhanceCheckbox() {
+    var labels = $(this).children('.ui-collapsible-content').children('label');
+    labels.find(':checkbox[data-role="none"]').attr('data-role', null);
+    labels.trigger('create');
+    $(this).unbind('expand', enhanceCheckbox);
+  }
+  var groups = $('#panelLayerAll').find('.ui-collapsible');
+  groups.bind('expand', enhanceCheckbox);
 
   // root group change (NOTE: add binding after building the layer tree, to skip events during creation)
   $('#panelLayerAll').children('.ui-collapsible[data-groupcheckbox=true]').bind('groupchange', function(e) {
