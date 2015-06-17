@@ -163,7 +163,8 @@ Gui.loadLayers = function(data) {
           visible: layer.visini,
           minscale: layer.minscale,
           maxscale: layer.maxscale,
-          hidden_attributes: layer.hidden_attributes
+          hidden_attributes: layer.hidden_attributes,
+          hidden_values: layer.hidden_values
         });
       }
     }
@@ -223,6 +224,7 @@ Gui.loadLayers = function(data) {
       minscale: layer.minscale,
       maxscale: layer.maxscale,
       hidden_attributes: layer.hidden_attributes,
+      hidden_values: layer.hidden_values,
       transparency: 0
     };
   }
@@ -562,6 +564,11 @@ Gui.showXMLFeatureInfoResults = function(results) {
     if (layer != undefined && layer.hidden_attributes != undefined) {
       hiddenAttributes = layer.hidden_attributes;
     }
+    var hiddenValues = [];
+    if (layer != undefined && layer.hidden_values != undefined) {
+      hiddenValues = layer.hidden_values;
+    }
+
     for (var j=0; j<result.features.length; j++) {
       var feature = result.features[j];
       var title = feature.id === null ? I18n.featureInfo.raster : I18n.featureInfo.feature + feature.id;
@@ -573,8 +580,8 @@ Gui.showXMLFeatureInfoResults = function(results) {
       for (var k=0; k<feature.attributes.length; k++) {
         var attribute = feature.attributes[k];
 
-        // skip hidden attributes
-        if ($.inArray(attribute.name, hiddenAttributes) == -1) {
+        // skip hidden attributes and hidden values
+        if ($.inArray(attribute.name, hiddenAttributes) == -1 && $.inArray(attribute.value, hiddenValues) == -1) {
           html += '<li>';
           html +=   '<span class="name">' + attribute.name + ': </span>';
           html +=   '<span class="value">' + attribute.value + '</span>';

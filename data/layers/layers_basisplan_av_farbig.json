@@ -27,7 +27,8 @@
             "visini": false,
             "wms_sort": 3,
             "toc_sort": 3,
-            "hidden_attributes": ["EGID"]
+            "hidden_attributes": ["EGID"],
+            "hidden_values": ["", "NULL"]
         },
         {
             "topic": "basisplan_av_farbig",
