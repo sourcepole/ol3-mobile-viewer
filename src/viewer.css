@@ -254,13 +254,24 @@
 #featureInfoResults .ui-btn-text {
   white-space: normal;
 }
-
+#featureInfoResults .feature {
+  margin: 0;
+}
+#featureInfoResults .feature .ui-collapsible-content {
+  padding: 0;
+}
+#featureInfoResults ul.ui-listview-inset {
+  margin: 0;
+}
 #featureInfoResults li.ui-li {
   padding-left: 4px;
   padding-right: 4px;
   overflow: auto;
 }
-
+#featureInfoResults li.ui-li .link {
+  padding-left: 0;
+  padding-right: 0;
+}
 #featureInfoResults span.value {
   font-weight: normal;
   text-align: right;

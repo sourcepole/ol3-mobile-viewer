@@ -557,7 +557,7 @@ Gui.showXMLFeatureInfoResults = function(results) {
       layerTitle = layer.title;
     }
 
-    html += '<div data-role="collapsible"  data-collapsed="false" data-theme="c">';
+    html += '<div data-role="collapsible" data-collapsed="false" data-theme="c">';
     html +=   '<h3>' + layerTitle + '</h3>';
 
     var hiddenAttributes = [];
@@ -573,9 +573,9 @@ Gui.showXMLFeatureInfoResults = function(results) {
       var feature = result.features[j];
       var title = feature.id === null ? I18n.featureInfo.raster : I18n.featureInfo.feature + feature.id;
 
-      html += '<div data-role="collapsible"  data-collapsed="false" data-theme="c">';
+      html += '<div class="feature" data-role="collapsible" data-collapsed="false" data-theme="c">';
       html +=   '<h3>' + title + '</h3>';
-      html +=   '<ul data-role="listview">';
+      html +=   '<ul class="ui-listview-inset ui-corner-all" data-role="listview">';
 
       for (var k=0; k<feature.attributes.length; k++) {
         var attribute = feature.attributes[k];
@@ -583,8 +583,17 @@ Gui.showXMLFeatureInfoResults = function(results) {
         // skip hidden attributes and hidden values
         if ($.inArray(attribute.name, hiddenAttributes) == -1 && $.inArray(attribute.value, hiddenValues) == -1) {
           html += '<li>';
-          html +=   '<span class="name">' + attribute.name + ': </span>';
-          html +=   '<span class="value">' + attribute.value + '</span>';
+          if (attribute.value.match(/^https?:\/\/.+\..+/i)) {
+            // add link to URL from value
+            html += '<a href="' + attribute.value + '" target="_blank" class="link">';
+            html +=   '<span class="name">' + attribute.name + '</span>';
+            html += '</a>';
+          }
+          else {
+            // add attribute name and value
+            html += '<span class="name">' + attribute.name + ': </span>';
+            html += '<span class="value">' + attribute.value + '</span>';
+          }
           html += '</li>';
         }
       }
