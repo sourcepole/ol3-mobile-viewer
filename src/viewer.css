@@ -363,3 +363,41 @@
     margin-left: 18em;
   }
 }
+
+/* styles for printing */
+@media print {
+
+  /* hide tool buttons and panels */
+  .ui-btn-icon-notext {
+    display: none;
+  }
+  .ui-panel {
+    display: none;
+  }
+
+  /* show compass */
+  #btnCompass {
+    display: inherit;
+  }
+  /* workaround for compass image */
+  .ui-icon-compass {
+    background-image: none;
+    display: list-item !important;
+    list-style-image: url("../img/compass.svg");
+    list-style-position: inside;
+  }
+
+  /* workaround for click marker image */
+  #clickMarker {
+    background-image: none;
+    display: list-item !important;
+    list-style-image: url("../img/click.svg");
+    list-style-position: inside;
+  }
+
+  /* remove blurring of scale bar */
+  .ol-scale-line-inner {
+    opacity: 1.0;
+  }
+
+}
