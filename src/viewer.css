@@ -387,6 +387,14 @@
     list-style-position: inside;
   }
 
+  /* workaround for location marker image */
+  #locationMarker {
+    background-image: none;
+    display: list-item !important;
+    list-style-image: url("../img/location.svg");
+    list-style-position: inside;
+  }
+
   /* workaround for click marker image */
   #clickMarker {
     background-image: none;
