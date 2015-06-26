@@ -2,7 +2,7 @@
  * Custom configuration
  */
 
-Config = {};
+var Config = {};
 
 // flag to activate debug code
 Config.debug = false;
@@ -243,6 +243,15 @@ Config.mapfishLocateUrl = function(locate, locations) {
  * QGIS Web Client permalink
  */
 //Config.permalink = new QgisPermalink();
+
+
+/**
+ * Printing from browser
+ */
+Config.print = {
+  hires: false, // enable high resolution printing
+  dpi: 300 // target print resolution
+};
 
 
 /**
