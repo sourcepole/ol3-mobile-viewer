@@ -947,19 +947,32 @@ Gui.initViewer = function() {
   });
 
   // search
-  $('#searchInput').bind('change', function(e) {
+  var resetSearchResults = function() {
     // reset search panel
     $('#searchResults').hide();
     // reset highlight
     Map.setHighlightLayer(null);
+  };
+  $('#searchInput').bind('change', function(e) {
+    if ($(this).val() == "") {
+      // clear search
+      resetSearchResults();
+    }
+  });
+  $('#searchForm').bind('submit', function(e) {
+    resetSearchResults();
 
-    var searchString = $(this).val();
+    var searchString = $('#searchInput').val();
     if (searchString != "") {
       // submit search
       Config.search.submit(searchString, Gui.showSearchResults);
       // close virtual keyboard
       $('#searchInput').blur();
     }
+
+    // block form submit
+    e.preventDefault();
+    e.stopPropagation();
   });
   $('#searchResultsList').delegate('li', 'vclick', function() {
     if ($(this).data('bbox') != null) {
