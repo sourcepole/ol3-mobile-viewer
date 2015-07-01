@@ -295,6 +295,12 @@
   margin: 0 2% 0 0;
 }
 
+/* fix closing panels with outside click on IE10 */
+.ui-panel-dismiss {
+  background-color: inherit;
+  opacity: 0.0;
+}
+
 /* override panel width */
 
 .ui-panel {
