@@ -300,6 +300,8 @@
   background-color: inherit;
   opacity: 0.0;
 }
+/* hide native clear button in search input on IE10 */
+input[data-type='search']::-ms-clear { display: none; }
 
 /* override panel width */
 
