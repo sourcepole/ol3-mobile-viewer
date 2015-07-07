@@ -147,7 +147,10 @@ Gui.loadLayers = function(data) {
         // add layer
         html += '<label>';
         html +=   '<input type="checkbox" ';
-        html +=     'data-role="none" '; // prevent auto-enhancement by jQuery Mobile
+        if (parent != null) {
+          // prevent auto-enhancement by jQuery Mobile if layer belongs to a group
+          html +=   'data-role="none" ';
+        }
         html +=     'name="' + layer.layername + '" ';
         html +=     'data-layer="' + layer.layername + '" ';
         if (layer.visini) {
