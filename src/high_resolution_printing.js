@@ -18,15 +18,12 @@ $(document).ready(function() {
   }
 
   // add <img> for WMS
-  var addWmsImage = function(id, width, height, transparent, olLayer, wmsParams) {
-    if (olLayer != null) {
+  var addWmsImage = function(id, width, height, olLayer, wmsParams) {
+    if (olLayer != null && olLayer.getVisible()) {
       var params = $.extend({},
         olLayer.getSource().getParams(),
         wmsParams
       );
-      if (transparent) {
-        params.TRANSPARENT = 'TRUE';
-      }
       if (params.OPACITIES == null) {
         // remove OPACITIES param
         delete params.OPACITIES;
@@ -47,7 +44,7 @@ $(document).ready(function() {
       html +=      'src="' + url + '" ';
       html +=      'width=' + width + ' height=' + height + ' ';
       html +=      'style="position: absolute; left: 0; top: 0; ';
-      if (transparent) {
+      if (params.TRANSPARENT == 'TRUE') {
         html +=    'background-color: transparent;';
       }
       html +=   '">';
@@ -118,14 +115,14 @@ $(document).ready(function() {
     }
 
     // create WMS background layer image
-    addWmsImage('printBackgroundLayer', width, height, false, Map.backgroundLayer, wmsParams);
+    addWmsImage('printBackgroundLayer', width, height, Map.backgroundLayer, wmsParams);
 
     // create WMS topic layer image
-    addWmsImage('printTopicLayer', width, height, true, Map.topicLayer, wmsParams);
+    addWmsImage('printTopicLayer', width, height, Map.topicLayer, wmsParams);
 
     // create WMS overlay layer images
     for (var overlayTopic in Map.overlayLayers) {
-      addWmsImage('printLayer_' + overlayTopic, width, height, true, Map.overlayLayers[overlayTopic], wmsParams);
+      addWmsImage('printLayer_' + overlayTopic, width, height, Map.overlayLayers[overlayTopic], wmsParams);
     }
 
     // create OL3 map for printing vectors, markers and scale line
@@ -175,6 +172,9 @@ $(document).ready(function() {
     printMap.getView().setZoom(map.getView().getZoom());
     // force render
     printMap.renderSync();
+
+    // hide main OL3 map
+    $('#map .ol-viewport').hide();
   };
 
   // cleanup after printing
@@ -182,6 +182,9 @@ $(document).ready(function() {
     // remove print elements
     $('.printWmsImage').remove();
     $('#printMap').remove();
+
+    // show main OL3 map
+    $('#map .ol-viewport').show();
   };
 
   // detect print requests
