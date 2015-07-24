@@ -128,6 +128,7 @@
 
 .scrollable {
   overflow: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 #clickMarker {
